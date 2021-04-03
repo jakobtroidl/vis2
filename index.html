@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>map & brush</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<style>
+		.pathOne {
+			fill: steelblue;
+			stroke: steelblue;
+		}
+
+		div.tooltip {
+			position: absolute;
+			text-align: center;
+			width: 12vw;
+			height: 20vh;
+			padding: 2px;
+			font: 12px sans-serif;
+			background: rgba(49, 49, 49, 0.51);
+			border: thin solid rgb(14,15,85);
+			border-radius: 5px
+			/*  pointer-events: none;	This line needs to be removed */
+
+		}
+	</style>
+</head>
+<body>
+
+	<!-- WRAPPER -->
+	<div class="container-fluid" style="height: 100vh; padding-top: 1vh">
+		<div class="row">
+			<div class="col-10 offset-1" style="border: thin solid grey; border-radius: 5px;">
+				<!-- HEADING -->
+				<div class="row d-flex justify-content-center" style="height: 10vh; padding: 0; background: #bdbdbd;">
+					<div class="align-self-center">
+						<h1>Map, Scatter, Brush</h1>
+					</div>
+				</div>
+				<!-- CONTENT -->
+				<div class="row" style="height: 70vh; background: white; padding: 0;">
+					<div class="col-7">
+						<div class="row" style="height: 100%">
+							<div id="mapDiv" style="height: 100%; width:100%; background: lightgrey"></div>
+						</div>
+					</div>
+					<div class="col-5">
+						<div class="row" style="height: 80%">
+							<div id="scatterDiv" style="height: 100%; width:100%; background: lightgrey"></div>
+						</div>
+						<div class="row" style="height: 20%; background: lightgrey; padding: 1vh">
+							<div class="col" style="border: thin solid grey; border-radius: 5px; background: rgba(64,64,64,0.4)"></div>
+						</div>
+					</div>
+
+				</div>
+				<div class="row" style="height: 18vh; background: #bdbdbd; padding: 0; border: 0">
+					<div id="brushDiv" style="height: 100%; width:100%;"></div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+	<!-- - - - - - - - - - - - >
+	<    Load JS libraries     >
+	<- - - - - - - - - - - - -->
+
+	<!-- BOOTSTRAP -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+	<!-- D3 -->
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+	<script src="https://d3js.org/topojson.v2.min.js"></script>
+	<script src="https://d3js.org/d3-geo.v1.min.js"></script>
+
+	<!-- OWN JS -->
+	<script src="js/mapVis.js"></script>
+	<script src="js/scatterVis.js"></script>
+	<script src="js/brushVis.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
