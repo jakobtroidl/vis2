@@ -4,8 +4,8 @@
 
 // init global variables
 let myMapVis;
-let myScatterVis;
-let myBrushVis;
+//let myScatterVis;
+//let myBrushVis;
 
 // init globalDataSets
 let dataSet;
@@ -15,8 +15,8 @@ let selectedState = '';
 
 // load data using promises
 let promises = [
-    d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json"),
-    d3.csv("data.csv")
+    d3.json("data/county_us.topojson"),
+    d3.csv("hail-small.csv")
 ];
 
 Promise.all(promises)
@@ -27,17 +27,17 @@ Promise.all(promises)
 function initMainPage(dataArray) {
 
     // log data
-    console.log(dataArray);
-    dataSet = dataArray[1];
+    //console.log(dataArray);
+    //dataSet = dataArray[1];
 
     // init map
     myMapVis = new mapVis('mapDiv', dataArray[0], dataArray[1]);
 
     // init scatter
-    myScatterVis = new scatterVis('scatterDiv', dataArray[1]);
+    //myScatterVis = new scatterVis('scatterDiv', dataArray[1]);
 
     // init brush
-    myBrushVis = new brushVis('brushDiv', dataArray[1]);
+    //myBrushVis = new brushVis('brushDiv', dataArray[1]);
 }
 
 
