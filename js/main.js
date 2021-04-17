@@ -16,7 +16,7 @@ let selectedState = '';
 // load data using promises
 let promises = [
     d3.json("data/county_us.topojson"),
-    d3.csv("data/hail-small.csv")
+    d3.csv("data/hail-2015-sevprob-larger-80.csv")
 ];
 
 Promise.all(promises)
