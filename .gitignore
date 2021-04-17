@@ -63,4 +63,6 @@ typings/
 # next.js build output
 .next
 
-data/
+data/us_accidents.csv
+
+hail-2015.csv
