@@ -138,7 +138,6 @@ mapVis.prototype.initLegend = function () {
 }
 
 mapVis.prototype.ready = function (us, data) {
-    console.log(us.objects.counties)
     g.append("g")
         .attr("id", "counties")
         .selectAll("path")
@@ -163,12 +162,13 @@ mapVis.prototype.ready = function (us, data) {
         .data(data).enter()
         .append("circle")
         .attr("cx", function (d) {
+            console.log("hello", d.LON, d.LAT)
             let proj = projection([d.LON, d.LAT]);
             if (proj != null) {
                  return proj[0];
             }
             else {
-                console.log(d.LON, " ", d.LAT);
+               // console.log(d.LON, " ", d.LAT);
             }
             return 0
         })
