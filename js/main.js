@@ -7,9 +7,6 @@ let myMapVis;
 //let myScatterVis;
 //let myBrushVis;
 
-// init globalDataSets
-let dataSet;
-
 // init global switches
 let selectedState = '';
 
@@ -25,10 +22,6 @@ Promise.all(promises)
 
 // initMainPage
 function initMainPage(dataArray) {
-
-    // log data
-    //console.log(dataArray);
-    //dataSet = dataArray[1];
 
     // init map
     myMapVis = new mapVis('mapDiv', dataArray[0], dataArray[1]);

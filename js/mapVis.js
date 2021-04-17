@@ -19,18 +19,6 @@ mapVis = function (_parentElement, county_data, data) {
 // init brushVis
 mapVis.prototype.initVis = function () {
 
-    // id_name_map = new Map();
-    // d3.tsv("id_name_map.tsv").then(function(data) {
-    //     data.forEach(function (d) {
-    //         id_name_map.set(d.id, d.name);
-    //     });
-    // });
-    // noReports_color = "rgb(0,0,0)";
-    // dotRadiusBig = 13;
-    // dotRadiusSmall = 4;
-
-    console.log("hello");
-
     margin = {top: 1, right: 10, bottom: 5, left: 10};
     width = $("#" + this.parentElement).width() - margin.left - margin.right;
     height = $("#" + this.parentElement).height() - margin.top - margin.bottom;
