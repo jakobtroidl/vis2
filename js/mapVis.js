@@ -2,14 +2,12 @@
 *          MapVis          *
 * * * * * * * * * * * * * */
 let margin, width, height, active;
-let path, projection, id_name_map, g, svg, rect;
+let path, projection, g, svg, rect;
 let div, colorScale, noReports_color;
-let totalCasesPerFacility;
 let dotRadiusBig, dotRadiusSmall;
 
 // constructor
-mapVis = function(_parentElement, county_data,  data)
-{
+mapVis = function (_parentElement, county_data, data) {
     this.parentElement = _parentElement;
     this.county_data = county_data;
     this.data = data;
@@ -19,7 +17,7 @@ mapVis = function(_parentElement, county_data,  data)
 };
 
 // init brushVis
-mapVis.prototype.initVis = function() {
+mapVis.prototype.initVis = function () {
 
     // id_name_map = new Map();
     // d3.tsv("id_name_map.tsv").then(function(data) {
@@ -49,10 +47,7 @@ mapVis.prototype.initVis = function() {
         .attr('class', 'background center-container')
         .attr('height', height + margin.top + margin.bottom)
         .attr('width', width + margin.left + margin.right);
-        //.on('click', clicked);
-
-    // Promise.resolve(d3.json('county_us.topojson'))
-    //     .then(this.ready);
+    //.on('click', clicked);
 
 
     projection = d3.geoAlbersUsa()
@@ -65,7 +60,7 @@ mapVis.prototype.initVis = function() {
 
     g = svg.append("g")
         .attr('class', 'center-container center-items us-state')
-        .attr('transform', 'translate('+margin.left+','+margin.top+')')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom);
 
@@ -82,12 +77,11 @@ mapVis.prototype.initVis = function() {
         .range(["#ffffff", "#ffd5d5", "#ffabab", "#ff8181", "#ff5757", "#ff2d2d", "#ff0000"]);
 
 
-
     //this.initLegend();
 
 };
 
-mapVis.prototype.initLegend = function(){
+mapVis.prototype.initLegend = function () {
     var ext_color_domain = [0, 10, 20, 30, 40, 50];
     var legend_labels = ["< 10", "10+", "20+", "30+", "40+", "50+"];
     var no_reports_label = "no reports";
@@ -155,7 +149,7 @@ mapVis.prototype.initLegend = function(){
         });
 }
 
-mapVis.prototype.ready = function(us, data) {
+mapVis.prototype.ready = function (us, data) {
     console.log(us.objects.counties)
     g.append("g")
         .attr("id", "counties")
@@ -164,7 +158,7 @@ mapVis.prototype.ready = function(us, data) {
         .enter().append("path")
         .attr("d", path)
         .attr("class", "county-boundary");
-        //.on("click", resetMapZoom);
+    //.on("click", resetMapZoom);
 
     g.append("g")
         .attr("id", "states")
@@ -173,80 +167,84 @@ mapVis.prototype.ready = function(us, data) {
         .enter().append("path")
         .attr("d", path)
         .attr("class", "state");
-        //.on("click", clicked);
+    //.on("click", clicked);
 
 
-
-    //d3.csv("facilities.csv").then(function(data) {
-        // add circles to g
-        g.selectAll("circle")
-            .data(data).enter()
-            .append("circle")
-            .attr("cx", function (d) {
-                let proj = projection([d.LON, d.LAT]);
-                if(proj != null){
-                    return proj[0];
-                }
-                return 0
-            })
-            .attr("cy", function (d) {
-                let proj = projection([d.LON, d.LAT]);
-                if(proj != null){
-                    return proj[1];
-                }
-                return 0
-            })
-            .attr("r", 3)
-            .style("fill", "rgb(255.0, 0.0, 0.0)")
-            .style("stroke", "white")
-            .style("opacity", 1.0)
-            // .on("mouseover", function(d) {
-            //     d3.select(this).
-            //     transition()
-            //         .duration(200)
-            //         .attr('r', dotRadiusBig);
-            //
-            //     div.transition()
-            //         .duration(200)
-            //         .style("opacity", .9);
-            //
-            //     div.text(d.name)
-            //         .style("left", (d3.event.pageX) + "px")
-            //         .style("top", (d3.event.pageY - 28) + "px");
-            // })
-            //
-            // // fade out tooltip on mouse out
-            // .on("mouseout", function(d) {
-            //
-            //     if(d !== selectedCenter) {
-            //         d3.select(this)
-            //             .transition()
-            //             .duration(200)
-            //             .attr('r', dotRadiusSmall);
-            //
-            //         div.transition()
-            //             .duration(500)
-            //             .style("opacity", 0);
-            //     }
-            // })
-            //
-            // // BASEBALL CARD APPEARANCE ON MOUSE CLICK //
-            // .on("click", function(d) {
-            //     selectedCenter = d;
-            //     d3.selectAll("circle").attr("r", dotRadiusSmall);
-            //     console.log(d.name);
-            //     let out = d.name.replace("(", "");
-            //     out = out.replace(")", "");
-            //     out = out.replace(/\s+/g, '');
-            //     d3.select("#" + out)
-            //         .attr("r", dotRadiusBig);
-            //     myBaseballCard.renderCenter(d);
-            // });
-    //});
+    // add circles to g
+    g.selectAll("circle")
+        .data(data).enter()
+        .append("circle")
+        .attr("cx", function (d) {
+            let proj = projection([d.LON, d.LAT]);
+            if (proj != null) {
+                 return proj[0];
+            }
+            else {
+                console.log(d.LON, " ", d.LAT);
+            }
+            return 0
+        })
+        .attr("cy", function (d) {
+            let proj = projection([d.LON, d.LAT]);
+            if (proj != null) {
+                return proj[1];
+            }
+            else {
+                console.log(d.LON, " ", d.LAT);
+            }
+            return 0
+        })
+        .attr("r", 1)
+        .style("fill", "rgb(255.0, 0.0, 0.0)")
+        .style("opacity", 1.0)
+    // .on("mouseover", function(d) {
+    //     d3.select(this).
+    //     transition()
+    //         .duration(200)
+    //         .attr('r', dotRadiusBig);
+    //
+    //     div.transition()
+    //         .duration(200)
+    //         .style("opacity", .9);
+    //
+    //     div.text(d.name)
+    //         .style("left", (d3.event.pageX) + "px")
+    //         .style("top", (d3.event.pageY - 28) + "px");
+    // })
+    //
+    // // fade out tooltip on mouse out
+    // .on("mouseout", function(d) {
+    //
+    //     if(d !== selectedCenter) {
+    //         d3.select(this)
+    //             .transition()
+    //             .duration(200)
+    //             .attr('r', dotRadiusSmall);
+    //
+    //         div.transition()
+    //             .duration(500)
+    //             .style("opacity", 0);
+    //     }
+    // })
+    //
+    // // BASEBALL CARD APPEARANCE ON MOUSE CLICK //
+    // .on("click", function(d) {
+    //     selectedCenter = d;
+    //     d3.selectAll("circle").attr("r", dotRadiusSmall);
+    //     console.log(d.name);
+    //     let out = d.name.replace("(", "");
+    //     out = out.replace(")", "");
+    //     out = out.replace(/\s+/g, '');
+    //     d3.select("#" + out)
+    //         .attr("r", dotRadiusBig);
+    //     myBaseballCard.renderCenter(d);
+    // });
 
 
     g.append("path")
-        .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+        .datum(topojson.mesh(us, us.objects.states, function (a, b) {
+            return a !== b;
+        }))
         .attr("id", "state-borders")
         .attr("d", path);
 }
@@ -287,13 +285,13 @@ function resetMapZoom() {
         .delay(100)
         .duration(750)
         .style("stroke-width", "1.5px")
-        .attr('transform', 'translate('+margin.left+','+margin.top+')');
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
     let zoom_btn = document.getElementById("zoom_btn");
     zoom_btn.style.display = "none";
 }
 
-mapVis.prototype.updateDot = function(center) {
+mapVis.prototype.updateDot = function (center) {
     d3.selectAll("circle").attr("r", dotRadiusSmall);
 
     let out = center.name.replace("(", "");
