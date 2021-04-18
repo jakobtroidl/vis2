@@ -38,9 +38,8 @@ class DensityFunction2D {
             }
             this.width = stride;
             this.data = [];
-            const dataClone = data; //[...data];
-            while(dataClone.length) {
-                this.data.push(dataClone.splice(0, stride));
+            while(data.length) {
+                this.data.push(data.splice(0, stride));
             }
             this.height = this.data.length;
         } else {
@@ -48,7 +47,6 @@ class DensityFunction2D {
             this.width = data.length;
             this.height = data[0].length;
         }
-        this.sum = data.flat().reduce((acc, p) => acc + p, 0);
     }
 
     density(x, y) {
