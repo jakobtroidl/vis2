@@ -100,6 +100,14 @@ function initMainPage(dataArray) {
     // test stippling using a canvas gradient
     testStippling(300, 100);
 
+    /*
+     * TODO: Accumulate densities of data sets in images (e.g. in an CanvasRenderingContext2D from an OffscreenCanvas)
+     *       and use these images to create DensityFunction2D instances.
+     *       While accumulating the densities, we should also create a backing 2d-array of arrays containing our actual
+     *       data (e.g. descriptions of car accidents).
+     *       This can later be used to show all data points represented by a stipple to the user on hover events.
+     */
+
     // init map
     //myMapVis = new mapVis('mapDiv', dataArray[0], dataArray[1]);
 
