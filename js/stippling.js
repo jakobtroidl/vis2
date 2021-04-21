@@ -110,10 +110,15 @@ const showImage = (img, divName) => {
 
 /**
  * Calculates two new cell centroids from a Voronoi cell that should be split.
+ *
  * @param cell
  * @returns {{position1: *[], position2: *[]}}
  */
 const splitCell = (cell) => {
+    // Note: this is a very naive implementation that chooses two new centroids that are halfway from the cell's centroid
+    // to the two corners which are the farthest away from the center.
+    // In some cases these two points might be very close together. Choosing more optimal centroids would probably lead
+    // to faster convergence.
     const centroid = d3.polygonCentroid(cell);
     let largestDir = [0, 0];
     let secondLargestDir = [0, 0];
@@ -221,6 +226,7 @@ class DensityFunction2D {
 
     async areaDensity(polygon) {
         // this doesn't have any async calls, but we could e.g. add a backing tf.tensor2D to perform this operation
+        // which would be asynchronous (& hopefully faster)
         const {min, max} = integerBounds(polygon);
         let density = 0;
         for (let y = min[1]; y < max[1]; ++y) {
@@ -236,9 +242,19 @@ class DensityFunction2D {
     assignDensity(stipples, voronoi) {
         stipples.forEach(s => s.density = 0);
         let lastFound = 0;
+        let lastFoundRow = Array(this.width);
         for (let y = 0; y < this.height; ++y) {
             for (let x = 0; x < this.width; ++x) {
+                // We use either the cell index of the pixel above or the pixel to the left, but prefer the one to the
+                // top. Both choices are correct in approximately 60% of the cases, but if the choice was wrong then
+                // choosing the pixel to the top will require us only to search (width + 1) cells in the worst case
+                // whereas when choosing the pixel to the pixel to left we would have to search almost all other cells
+                // in the worst case (because of how Delaunay.find is implemented).
+                if (lastFoundRow[x]) {
+                    lastFound = lastFoundRow[x];
+                }
                 lastFound = voronoi.delaunay.find(x, y, lastFound);
+                lastFoundRow[x] = lastFound;
                 stipples[lastFound].density += this.density(x, y);
             }
         }
@@ -420,6 +436,10 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
 
         const startStipples = Date.now();
         const nextStipples = [];
+        // Note: we also tried making the errorThreshold depend on the stipple area (i.e. e = A_s * errorThreshold)
+        // and multiplying errorThreshold with a constant factor in each iteration, but it took about 10 times longer
+        // to get the same results. Maybe multiplying it with r/t, where r is the convergence rate and t is the iteration
+        // would work better, but it probably wouldn't be faster.
         const deleteThreshold = stippleArea - errorThreshold;
         const splitThreshold = stippleArea + errorThreshold;
         for (let i = 0; i < stipples.length; ++i) {
