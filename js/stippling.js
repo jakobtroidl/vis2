@@ -86,6 +86,12 @@ const polygonBounds = (points) => {
     }
     return {min: [minX, minY], max: [maxX, maxY]};
 }
+const integerBounds = (points, toInt = Math.round) => {
+    const bounds = polygonBounds(points);
+    bounds.min = bounds.min.map(toInt);
+    bounds.max = bounds.max.map(toInt);
+    return bounds;
+}
 
 /**
  * Creates a canvas as a child of a div-tag and uses it to present the given {@link ImageData} instance.
@@ -113,7 +119,7 @@ const splitCell = (cell) => {
     let secondLargestDir = [0, 0];
     let largestDistance = 0;
     let secondLargestDistance = 0;
-    for (const p of d3.polygonHull(cell)) {
+    for (const p of cell) {
         const direction = [
             p[0] - centroid[0],
             p[1] - centroid[1]
@@ -213,9 +219,18 @@ class DensityFunction2D {
         return this.data[y][x];
     }
 
-    areaDensity(polygon) {
-        // TODO: map polygon to integer x,y coords and sum up all densitiy values for it
-        throw new Error('not implemented');
+    async areaDensity(polygon) {
+        // this doesn't have any async calls, but we could e.g. add a backing tf.tensor2D to perform this operation
+        const {min, max} = integerBounds(polygon);
+        let density = 0;
+        for (let y = min[1]; y < max[1]; ++y) {
+            for (let x = min[0]; x < max[0]; ++x) {
+                if (d3.polygonContains(polygon, [x, y])) {
+                    density += this.density(x, y);
+                }
+            }
+        }
+        return density;
     }
 
     assignDensity(stipples, voronoi) {
@@ -238,7 +253,7 @@ class DensityFunction2D {
      * @returns {DensityFunction2D}
      */
     static fromImageData2D(imageData, rgbaToDensity = rgbaToLuminance) {
-        const {data, maxValue: maxDensity} = imageDataToFloatArray(imageData);
+        const {data, maxValue: maxDensity} = imageDataToFloatArray(imageData, rgbaToDensity);
         return new DensityFunction2D(data.map(p => p / maxDensity), imageData.width);
     }
 
@@ -409,7 +424,7 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
         const splitThreshold = stippleArea + errorThreshold;
         for (let i = 0; i < stipples.length; ++i) {
             const s = stipples[i];
-            const cell = voronoi.cellPolygon(i);
+            const cell = d3.polygonHull(voronoi.cellPolygon(i));
             if (s.density < deleteThreshold) {
                 splitsOrMerges = true;
             } else if (s.density > splitThreshold) {
@@ -440,6 +455,115 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
     console.debug(`Time spent building Voronoi diagrams: ${timeVoronoi} ms, ${(timeVoronoi / timeTotal) * 100} %`);
     console.debug(`Time spent integrating over Voronoi cells: ${timeDensity} ms, ${(timeDensity / timeTotal) * 100} %`);
     console.debug(`Time spent moving, merging and splitting stipples: ${timeStipples} ms, ${(timeStipples / timeTotal) * 100} %`);
+
+    // map stipple densities to range [0,1]
+    const maxDensity = stipples.reduce((maxDensity, s) => {
+        return s.density > maxDensity ? s.density : maxDensity;
+    }, 0);
+    stipples.forEach(s => s.density /= maxDensity);
+
+    return {stipples, voronoi: lastVoronoi};
+};
+
+/**
+ * Creates stipples for a given target density function ({@link DensityFunction2D}) using the algorithm presented by
+ * Görtler et al. (Stippling of 2D Scalar Fields).
+ *
+ * For contouring techniques use a {@link RestrictedStipplingDensityFunction2D} instead of a plain {@link DensityFunction2D}.
+ *
+ * Note that the function returns a {@link Promise}, so you either have to await it in an async context or use its
+ * return values in a {@link Promise} chain.
+ *
+ * Note: this is currently much slower than {@link stipple}. The reason for this is that {@link DensityFunction2D.areaDensity}
+ * is not optimized. Another problem with this version is that the contouring effect is much weaker than in {@link stipple}.
+ * Probably because some density values don't contribute to the density of their Voronoi cells due to rounding errors.
+ *
+ * @param targetDensityFunction a {@link DensityFunction2D}
+ * @param stippleRadius
+ * @param initialErrorThreshold the initial error threshold used for splitting and merging stipples.
+ * @param thresholdConvergenceRate the error threshold is increased by this amount in every iteration
+ * @return {Promise<{voronoi: *, stipples: any[]}>}
+ */
+const stippleParallel = async (targetDensityFunction, stippleRadius = 5.0, initialErrorThreshold = 0.0, thresholdConvergenceRate = 0.01) => {
+    // keep track of computation time for indiviual steps
+    const now = Date.now();
+    let timeVoronoi = 0;
+    let timeStippling = 0;
+
+    const stippleArea = Math.pow(stippleRadius, 2) * Math.PI;
+    const numInitialStipples = Math.round(
+        ((targetDensityFunction.width * targetDensityFunction.height) / stippleArea) * 0.7);
+
+    let lastVoronoi = null;
+    let stipples = Stipple.createRandomStipples(
+        numInitialStipples,
+        targetDensityFunction.width,
+        targetDensityFunction.height);
+
+    let errorThreshold = initialErrorThreshold;
+    let splitsOrMerges = false;
+    do {
+        splitsOrMerges = false;
+
+        const startVoronoi = Date.now();
+        const voronoi = d3.Delaunay
+            .from(stipples.map(s => s.toArray()))
+            .voronoi([0, 0, targetDensityFunction.width, targetDensityFunction.height]);
+        const endVoronoi = Date.now();
+
+        const startStippling = Date.now();
+        const deleteThreshold = stippleArea - errorThreshold;
+        const splitThreshold = stippleArea + errorThreshold;
+        const foo = (await Promise.all(
+            stipples.map(async (s, i) => {
+                const cell = d3.polygonHull(voronoi.cellPolygon(i));
+                const density = await targetDensityFunction.areaDensity(cell);
+                if (density < deleteThreshold) {
+                    return null;
+                } else if (density > splitThreshold) {
+                    const {position1, position2} = splitCell(cell);
+                    s.setPosition(...position1);
+                    return [
+                        s,
+                        new Stipple(...position2)
+                    ];
+                } else {
+                    s.setPosition(...d3.polygonCentroid(cell));
+                    s.density = density;
+                    return s;
+                }
+            })
+        )).reduce((acc, s) => { // clean up stipples in one loop instead of doing filter(s => s).flat()
+            if (s) {
+                if (Array.isArray(s)) {
+                    acc.splitsOrMerges = true;
+                    acc.stipples.push(s[0]);
+                    acc.stipples.push(s[1]);
+                }
+                else {
+                    acc.stipples.push(s);
+                }
+            } else {
+                acc.splitsOrMerges = true;
+            }
+            return acc;
+        }, {stipples: [], splitsOrMerges: false});
+        stipples = foo.stipples;
+        splitsOrMerges = foo.splitsOrMerges;
+        const endStippling = Date.now();
+
+        lastVoronoi = voronoi;
+        errorThreshold += thresholdConvergenceRate;
+
+        timeVoronoi += endVoronoi - startVoronoi;
+        timeStippling += endStippling - startStippling;
+    } while (splitsOrMerges);
+
+    // timing
+    const timeTotal = Date.now() - now;
+    console.debug(`Total time spent: ${timeTotal} ms`);
+    console.debug(`Time spent building Voronoi diagrams: ${timeVoronoi} ms, ${(timeVoronoi / timeTotal) * 100} %`);
+    console.debug(`Time spent integrating over Voronoi cells and processing stipples: ${timeStippling} ms, ${(timeStippling / timeTotal) * 100} %`);
 
     // map stipple densities to range [0,1]
     const maxDensity = stipples.reduce((maxDensity, s) => {
