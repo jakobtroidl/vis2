@@ -11,21 +11,26 @@ class DataLoader{
      * @returns ImageData
      */
     static loadUsGeoData(data, width, height) {
-        let projection = d3.geoAlbersUsa()
+        const projection = d3.geoAlbersUsa()
             .translate([width / 2, height / 2])
             .scale(width);
-        const array = new Uint8ClampedArray(4 * width * height);
+        const array = Array(width *  height).fill(0.0);
+        const data2D = Array(width *  height).fill([]);
         data.forEach(d => {
-            let proj = projection([d.LON, d.LAT]);
+            const proj = projection([d.LON, d.LAT]);
             if (proj != null) {
-                let x = Math.floor(proj[0]);
-                let y = Math.floor(proj[1]);
-                array[x * y] += 20;
-                array[x * y + 1] += 20;
-                array[x * y + 2] += 20;
-                array[x * y + 3] += 20;
+                const x = Math.floor(proj[0]);
+                const y = Math.floor(proj[1]);
+                const i = (y * width) + x;
+                array[i] += 1.0;
+                data2D[i].push(d);
             }
-        })
-        return new ImageData(array, width, height);
+        });
+        const maxValue = array.reduce((max, x) => {
+            return max > x ? max : x;
+        }, 0.0);
+        console.log(array.map(x => x/maxValue), width);
+        return floatArrayToImageData(array, width);
+        //return new ImageData(array, width, height);
     }
 }

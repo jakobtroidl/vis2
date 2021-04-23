@@ -92,18 +92,20 @@ const testStippling = async (data, width, height, machBanding = false, stippleRa
      *   >>> 'bar'
      */
     stipples.forEach(s => {
-        svg.append('circle')
-            .attr('cx', s.x)
-            .attr('cy', s.y)
-            .attr('r', stippleRadius) // * s.density
-            .style('fill', 'black')
+        if (s.density !== 0.0) {
+            svg.append('circle')
+                .attr('cx', s.x)
+                .attr('cy', s.y)
+                .attr('r', stippleRadius * s.density)
+                .style('fill', 'black')
+        }
     });
 }
 
 // initMainPage
 function initMainPage(dataArray) {
     // test stippling using a canvas gradient
-    testStippling(dataArray[1], 300, 100).then(_x => console.log('finished stippling'));
+    testStippling(dataArray[1], 480, 250).then(_x => console.log('finished stippling'));
 
     /*
      * TODO: Accumulate densities of data sets in images (e.g. in an CanvasRenderingContext2D from an OffscreenCanvas)

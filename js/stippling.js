@@ -38,6 +38,7 @@ const quantize = (arr, quantization) => {
         return 1.0;
     });
 };
+// TODO: document arr requirements
 const floatArrayToImageData = (arr, stride, mapFromMinus1 = false) => {
     const mapVal = mapFromMinus1 ? p => (p + 1.0) / 2.0 : p => p;
     return new ImageData(
@@ -163,6 +164,8 @@ class Stipple {
     constructor(x, y) {
         this.setPosition(x, y);
         this.density = 0;
+        this.relativeX = 0;
+        this.relativeY = 0;
         this.absoluteDensity = 0;
     }
 
@@ -463,6 +466,10 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
                 nextStipples.push(s);
             }
         }
+        if (!nextStipples.length) {
+            nextStipples.push(
+                Stipple.createRandomStipples(1, targetDensityFunction.width, targetDensityFunction.height)[0]);
+        }
         const endStipples = Date.now();
 
         stipples = nextStipples;
@@ -594,7 +601,11 @@ const stippleParallel = async (targetDensityFunction, stippleRadius = 5.0, initi
     const maxDensity = stipples.reduce((maxDensity, s) => {
         return s.density > maxDensity ? s.density : maxDensity;
     }, 0);
-    stipples.forEach(s => s.density /= maxDensity);
+    stipples.forEach(s => {
+        s.density /= maxDensity;
+        s.relativeX = s.x / targetDensityFunction.width;
+        s.relativeY = s.y / targetDensityFunction.height;
+    });
 
     return {stipples, voronoi: lastVoronoi};
 };
