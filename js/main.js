@@ -20,7 +20,7 @@ Promise.all(promises)
     .then( function(data){ initMainPage(data) })
     .catch( function (err){console.log(err)} );
 
-const testStippling = async (data, width, height, machBanding = false, stippleRadius = 1.0, fromTo = undefined) => {
+const testStippling = async (data, width, height, outputScale = 1.5, machBanding = false, stippleRadius = 1.0, fromTo = undefined) => {
     const bounds = [0, 0, width, height];
     if (!fromTo) {
         // just point from left to right by default
@@ -60,10 +60,12 @@ const testStippling = async (data, width, height, machBanding = false, stippleRa
         stippleRadius);
 
     // draw
+    const outputWidth = width * outputScale;
+    const outputHeight = height * outputScale;
     const svg = d3.select('#mapDiv')
         .append('svg')
-        .attr('width', width)
-        .attr('height', height);
+        .attr('width', outputWidth)
+        .attr('height', outputHeight);
 
     /*
      * The stipple size or color could also be dependent on the density (i.e. s.density ∈ [0,1]).
@@ -94,9 +96,9 @@ const testStippling = async (data, width, height, machBanding = false, stippleRa
     stipples.forEach(s => {
         if (s.density !== 0.0) {
             svg.append('circle')
-                .attr('cx', s.x)
-                .attr('cy', s.y)
-                .attr('r', stippleRadius * s.density)
+                .attr('cx', s.relativeX * outputWidth)
+                .attr('cy', s.relativeY * outputHeight)
+                .attr('r', stippleRadius * s.density * outputScale)
                 .style('fill', 'black')
         }
     });

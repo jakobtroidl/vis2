@@ -492,7 +492,11 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
     const maxDensity = stipples.reduce((maxDensity, s) => {
         return s.density > maxDensity ? s.density : maxDensity;
     }, 0);
-    stipples.forEach(s => s.density /= maxDensity);
+    stipples.forEach(s => {
+        s.density /= maxDensity;
+        s.relativeX = s.x / targetDensityFunction.width;
+        s.relativeY = s.y / targetDensityFunction.height;
+    });
 
     return {stipples, voronoi: lastVoronoi};
 };
