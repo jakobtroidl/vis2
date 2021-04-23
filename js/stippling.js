@@ -227,6 +227,7 @@ class DensityFunction2D {
     async areaDensity(polygon) {
         // this doesn't have any async calls, but we could e.g. add a backing tf.tensor2D to perform this operation
         // which would be asynchronous (& hopefully faster)
+        console.log(polygon);
         const {min, max} = integerBounds(polygon);
         let density = 0;
         for (let y = min[1]; y < max[1]; ++y) {
@@ -255,6 +256,10 @@ class DensityFunction2D {
                 }
                 lastFound = voronoi.delaunay.find(x, y, lastFound);
                 lastFoundRow[x] = lastFound;
+                if(stipples[lastFound] === undefined){
+                    console.log("undefined")
+                }
+
                 stipples[lastFound].density += this.density(x, y);
             }
         }
@@ -295,7 +300,7 @@ class DensityFunction2D {
      * @param debugDiv (optional) a string, the id of a div that should be used to display intermediate results. Default: undefined
      * @return {DensityFunction2D}
      */
-    static machBandingFromImageData2D(imageData, quantization = 5, weight = 0.5, blurRadius = 4, rgbaToDensity = rgbaToLuminance, debugDiv = undefined) {
+    static machBandingFromImageData2D(imageData, quantization = 5, weight = 0.5, blurRadius = 4, rgbaToDensity = rgbaToLuminance, debugDiv = "mapDiv") {
         if (!Array.isArray(quantization)) {
             quantization = createQuantization(quantization);
         }

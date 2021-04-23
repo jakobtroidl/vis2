@@ -162,7 +162,6 @@ mapVis.prototype.ready = function (us, data) {
         .data(data).enter()
         .append("circle")
         .attr("cx", function (d) {
-            console.log("hello", d.LON, d.LAT)
             let proj = projection([d.LON, d.LAT]);
             if (proj != null) {
                  return proj[0];
