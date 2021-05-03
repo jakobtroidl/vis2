@@ -36,7 +36,7 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
         .node()
         .getContext('2d');
 
-    let imageData = DataLoader.loadUsGeoData(data, width, height);
+    let [imageData, metaData] = DataLoader.loadUsGeoData(data, width, height);
 
     showImage(imageData, "mapDiv")
 
@@ -93,15 +93,44 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
      *   >>> 'foo'
      *   >>> 'bar'
      */
-    stipples.forEach(s => {
-        if (s.density !== 0.0) {
-            svg.append('circle')
-                .attr('cx', s.relativeX * outputWidth)
-                .attr('cy', s.relativeY * outputHeight)
-                .attr('r', stippleRadius * s.density * outputScale)
-                .style('fill', 'black')
-        }
-    });
+
+    let card = new Card(metaData, width, height, "#cardDiv");
+
+    svg.selectAll("circle")
+        .data(stipples).enter()
+        .append('circle')
+        .attr('cx', function(s){
+            return s.relativeX * outputWidth;
+        })
+        .attr('cy', function(s){
+            return s.relativeY * outputHeight;
+        })
+        .attr('r', function (s) {
+            return stippleRadius * s.density * outputScale;
+        })
+        .style('fill', 'black')
+        .on('mouseover', function (s) {
+            d3.select(this).style('fill', 'rgb(255, 0, 0)');
+            let bounds = stippleBounds(s, voronoi);
+            card.drawArea(bounds, voronoi, getVoronoiCell(s.position(), voronoi));
+
+        })
+        .on('mouseleave', function (s) {
+            d3.select(this).style('fill', 'black');
+        })
+
+    // stipples.forEach(s => {
+    //     if (s.density !== 0.0) {
+    //         svg.append('circle')
+    //             .attr('cx', s.relativeX * outputWidth)
+    //             .attr('cy', s.relativeY * outputHeight)
+    //             .attr('r', stippleRadius * s.density * outputScale)
+    //             .style('fill', 'black')
+    //             .on("mouseenter", function (s) {
+    //                 console.log(s);
+    //             })
+    //     }
+    // });
 }
 
 // initMainPage

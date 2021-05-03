@@ -95,6 +95,22 @@ const integerBounds = (points, toInt = Math.round) => {
 }
 
 /**
+ *
+ * @param x position
+ * @param y position
+ * @param voronoi
+ * @returns the index of the voronoi region of the given position
+ */
+const getVoronoiCell = ([x, y], voronoi) => {
+    return voronoi.delaunay.find(x, y);
+}
+const stippleBounds = (stipple, voronoi) => {
+    let index = getVoronoiCell(stipple.position(), voronoi);
+    let cell = voronoi.cellPolygon(index);
+    return polygonBounds(cell);
+}
+
+/**
  * Creates a canvas as a child of a div-tag and uses it to present the given {@link ImageData} instance.
  * @param img the {@link ImageData} to show
  * @param divName a string, the id of the div
@@ -169,14 +185,15 @@ class Stipple {
         this.absoluteDensity = 0;
     }
 
-    toArray() {
-        return [this.x, this.y];
-    }
-
     setPosition(x, y) {
         this.x = x;
         this.y = y;
     }
+
+    position() {
+        return [this.x, this.y];
+    }
+
 
     static createRandomStipples(numStipples, xScale = 1, yScale = 1, sampler = d3.randomUniform) {
         const xSampler = sampler(0, xScale);
@@ -429,7 +446,7 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
 
         const startVoronoi = Date.now();
         const voronoi = d3.Delaunay
-            .from(stipples.map(s => s.toArray()))
+            .from(stipples.map(s => s.position()))
             .voronoi([0, 0, targetDensityFunction.width, targetDensityFunction.height]);
         const endVoronoi = Date.now();
 
@@ -543,7 +560,7 @@ const stippleParallel = async (targetDensityFunction, stippleRadius = 5.0, initi
 
         const startVoronoi = Date.now();
         const voronoi = d3.Delaunay
-            .from(stipples.map(s => s.toArray()))
+            .from(stipples.map(s => s.position()))
             .voronoi([0, 0, targetDensityFunction.width, targetDensityFunction.height]);
         const endVoronoi = Date.now();
 
