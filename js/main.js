@@ -29,16 +29,16 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
     }
 
     // init
-    const context2D = d3.select('#mapDiv')
-        .append('canvas')
-        .attr('width', width)
-        .attr('height', height)
-        .node()
-        .getContext('2d');
+    // const context2D = d3.select('#mapDiv')
+    //     .append('canvas')
+    //     .attr('width', width)
+    //     .attr('height', height)
+    //     .node()
+    //     .getContext('2d');
 
     let [imageData, metaData] = DataLoader.loadUsGeoData(data, width, height);
 
-    showImage(imageData, "mapDiv")
+    //showImage(imageData, "mapDiv")
 
     //const gradient = context2D.createLinearGradient(...fromTo);
 
