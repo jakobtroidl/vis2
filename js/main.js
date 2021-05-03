@@ -20,7 +20,7 @@ Promise.all(promises)
     .then( function(data){ initMainPage(data) })
     .catch( function (err){console.log(err)} );
 
-const testStippling = async (width, height, machBanding = true, stippleRadius = 1.0, fromTo = undefined) => {
+const testStippling = async (data, width, height, outputScale = 1.5, machBanding = false, stippleRadius = 1.0, fromTo = undefined) => {
     const bounds = [0, 0, width, height];
     if (!fromTo) {
         // just point from left to right by default
@@ -35,28 +35,37 @@ const testStippling = async (width, height, machBanding = true, stippleRadius = 
         .attr('height', height)
         .node()
         .getContext('2d');
-    const gradient = context2D.createLinearGradient(...fromTo);
-    gradient.addColorStop(0, 'black');
-    gradient.addColorStop(1, 'white');
-    context2D.fillStyle = gradient;
-    context2D.fillRect(...bounds);
+
+    let [imageData, metaData] = DataLoader.loadUsGeoData(data, width, height);
+
+    showImage(imageData, "mapDiv")
+
+    //const gradient = context2D.createLinearGradient(...fromTo);
+
+    // gradient.addColorStop(0, 'black');
+    // gradient.addColorStop(1, 'white');
+    // context2D.fillStyle = gradient;
+    // context2D.fillRect(...bounds);
+
 
     // stipple
     const {stipples, voronoi} = await stipple(
         (machBanding ?
                 DensityFunction2D.machBandingFromImageData2D(
-                    context2D.getImageData(...bounds),
+                    imageData,//context2D.getImageData(...bounds),
                     5,
                     1.0, // full weight
                     stippleRadius) :
-                DensityFunction2D.fromImageData2D(context2D.getImageData(...bounds))),
+                DensityFunction2D.fromImageData2D(imageData)),
         stippleRadius);
 
     // draw
+    const outputWidth = width * outputScale;
+    const outputHeight = height * outputScale;
     const svg = d3.select('#mapDiv')
         .append('svg')
-        .attr('width', width)
-        .attr('height', height);
+        .attr('width', outputWidth)
+        .attr('height', outputHeight);
 
     /*
      * The stipple size or color could also be dependent on the density (i.e. s.density ∈ [0,1]).
@@ -84,19 +93,50 @@ const testStippling = async (width, height, machBanding = true, stippleRadius = 
      *   >>> 'foo'
      *   >>> 'bar'
      */
-    stipples.forEach(s => {
-        svg.append('circle')
-            .attr('cx', s.x)
-            .attr('cy', s.y)
-            .attr('r', stippleRadius) // * s.density
-            .style('fill', 'black')
-    });
+
+    let card = new Card(metaData, width, height, "#cardDiv");
+
+    svg.selectAll("circle")
+        .data(stipples).enter()
+        .append('circle')
+        .attr('cx', function(s){
+            return s.relativeX * outputWidth;
+        })
+        .attr('cy', function(s){
+            return s.relativeY * outputHeight;
+        })
+        .attr('r', function (s) {
+            return stippleRadius * s.density * outputScale;
+        })
+        .style('fill', 'black')
+        .on('mouseover', function (s) {
+            d3.select(this).style('fill', 'rgb(255, 0, 0)');
+            let bounds = stippleBounds(s, voronoi);
+            card.drawArea(bounds, voronoi, getVoronoiCell(s.position(), voronoi));
+
+        })
+        .on('mouseleave', function (s) {
+            d3.select(this).style('fill', 'black');
+        })
+
+    // stipples.forEach(s => {
+    //     if (s.density !== 0.0) {
+    //         svg.append('circle')
+    //             .attr('cx', s.relativeX * outputWidth)
+    //             .attr('cy', s.relativeY * outputHeight)
+    //             .attr('r', stippleRadius * s.density * outputScale)
+    //             .style('fill', 'black')
+    //             .on("mouseenter", function (s) {
+    //                 console.log(s);
+    //             })
+    //     }
+    // });
 }
 
 // initMainPage
 function initMainPage(dataArray) {
     // test stippling using a canvas gradient
-    testStippling(300, 100).then(_x => console.log('finished stippling'));
+    testStippling(dataArray[1], 480, 250).then(_x => console.log('finished stippling'));
 
     /*
      * TODO: Accumulate densities of data sets in images (e.g. in an CanvasRenderingContext2D from an OffscreenCanvas)

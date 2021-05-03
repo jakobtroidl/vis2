@@ -38,6 +38,7 @@ const quantize = (arr, quantization) => {
         return 1.0;
     });
 };
+// TODO: document arr requirements
 const floatArrayToImageData = (arr, stride, mapFromMinus1 = false) => {
     const mapVal = mapFromMinus1 ? p => (p + 1.0) / 2.0 : p => p;
     return new ImageData(
@@ -91,6 +92,22 @@ const integerBounds = (points, toInt = Math.round) => {
     bounds.min = bounds.min.map(toInt);
     bounds.max = bounds.max.map(toInt);
     return bounds;
+}
+
+/**
+ *
+ * @param x position
+ * @param y position
+ * @param voronoi
+ * @returns the index of the voronoi region of the given position
+ */
+const getVoronoiCell = ([x, y], voronoi) => {
+    return voronoi.delaunay.find(x, y);
+}
+const stippleBounds = (stipple, voronoi) => {
+    let index = getVoronoiCell(stipple.position(), voronoi);
+    let cell = voronoi.cellPolygon(index);
+    return polygonBounds(cell);
 }
 
 /**
@@ -163,17 +180,20 @@ class Stipple {
     constructor(x, y) {
         this.setPosition(x, y);
         this.density = 0;
+        this.relativeX = 0;
+        this.relativeY = 0;
         this.absoluteDensity = 0;
-    }
-
-    toArray() {
-        return [this.x, this.y];
     }
 
     setPosition(x, y) {
         this.x = x;
         this.y = y;
     }
+
+    position() {
+        return [this.x, this.y];
+    }
+
 
     static createRandomStipples(numStipples, xScale = 1, yScale = 1, sampler = d3.randomUniform) {
         const xSampler = sampler(0, xScale);
@@ -227,6 +247,7 @@ class DensityFunction2D {
     async areaDensity(polygon) {
         // this doesn't have any async calls, but we could e.g. add a backing tf.tensor2D to perform this operation
         // which would be asynchronous (& hopefully faster)
+        console.log(polygon);
         const {min, max} = integerBounds(polygon);
         let density = 0;
         for (let y = min[1]; y < max[1]; ++y) {
@@ -255,6 +276,10 @@ class DensityFunction2D {
                 }
                 lastFound = voronoi.delaunay.find(x, y, lastFound);
                 lastFoundRow[x] = lastFound;
+                if(stipples[lastFound] === undefined){
+                    console.log("undefined")
+                }
+
                 stipples[lastFound].density += this.density(x, y);
             }
         }
@@ -295,7 +320,7 @@ class DensityFunction2D {
      * @param debugDiv (optional) a string, the id of a div that should be used to display intermediate results. Default: undefined
      * @return {DensityFunction2D}
      */
-    static machBandingFromImageData2D(imageData, quantization = 5, weight = 0.5, blurRadius = 4, rgbaToDensity = rgbaToLuminance, debugDiv = undefined) {
+    static machBandingFromImageData2D(imageData, quantization = 5, weight = 0.5, blurRadius = 4, rgbaToDensity = rgbaToLuminance, debugDiv = "mapDiv") {
         if (!Array.isArray(quantization)) {
             quantization = createQuantization(quantization);
         }
@@ -421,7 +446,7 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
 
         const startVoronoi = Date.now();
         const voronoi = d3.Delaunay
-            .from(stipples.map(s => s.toArray()))
+            .from(stipples.map(s => s.position()))
             .voronoi([0, 0, targetDensityFunction.width, targetDensityFunction.height]);
         const endVoronoi = Date.now();
 
@@ -458,6 +483,10 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
                 nextStipples.push(s);
             }
         }
+        if (!nextStipples.length) {
+            nextStipples.push(
+                Stipple.createRandomStipples(1, targetDensityFunction.width, targetDensityFunction.height)[0]);
+        }
         const endStipples = Date.now();
 
         stipples = nextStipples;
@@ -480,7 +509,11 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
     const maxDensity = stipples.reduce((maxDensity, s) => {
         return s.density > maxDensity ? s.density : maxDensity;
     }, 0);
-    stipples.forEach(s => s.density /= maxDensity);
+    stipples.forEach(s => {
+        s.density /= maxDensity;
+        s.relativeX = s.x / targetDensityFunction.width;
+        s.relativeY = s.y / targetDensityFunction.height;
+    });
 
     return {stipples, voronoi: lastVoronoi};
 };
@@ -527,7 +560,7 @@ const stippleParallel = async (targetDensityFunction, stippleRadius = 5.0, initi
 
         const startVoronoi = Date.now();
         const voronoi = d3.Delaunay
-            .from(stipples.map(s => s.toArray()))
+            .from(stipples.map(s => s.position()))
             .voronoi([0, 0, targetDensityFunction.width, targetDensityFunction.height]);
         const endVoronoi = Date.now();
 
@@ -589,7 +622,11 @@ const stippleParallel = async (targetDensityFunction, stippleRadius = 5.0, initi
     const maxDensity = stipples.reduce((maxDensity, s) => {
         return s.density > maxDensity ? s.density : maxDensity;
     }, 0);
-    stipples.forEach(s => s.density /= maxDensity);
+    stipples.forEach(s => {
+        s.density /= maxDensity;
+        s.relativeX = s.x / targetDensityFunction.width;
+        s.relativeY = s.y / targetDensityFunction.height;
+    });
 
     return {stipples, voronoi: lastVoronoi};
 };
