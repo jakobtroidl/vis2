@@ -113,7 +113,6 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
             d3.select(this).style('fill', 'rgb(255, 0, 0)');
             let bounds = stippleBounds(s, voronoi);
             card.drawArea(bounds, voronoi, getVoronoiCell(s.position(), voronoi));
-
         })
         .on('mouseleave', function (s) {
             d3.select(this).style('fill', 'black');
