@@ -94,7 +94,16 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
      *   >>> 'bar'
      */
 
-    let card = new Card(metaData, width, height, "#cardDiv");
+    let cardDiv = '#cardDiv';
+    let box = document.querySelector(cardDiv);
+    let cardWidth = box.clientWidth;
+    let cardHeight = box.clientHeight;
+
+    console.log(cardWidth, " ", cardHeight);
+
+    let myData = {data: metaData, width: width, height: height};
+
+    let card = new Card(myData, cardWidth, cardHeight, cardDiv);
 
     svg.selectAll("circle")
         .data(stipples).enter()
@@ -110,7 +119,7 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
         })
         .style('fill', 'black')
         .on('mouseover', function (s) {
-            d3.select(this).style('fill', 'rgb(255, 0, 0)');
+            d3.select(this).style('fill', 'rgb(255, 0, 0)'); // color stipples
             let bounds = stippleBounds(s, voronoi);
             card.drawArea(bounds, voronoi, getVoronoiCell(s.position(), voronoi));
         })

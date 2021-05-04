@@ -48,27 +48,24 @@ class Card{
             for (let y = minY; y < maxY; y++) {
                 let thisVoronoiIndex = getVoronoiCell([x, y], voronoi);
                 if(thisVoronoiIndex === voronoiIndex){ // check whether the coordinate is in the voronoi region
-                    const idx = (y * this.width) + x;
-                    croppedData = croppedData.concat(this.data[idx]);
+                    const idx = (y * this.data.width) + x;
+                    croppedData = croppedData.concat(this.data.data[idx]);
                 }
             }
         }
 
-        console.log("---------------------")
-        console.log(croppedData);
-
-        this.svg.selectAll("*").remove();
+        this.svg.selectAll("*").remove(); // clear svg before plotting new elements
 
         let dx = maxX - minX;
         let dy = maxY - minY;
         let x = (minX + maxX) / 2;
         let y = (minY + maxY) / 2;
-        let scale = 0.9 / Math.max(dx / this.width, dy / this.height);
-        let translate = [this.width / 2 - scale * x, this.height / 2 - scale * y];
+        let scale = 0.9 / Math.max(dx / this.data.width, dy / this.data.height);
+        let translate = [this.data.width / 2 - scale * x, this.data.height / 2 - scale * y];
 
         const projection = d3.geoAlbersUsa()
-            .translate([this.width / 2, this.height / 2])
-            .scale(this.width);
+            .translate([this.data.width / 2, this.data.height / 2])
+            .scale(this.data.width);
 
         let g = this.svg.append("g")
             .attr('transform', 'translate(' + translate + ')scale(' + scale + ')')
