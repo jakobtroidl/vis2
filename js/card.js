@@ -15,13 +15,15 @@ class Card{
         this.height = height;
         this.svg = this.setupSVG();
 
+        this.circleRadius = 2.0;
+        this.lineWidth = 1.0;
     }
 
     setupSVG(){
         return d3.select('#cardDiv')
             .append('svg')
-            .attr('width', 300)
-            .attr('height', 300);
+            .attr('width', this.width)
+            .attr('height', this.height);
     }
 
     /**
@@ -69,10 +71,19 @@ class Card{
             .scale(this.width);
 
         let g = this.svg.append("g")
-            //.attr('class', 'center-container center-items')
             .attr('transform', 'translate(' + translate + ')scale(' + scale + ')')
             .attr('width', this.width)
             .attr('height', this.height);
+
+        let lineFunc = d3.line()
+            .x(function(d) { return d[0]; })
+            .y(function(d) { return d[1]; });
+
+        g.append('path')
+            .attr('d', lineFunc(voronoi.cellPolygon(voronoiIndex)))
+            .attr('stroke', 'black')
+            .attr('stroke-width', this.lineWidth * (1 / scale))
+            .attr('fill', 'none');
 
         g.selectAll('circle')
             .data(croppedData).enter()
@@ -91,8 +102,7 @@ class Card{
                     return 0;
                 }
             })
-            .attr('r', 1)
-            .style('stroke', 'black')
+            .attr('r', this.circleRadius * (1 / scale))
             .style('fill', 'red');
     }
 }
