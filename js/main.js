@@ -16,8 +16,13 @@ let promises = [
     d3.csv("data/us-accidents-severity-4-Nov-Dec-2020.csv")
 ];
 
+// TODO: do this properly
+let accidents = [[], []];
+
 Promise.all(promises)
-    .then( function(data){ initMainPage(data) })
+    .then( function(data){
+        accidents = data;//initMainPage(data)
+    })
     .catch( function (err){console.log(err)} );
 
 const testStippling = async (data, width, height, outputScale = 1.5, machBanding = false, stippleRadius = 1.0, fromTo = undefined) => {
@@ -141,6 +146,32 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
     // });
 }
 
+const stippleFoo = async (dataset, width, height, outputScale = 1.5, stippleRadius = 1.0) => {
+    // stipple
+    const {stipples, voronoi} = await stipple(dataset, stippleRadius);
+
+    // draw
+    const outputWidth = width * outputScale;
+    const outputHeight = height * outputScale;
+    const svg = d3.select('#mapDiv')
+        .append('svg')
+        .attr('width', outputWidth)
+        .attr('height', outputHeight);
+
+    stipples.forEach(s => {
+        if (s.density !== 0.0) {
+            svg.append('circle')
+                .attr('cx', s.relativeX * outputWidth)
+                .attr('cy', s.relativeY * outputHeight)
+                .attr('r', stippleRadius * s.density * outputScale)
+                .style('fill', 'black')
+                .on("mouseenter", function (s) {
+                    console.log(s);
+                })
+        }
+    });
+}
+
 // initMainPage
 function initMainPage(dataArray) {
     // test stippling using a canvas gradient
@@ -164,4 +195,35 @@ function initMainPage(dataArray) {
     //myBrushVis = new brushVis('brushDiv', dataArray[1]);
 }
 
+function showDataSetForm() {
+    // todo: don't show other forms anymore
+    switch (document.forms['dataSetForm']['dataset'].value) {
+        case 'accidents': break;
+        case 'gradient':
+            document.getElementById('gradientForm').style.display = 'block';
+            break;
+        default: break;
+    }
+}
 
+function stippleDataSet() {
+    console.log(document.forms['dataSetForm']['dataset'].value)
+    switch (document.forms['dataSetForm']['dataset'].value) {
+        case 'accidents':
+            testStippling(accidents[1], 480, 250).then(_x => console.log('finished stippling'));
+            break;
+        case 'gradient':
+            const fromTo = [
+                document.getElementById('gradientX1').value,
+                document.getElementById('gradientY1').value,
+                document.getElementById('gradientX2').value,
+                document.getElementById('gradientY2').value,
+            ];
+            console.log(fromTo)
+            const gradient = createGradientImage(200, 100, fromTo);
+            stippleFoo(DensityFunction2D.fromImageData2D(gradient), 200, 100).then(_x => console.log('finished stippling'));
+            break;
+    }
+
+    return false; // i.e. do not refresh the page
+}

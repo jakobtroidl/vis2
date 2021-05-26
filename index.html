@@ -23,6 +23,29 @@ and is wrapped around the whole page content, except for the footer in this exam
     <!-- Grid -->
     <div class="w3-row">
 
+        <form name="dataSetForm" onsubmit="return stippleDataSet()">
+            <select name="dataset" id="datasets" onchange="showDataSetForm()">
+                <option value="accidents">Accidents</option>
+                <option value="gradient">Gradient</option>
+                <option value="image">Image</option>
+                <option value="custom">Try your own</option>
+            </select>
+
+            <!-- todo: depending on datasets value display other subforms -->
+            <div id="gradientForm" style="display:none;">
+                <label for="gradientX1">x1:</label>
+                <input type="number" id="gradientX1" value="0"/>
+                <label for="gradientY1">y1:</label>
+                <input type="number" id="gradientY1" value="0"/>
+                <label for="gradientX2">x2:</label>
+                <input type="number" id="gradientX2" value="1"/>
+                <label for="gradientY2">y2:</label>
+                <input type="number" id="gradientY2" value="0"/>
+            </div>
+
+            <input type="submit" value="Stipple!">
+        </form>
+
         <!-- Blog entries -->
         <div class="w3-col l8 s12">
             <!-- Blog entry -->
@@ -146,6 +169,7 @@ and is wrapped around the whole page content, except for the footer in this exam
 <script src="js/data.js"></script>
 <script src="js/card.js"></script>
 <script src="js/stippling.js"></script>
+<script src="js/dataset.js"></script>
 <script src="js/main.js"></script>
 
 </body>
