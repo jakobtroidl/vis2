@@ -201,15 +201,18 @@ function showMachBandingForm() {
 }
 
 function showDataSetForm() {
-    // todo: don't show other forms anymore
+    const dataSetForms = ['imageForm', 'gradientForm'];
+    const selected = document.forms['dataSetForm']['dataset'].value;
+    const selectedForm = `${selected}Form`;
+    dataSetForms.forEach(id => {
+        document.getElementById(id).style.display = (id === selectedForm ? 'block' : 'none');
+    })
+
+    // todo: maybe fill other form fields based on selection
     switch (document.forms['dataSetForm']['dataset'].value) {
         case 'accidents': break;
-        case 'image':
-            document.getElementById('imageForm').style.display = 'block';
-            break;
-        case 'gradient':
-            document.getElementById('gradientForm').style.display = 'block';
-            break;
+        case 'image': break;
+        case 'gradient': break;
         default: break;
     }
 }
