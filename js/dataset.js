@@ -64,11 +64,19 @@ const arrayMax = (arr) => arr.reduce((max, x) => max > x ? max : x, -Infinity);
  * @returns {{densityImage: ImageData, locationToData: any[]}} an object containing the rendered image and the backing 2d array.
  */
 const createImageFromData = (data, width, height, xAttribute, yAttribute, mapLocation = (xy) => xy, scaleByMaxDensity = false) => {
+    const filteredData = data.filter(d => d[xAttribute] && d[yAttribute]).map(d => {
+        d[xAttribute] = parseFloat(d[xAttribute]);
+        d[yAttribute] = parseFloat(d[yAttribute]);
+        return d;
+    });
+    if (!filteredData) {
+        throw new Error(`Data has zero elements with both ${xAttribute} and ${yAttribute} set`);
+    }
     if (!mapLocation) {
-        const xCoords = data.map(d => d[xAttribute]);
-        const yCoords = data.map(d => d[yAttribute]);
-        const scaleX = scaleToRange.bind(null, arrayMin(xCoords), arrayMax(xCoords), 0, width);
-        const scaleY = scaleToRange.bind(null, arrayMin(yCoords), arrayMax(yCoords), 0, width);
+        const xCoords = filteredData.map(d => d[xAttribute]);
+        const yCoords = filteredData.map(d => d[yAttribute]);
+        const scaleX = scaleToRange.bind(null, arrayMin(xCoords), arrayMax(xCoords), 0, width - 1);
+        const scaleY = scaleToRange.bind(null, arrayMin(yCoords), arrayMax(yCoords), 0, height - 1);
         mapLocation = (xy) => [scaleX(xy[0]), scaleY(xy[1])];
     }
 
@@ -78,16 +86,13 @@ const createImageFromData = (data, width, height, xAttribute, yAttribute, mapLoc
         locationToData[i] = [];
     }
 
-    data.forEach(d => {
+    filteredData.forEach(d => {
         const location = mapLocation([d[xAttribute], d[yAttribute]]);
         if (location) {
             const x = Math.floor(location[0]);
             const y = Math.floor(location[1]);
             const i = (y * width) + x;
             density[i] += 1.0;
-            if (!locationToData[i]) {
-                console.log(x, y, i, locationToData.length);
-            }
             locationToData[i].push(d);
         }
     });

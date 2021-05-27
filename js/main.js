@@ -201,18 +201,19 @@ function showMachBandingForm() {
 }
 
 function showDataSetForm() {
-    const dataSetForms = ['imageForm', 'gradientForm'];
+    const dataSetForms = ['imageForm', 'gradientForm', 'customForm'];
     const selected = document.forms['dataSetForm']['dataset'].value;
     const selectedForm = `${selected}Form`;
     dataSetForms.forEach(id => {
         document.getElementById(id).style.display = (id === selectedForm ? 'block' : 'none');
     })
 
-    // todo: maybe fill other form fields based on selection
+    // todo: maybe fill other form fields based on selection (e.g. from/to for gradient)
     switch (document.forms['dataSetForm']['dataset'].value) {
         case 'accidents': break;
         case 'image': break;
         case 'gradient': break;
+        case 'custom': break;
         default: break;
     }
 }
@@ -254,16 +255,33 @@ function visualizeCurrentStipples() {
     }
 }
 
+const readFile = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => resolve(reader.result);
+        console.log(file);
+        reader.readAsDataURL(file);
+    });
+}
+const loadImage = async (src) => {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onerror = reject;
+        image.onload = () => resolve(image);
+        image.src = src;
+    });
+}
+
 function stippleDataSet() {
-    const width = document.getElementById('stippleWidth').value;
-    const height = document.getElementById('stippleHeight').value;
-    const stippleRadius = document.getElementById('stippleRadius').value;
+    const width = parseInt(document.getElementById('stippleWidth').value);
+    const height = parseInt(document.getElementById('stippleHeight').value);
+    const stippleRadius = parseFloat(document.getElementById('stippleRadius').value);
     const useMachbanding = document.getElementById('machbanding').checked;
-    const machbandingQuantization = document.getElementById('machbandingQuantization').value;
-    const machbandingWeight = document.getElementById('machbandingWeight').value;
-    const machbandingBlurRadius = document.getElementById('machbandingBlurRadius').value;
+    const machbandingQuantization = parseInt(document.getElementById('machbandingQuantization').value);
+    const machbandingWeight = parseFloat(document.getElementById('machbandingWeight').value);
+    const machbandingBlurRadius = parseFloat(document.getElementById('machbandingBlurRadius').value);
     const dataset = document.forms['dataSetForm']['dataset'].value;
-    const imageFile = document.getElementById('imageToStipple').files[0];
 
     // todo: calculate height from width for geoAlbersUsa
     let dataSourceFunc;
@@ -290,37 +308,41 @@ function stippleDataSet() {
             };
             break;
         case 'image':
+            const imageFile = document.getElementById('imageToStipple').files[0];
             dataSourceFunc = async () => {
-                const readFile = (file) => {
-                    return new Promise((resolve, reject) => {
-                       const reader = new FileReader();
-                       reader.onerror = reject;
-                       reader.onload = () => resolve(reader.result);
-                       console.log(file);
-                       reader.readAsDataURL(file);
-                    });
-                }
-                const loadImage = async (src) => {
-                    return new Promise((resolve, reject) => {
-                        const image = new Image();
-                        image.onerror = reject;
-                        image.onload = () => resolve(image);
-                        image.src = src;
-                    });
-                }
-
                 const image = await loadImage(await readFile(imageFile));
 
+                // get image data in target resolution
                 const ratio = width / image.width;
                 const scaledHeight = image.height * ratio;
                 const ctx = new OffscreenCanvas(width, scaledHeight).getContext('2d');
-
                 ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, scaledHeight);
+
                 return {
                     densityImage: ctx.getImageData(0, 0, width, scaledHeight),
                     mapToLocation: ctx.getImageData(0, 0, width, scaledHeight)
                 };
             };
+            break;
+        case 'custom':
+            const dataSource = document.getElementById('customDataURL').value;
+            const projection = document.getElementById('customProjection').value;
+            const xAttribute = document.getElementById('xAttribute').value;
+            const yAttribute = document.getElementById('yAttribute').value;
+            dataSourceFunc = async () => {
+                let data;
+                if (dataSource.toLowerCase().endsWith('.csv')) {
+                    data = await d3.csv(dataSource);
+                } else if (dataSource.toLowerCase().endsWith('.json')) {
+                    data = await d3.json(dataSource);
+                }
+                if (projection === 'none') {
+                    return createImageFromData(data, width, height, xAttribute, yAttribute, null, true);
+                } else {
+                    return createGeographicDataImage(data, width, height, projection, xAttribute, yAttribute, false);
+                }
+            };
+            break;
     }
 
     (async () => {
