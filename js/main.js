@@ -146,32 +146,6 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
     // });
 }
 
-const stippleFoo = async (dataset, width, height, outputScale = 1.5, stippleRadius = 1.0) => {
-    // stipple
-    const {stipples, voronoi} = await stipple(dataset, stippleRadius);
-
-    // draw
-    const outputWidth = width * outputScale;
-    const outputHeight = height * outputScale;
-    const svg = d3.select('#mapDiv')
-        .append('svg')
-        .attr('width', outputWidth)
-        .attr('height', outputHeight);
-
-    stipples.forEach(s => {
-        if (s.density !== 0.0) {
-            svg.append('circle')
-                .attr('cx', s.relativeX * outputWidth)
-                .attr('cy', s.relativeY * outputHeight)
-                .attr('r', stippleRadius * s.density * outputScale)
-                .style('fill', 'black')
-                .on("mouseenter", function (s) {
-                    console.log(s);
-                })
-        }
-    });
-}
-
 // initMainPage
 function initMainPage(dataArray) {
     // test stippling using a canvas gradient
@@ -229,6 +203,7 @@ function visualizeCurrentStipples() {
         const outputScale = document.getElementById('visScale').value;
         const scaleByDensity = document.getElementById('scaleByDensity').checked;
         const colorMap = document.getElementById('stippleColorMap').value;
+        const interpolateColor = document.getElementById('interpolateColorMap').checked;
         // todo: add color map stuff
 
         const outputWidth = currentStippledDataSet.width * outputScale;
@@ -244,7 +219,7 @@ function visualizeCurrentStipples() {
                     .attr('cx', s.relativeX * outputWidth)
                     .attr('cy', s.relativeY * outputHeight)
                     .attr('r', currentStippledDataSet.stippleRadius * outputScale * (scaleByDensity ? s.density : 1))
-                    .style('fill', 'black')
+                    .style('fill', (colorMap === 'none' ? 'black' : getColorString(s.density, colorMap, interpolateColor)))
                     .on("mouseenter", function (s) {
                         console.log(s);
                     })

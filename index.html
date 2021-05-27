@@ -101,7 +101,53 @@ and is wrapped around the whole page content, except for the footer in this exam
         <label for="stippleColorMap">Choose color map:</label>
         <select name="stippleColorMap" id="stippleColorMap" onchange="visualizeCurrentStipples()">
             <option value="none">none</option>
+            <option value="jet">Jet</option>
+            <option value=hsv>HSV</option>
+            <option value=hot>Hot</option>
+            <option value=spring>Spring</option>
+            <option value=summer>Summer</option>
+            <option value=autumn>Autumn</option>
+            <option value=winter>Winter</option>
+            <option value=bone>Bone</option>
+            <option value=copper>Copper</option>
+            <option value=greys>Greys</option>
+            <option value=yignbu>YIGnBu</option>
+            <option value=greens>Greens</option>
+            <option value=yiorrd>YIOrRd</option>
+            <option value=bluered>Bluered</option>
+            <option value=rdbu>RdBu</option>
+            <option value=picnic>Picnic</option>
+            <option value=rainbow>Rainbow</option>
+            <option value=portland>Portland</option>
+            <option value=blackbody>Blackbody</option>
+            <option value=earth>Earth</option>
+            <option value=electric>Electric</option>
+            <option value=alpha>Alpha</option>
+            <option value=viridis>Viridis</option>
+            <option value=inferno>Inferno</option>
+            <option value=magma>Magma</option>
+            <option value=plasma>Plasma</option>
+            <option value=warm>Warm</option>
+            <option value=cool>Cool</option>
+            <option value=rainbow-soft>Rainbow-soft</option>
+            <option value=bathymetry>Bathymetry</option>
+            <option value=cdom>cdom</option>
+            <option value=chlorophyll>Chlorophyll</option>
+            <option value=density>Density</option>
+            <option value=freesurface-blue>Freesurface - blue</option>
+            <option value=freesurface-red>Freesurface - red</option>
+            <option value=oxygen>Oxygen</option>
+            <option value=par>Par</option>
+            <option value=phase>Phase</option>
+            <option value=salinity>Salinity</option>
+            <option value=temperature>Temperature</option>
+            <option value=turbidity>Turbidity</option>
+            <option value=velocity-blue>Velocity - blue</option>
+            <option value=velocity-green>Velocity - green</option>
+            <option value=cubehelix>Cubehelix</option>
         </select>
+        <label for="interpolateColorMap">Interpolate color map:</label>
+        <input type="checkbox" id="interpolateColorMap" onchange="visualizeCurrentStipples()"/>
 
         <!-- Blog entries -->
         <div class="w3-col l8 s12">
@@ -218,6 +264,7 @@ and is wrapped around the whole page content, except for the footer in this exam
 <script type="text/javascript" src="https://d3js.org/topojson.v3.min.js"></script>
 <!-- unpgk has many (all?) npm libraries - sounds cool -->
 <script type="text/javascript" src="https://unpkg.com/d3-delaunay@5.3.0/dist/d3-delaunay.js"></script>
+<script type="text/javascript" src="js/colormap.js"></script>
 
 <!-- OWN JS -->
 <script src="js/mapVis.js"></script>
