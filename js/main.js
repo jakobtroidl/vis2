@@ -204,6 +204,9 @@ function showDataSetForm() {
     // todo: don't show other forms anymore
     switch (document.forms['dataSetForm']['dataset'].value) {
         case 'accidents': break;
+        case 'image':
+            document.getElementById('imageForm').style.display = 'block';
+            break;
         case 'gradient':
             document.getElementById('gradientForm').style.display = 'block';
             break;
@@ -222,8 +225,7 @@ function visualizeCurrentStipples() {
         const outputScale = document.getElementById('visScale').value;
         const scaleByDensity = document.getElementById('scaleByDensity').checked;
         const colorMap = document.getElementById('stippleColorMap').value;
-        console.log(colorMap);
-        console.log(typeof scaleByDensity);
+        // todo: add color map stuff
 
         const outputWidth = currentStippledDataSet.width * outputScale;
         const outputHeight = currentStippledDataSet.height * outputScale;
@@ -244,6 +246,8 @@ function visualizeCurrentStipples() {
                     })
             }
         });
+
+        // todo: add mouse hovering stuff
     }
 }
 
@@ -256,7 +260,9 @@ function stippleDataSet() {
     const machbandingWeight = document.getElementById('machbandingWeight').value;
     const machbandingBlurRadius = document.getElementById('machbandingBlurRadius').value;
     const dataset = document.forms['dataSetForm']['dataset'].value;
+    const imageFile = document.getElementById('imageToStipple').files[0];
 
+    // todo: calculate height from width for geoAlbersUsa
     let dataSourceFunc;
     switch (dataset) {
         case 'accidents':
@@ -280,6 +286,38 @@ function stippleDataSet() {
                 };
             };
             break;
+        case 'image':
+            dataSourceFunc = async () => {
+                const readFile = (file) => {
+                    return new Promise((resolve, reject) => {
+                       const reader = new FileReader();
+                       reader.onerror = reject;
+                       reader.onload = () => resolve(reader.result);
+                       console.log(file);
+                       reader.readAsDataURL(file);
+                    });
+                }
+                const loadImage = async (src) => {
+                    return new Promise((resolve, reject) => {
+                        const image = new Image();
+                        image.onerror = reject;
+                        image.onload = () => resolve(image);
+                        image.src = src;
+                    });
+                }
+
+                const image = await loadImage(await readFile(imageFile));
+
+                const ratio = width / image.width;
+                const scaledHeight = image.height * ratio;
+                const ctx = new OffscreenCanvas(width, scaledHeight).getContext('2d');
+
+                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, scaledHeight);
+                return {
+                    densityImage: ctx.getImageData(0, 0, width, scaledHeight),
+                    mapToLocation: ctx.getImageData(0, 0, width, scaledHeight)
+                };
+            };
     }
 
     (async () => {
@@ -294,8 +332,8 @@ function stippleDataSet() {
         const {stipples, voronoi} = await stipple(densityFunction, stippleRadius);
 
         return {
-            width,
-            height,
+            width: densityFunction.width,
+            height: densityFunction.height,
             stippleRadius,
             datasetType: dataset,
             densityImage,

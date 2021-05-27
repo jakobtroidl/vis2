@@ -64,7 +64,7 @@ const arrayMax = (arr) => arr.reduce((max, x) => max > x ? max : x, -Infinity);
  * @returns {{densityImage: ImageData, locationToData: any[]}} an object containing the rendered image and the backing 2d array.
  */
 const createImageFromData = (data, width, height, xAttribute, yAttribute, mapLocation = (xy) => xy, scaleByMaxDensity = false) => {
-    if (!mapLocation()) {
+    if (!mapLocation) {
         const xCoords = data.map(d => d[xAttribute]);
         const yCoords = data.map(d => d[yAttribute]);
         const scaleX = scaleToRange.bind(null, arrayMin(xCoords), arrayMax(xCoords), 0, width);
@@ -85,6 +85,9 @@ const createImageFromData = (data, width, height, xAttribute, yAttribute, mapLoc
             const y = Math.floor(location[1]);
             const i = (y * width) + x;
             density[i] += 1.0;
+            if (!locationToData[i]) {
+                console.log(x, y, i, locationToData.length);
+            }
             locationToData[i].push(d);
         }
     });
@@ -111,7 +114,7 @@ const createProjection = (width, height, projectionMethod = 'geoAlbersUsa') => {
         default:
             return d3[projectionMethod]()
                 .translate([width / 2, height / 2]) // translate to center
-                .scale(d3[projectionMethod].scale() * (width / height)); // rescale to target resolution
+                .scale(d3[projectionMethod]().scale() * (height / 500)); // rescale to target resolution (default uses a height of 500)
     }
 };
 
