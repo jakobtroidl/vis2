@@ -3,19 +3,17 @@ html {
 }
 
 .tab-bar {
-    width:400px;
+    width:100%;
 }
 .tab{
     margin-bottom: 20px;
 }
 
 .login-box {
-    width: 400px;
+    width: 100%;
     padding: 10px;
     background: rgb(255, 255, 255);
     box-sizing: border-box;
-    box-shadow: 0 10px 20px rgba(0,0,0,.3);
-    border-radius: 2px;
 }
 
 .login-box h2 {
@@ -51,11 +49,10 @@ html {
 
 input[type=submit] {
     background-color: #4CAF50;
-    width: 400px;
+    width: 100%;
     border: none;
     color: white;
     padding: 16px 32px;
-    margin: -10px;
     text-decoration: none;
     cursor: pointer;
 }
