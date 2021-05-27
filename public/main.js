@@ -151,6 +151,15 @@ function showMachBandingForm() {
     document.getElementById('machbandingForm').style.display = (useMachbanding ? 'block' : 'none');
 }
 
+function openTab(name) {
+    let i;
+    let x = document.getElementsByClassName("tab");
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    document.getElementById(name).style.display = "block";
+}
+
 function showDataSetForm() {
     const dataSetForms = ['imageForm', 'gradientForm', 'customForm'];
     const selected = document.forms['dataSetForm']['dataset'].value;
