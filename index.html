@@ -74,14 +74,17 @@ and is wrapped around the whole page content, except for the footer in this exam
                 <input type="text" id="customDataURL" value="data/us-accidents-severity-4-Nov-Dec-2020.csv"/>
 
                 <label for="xAttribute">X / Longitude - Attribute:</label>
-                <input type="text" id="xAttribute" value="x"/>
+                <input type="text" id="xAttribute" value="LON"/>
                 <label for="yAttribute">Y / Latitude - Attribute:</label>
-                <input type="text" id="yAttribute" value="y"/>
+                <input type="text" id="yAttribute" value="LAT"/>
+
+                <label for="useGrayscale">Dense dataset:</label>
+                <input type="checkbox" id="useGrayscale"/>
 
                 <label for="customProjection">Projection method:</label>
                 <select name="geoprojection" id="customProjection">
-                    <option value="none">none</option>
                     <option value="geoAlbersUsa">Albers - USA</option>
+                    <option value="none">none</option>
                 </select>
             </div>
 

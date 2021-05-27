@@ -146,29 +146,6 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
     // });
 }
 
-// initMainPage
-function initMainPage(dataArray) {
-    // test stippling using a canvas gradient
-    testStippling(dataArray[1], 480, 250).then(_x => console.log('finished stippling'));
-
-    /*
-     * TODO: Accumulate densities of data sets in images (e.g. in an CanvasRenderingContext2D from an OffscreenCanvas)
-     *       and use these images to create DensityFunction2D instances.
-     *       While accumulating the densities, we should also create a backing 2d-array of arrays containing our actual
-     *       data (e.g. descriptions of car accidents).
-     *       This can later be used to show all data points represented by a stipple to the user on hover events.
-     */
-
-    // init map
-    //myMapVis = new mapVis('mapDiv', dataArray[0], dataArray[1]);
-
-    // init scatter
-    //myScatterVis = new scatterVis('scatterDiv', dataArray[1]);
-
-    // init brush
-    //myBrushVis = new brushVis('brushDiv', dataArray[1]);
-}
-
 function showMachBandingForm() {
     const useMachbanding = document.getElementById('machbanding').checked;
     document.getElementById('machbandingForm').style.display = (useMachbanding ? 'block' : 'none');
@@ -199,12 +176,10 @@ function visualizeCurrentStipples() {
     d3.select(visDiv).select('svg').remove();
 
     if (currentStippledDataSet) {
-        // todo: gather visualization parameters
         const outputScale = document.getElementById('visScale').value;
         const scaleByDensity = document.getElementById('scaleByDensity').checked;
         const colorMap = document.getElementById('stippleColorMap').value;
         const interpolateColor = document.getElementById('interpolateColorMap').checked;
-        // todo: add color map stuff
 
         const outputWidth = currentStippledDataSet.width * outputScale;
         const outputHeight = currentStippledDataSet.height * outputScale;
@@ -249,6 +224,7 @@ const loadImage = async (src) => {
 }
 
 function stippleDataSet() {
+    // todo: height depends on width in most cases: only set height for gradient and custom datasets
     const width = parseInt(document.getElementById('stippleWidth').value);
     const height = parseInt(document.getElementById('stippleHeight').value);
     const stippleRadius = parseFloat(document.getElementById('stippleRadius').value);
@@ -258,6 +234,8 @@ function stippleDataSet() {
     const machbandingBlurRadius = parseFloat(document.getElementById('machbandingBlurRadius').value);
     const dataset = document.forms['dataSetForm']['dataset'].value;
 
+    // todo: add prepared heightmaps
+    // todo: add prepared weather data
     // todo: calculate height from width for geoAlbersUsa
     let dataSourceFunc;
     switch (dataset) {
@@ -304,6 +282,7 @@ function stippleDataSet() {
             const projection = document.getElementById('customProjection').value;
             const xAttribute = document.getElementById('xAttribute').value;
             const yAttribute = document.getElementById('yAttribute').value;
+            const scaleByMaxDensity = document.getElementById('useGrayscale').checked;
             dataSourceFunc = async () => {
                 let data;
                 if (dataSource.toLowerCase().endsWith('.csv')) {
@@ -312,9 +291,9 @@ function stippleDataSet() {
                     data = await d3.json(dataSource);
                 }
                 if (projection === 'none') {
-                    return createImageFromData(data, width, height, xAttribute, yAttribute, null, true);
+                    return createImageFromData(data, width, height, xAttribute, yAttribute, null, scaleByMaxDensity);
                 } else {
-                    return createGeographicDataImage(data, width, height, projection, xAttribute, yAttribute, false);
+                    return createGeographicDataImage(data, width, height, projection, xAttribute, yAttribute, scaleByMaxDensity);
                 }
             };
             break;
