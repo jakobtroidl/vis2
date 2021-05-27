@@ -241,7 +241,7 @@ function stippleDataSet() {
     switch (dataset) {
         case 'accidents':
             dataSourceFunc = async () => {
-                const data = await d3.csv("data/us-accidents-severity-4-Nov-Dec-2020.csv");
+                const data = await d3.csv("us-accidents-severity-4-Nov-Dec-2020.csv");
                 return createGeographicDataImage(data, width, height);
             };
             break;
