@@ -23,8 +23,33 @@ and is wrapped around the whole page content, except for the footer in this exam
     <!-- Grid -->
     <div class="w3-row">
 
+        <!-- set all parameters to stipple a dataset -->
         <form name="dataSetForm" onsubmit="return stippleDataSet()">
-            <select name="dataset" id="datasets" onchange="showDataSetForm()">
+            <!-- dimensions of density function that's going to be stippled -->
+            <label for="stippleWidth">Width:</label>
+            <input type="number" id="stippleWidth" value="480"/>
+            <label for="stippleHeight">Height:</label>
+            <input type="number" id="stippleHeight" value="250"/>
+
+            <!-- size of stipple in target density function's dimensions -->
+            <label for="stippleRadius">Stipple radius:</label>
+            <input type="number" id="stippleRadius" value="1.0"/>
+
+            <label for="machbanding">Use Mach-banding</label>
+            <input type="checkbox" id="machbanding" onchange="showMachBandingForm()"/>
+            <div id="machbandingForm" style="display:none;">
+                <!-- todo: maybe allow passing in arrays (but that's tedious) -->
+                <label for="machbandingQuantization">Quantization steps:</label>
+                <input type="number" id="machbandingQuantization" value="5"/>
+                <label for="machbandingWeight">Weight:</label>
+                <input type="number" id="machbandingWeight" value="0.5"/>
+                <label for="machbandingBlurRadius">Blur radius:</label>
+                <input type="number" id="machbandingBlurRadius" value="4"/>
+            </div>
+
+            <!-- dataset selection -->
+            <label for="dataset">Select data set:</label>
+            <select name="dataset" id="dataset" onchange="showDataSetForm()">
                 <option value="accidents">Accidents</option>
                 <option value="gradient">Gradient</option>
                 <option value="image">Image</option>
@@ -45,6 +70,16 @@ and is wrapped around the whole page content, except for the footer in this exam
 
             <input type="submit" value="Stipple!">
         </form>
+
+        <!-- set stipple parameters -->
+        <label for="visScale">Scale:</label>
+        <input type="number" id="visScale" value="1" onchange="visualizeCurrentStipples()"/>
+        <label for="scaleByDensity">Scale stipples by density</label>
+        <input type="checkbox" id="scaleByDensity" onchange="visualizeCurrentStipples()"/>
+        <label for="stippleColorMap">Choose color map:</label>
+        <select name="stippleColorMap" id="stippleColorMap" onchange="visualizeCurrentStipples()">
+            <option value="none">none</option>
+        </select>
 
         <!-- Blog entries -->
         <div class="w3-col l8 s12">

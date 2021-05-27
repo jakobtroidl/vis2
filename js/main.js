@@ -195,6 +195,11 @@ function initMainPage(dataArray) {
     //myBrushVis = new brushVis('brushDiv', dataArray[1]);
 }
 
+function showMachBandingForm() {
+    const useMachbanding = document.getElementById('machbanding').checked;
+    document.getElementById('machbandingForm').style.display = (useMachbanding ? 'block' : 'none');
+}
+
 function showDataSetForm() {
     // todo: don't show other forms anymore
     switch (document.forms['dataSetForm']['dataset'].value) {
@@ -206,11 +211,59 @@ function showDataSetForm() {
     }
 }
 
+let currentStippledDataSet = null;
+function visualizeCurrentStipples() {
+    // remove existing visualization
+    const visDiv = '#mapDiv';
+    d3.select(visDiv).select('svg').remove();
+
+    if (currentStippledDataSet) {
+        // todo: gather visualization parameters
+        const outputScale = document.getElementById('visScale').value;
+        const scaleByDensity = document.getElementById('scaleByDensity').checked;
+        const colorMap = document.getElementById('stippleColorMap').value;
+        console.log(colorMap);
+        console.log(typeof scaleByDensity);
+
+        const outputWidth = currentStippledDataSet.width * outputScale;
+        const outputHeight = currentStippledDataSet.height * outputScale;
+        const svg = d3.select(visDiv)
+            .append('svg')
+            .attr('width', outputWidth)
+            .attr('height', outputHeight);
+
+        currentStippledDataSet.stipples.forEach(s => {
+            if (s.density !== 0.0) {
+                svg.append('circle')
+                    .attr('cx', s.relativeX * outputWidth)
+                    .attr('cy', s.relativeY * outputHeight)
+                    .attr('r', currentStippledDataSet.stippleRadius * outputScale * (scaleByDensity ? s.density : 1))
+                    .style('fill', 'black')
+                    .on("mouseenter", function (s) {
+                        console.log(s);
+                    })
+            }
+        });
+    }
+}
+
 function stippleDataSet() {
-    console.log(document.forms['dataSetForm']['dataset'].value)
-    switch (document.forms['dataSetForm']['dataset'].value) {
+    const width = document.getElementById('stippleWidth').value;
+    const height = document.getElementById('stippleHeight').value;
+    const stippleRadius = document.getElementById('stippleRadius').value;
+    const useMachbanding = document.getElementById('machbanding').checked;
+    const machbandingQuantization = document.getElementById('machbandingQuantization').value;
+    const machbandingWeight = document.getElementById('machbandingWeight').value;
+    const machbandingBlurRadius = document.getElementById('machbandingBlurRadius').value;
+    const dataset = document.forms['dataSetForm']['dataset'].value;
+
+    let dataSourceFunc;
+    switch (dataset) {
         case 'accidents':
-            testStippling(accidents[1], 480, 250).then(_x => console.log('finished stippling'));
+            dataSourceFunc = async () => {
+                const data = await d3.csv("data/us-accidents-severity-4-Nov-Dec-2020.csv");
+                return createGeographicDataImage(data, width, height);
+            };
             break;
         case 'gradient':
             const fromTo = [
@@ -219,11 +272,41 @@ function stippleDataSet() {
                 document.getElementById('gradientX2').value,
                 document.getElementById('gradientY2').value,
             ];
-            console.log(fromTo)
-            const gradient = createGradientImage(200, 100, fromTo);
-            stippleFoo(DensityFunction2D.fromImageData2D(gradient), 200, 100).then(_x => console.log('finished stippling'));
+            dataSourceFunc = async () => {
+                const gradient = createGradientImage(width, height, fromTo);
+                return {
+                    densityImage: gradient,
+                    locationToData: gradient
+                };
+            };
             break;
     }
+
+    (async () => {
+        const {densityImage, locationToData} = await dataSourceFunc();
+        let densityFunction;
+        if (useMachbanding) {
+            densityFunction = DensityFunction2D.machBandingFromImageData2D(
+                densityImage, machbandingQuantization, machbandingWeight, machbandingBlurRadius, rgbaToLuminance, null);
+        } else {
+            densityFunction = DensityFunction2D.fromImageData2D(densityImage);
+        }
+        const {stipples, voronoi} = await stipple(densityFunction, stippleRadius);
+
+        return {
+            width,
+            height,
+            stippleRadius,
+            datasetType: dataset,
+            densityImage,
+            locationToData,
+            stipples,
+            voronoi
+        };
+    })().then(stippledDataset => {
+        currentStippledDataSet = stippledDataset;
+        visualizeCurrentStipples();
+    });
 
     return false; // i.e. do not refresh the page
 }
