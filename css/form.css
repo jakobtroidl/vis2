@@ -9,6 +9,11 @@ html {
     margin-bottom: 20px;
 }
 
+.box {
+    display: flex;
+    align-items: stretch;
+}
+
 .login-box {
     width: 100%;
     padding: 10px;

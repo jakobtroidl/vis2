@@ -24,16 +24,16 @@ and is wrapped around the whole page content, except for the footer in this exam
     </header>
 
     <!-- Grid -->
-    <div class="w3-row">
+    <div class="w3-row box">
         <div class="w3-col l4">
             <div class="w3-row">
                 <div class="w3-card w3-margin">
 
-                        <div class="tab-bar w3-black">
-                            <button class="w3-bar-item w3-button" onclick="openTab('Data')">Data</button>
-                            <button class="w3-bar-item w3-button" onclick="openTab('Params')">Params</button>
-                            <button class="w3-bar-item w3-button" onclick="openTab('Contours')">Contours</button>
-                            <button class="w3-bar-item w3-button" onclick="openTab('Style')">Style</button>
+                        <div class="w3-container w3-black">
+                            <button class="w3-button" onclick="openTab('Data')">Data</button>
+                            <button class="w3-button" onclick="openTab('Params')">Params</button>
+                            <button class="w3-button" onclick="openTab('Contours')">Contours</button>
+                            <button class="w3-button" onclick="openTab('Style')">Style</button>
                         </div>
 
                         <div class="login-box">
@@ -166,7 +166,7 @@ and is wrapped around the whole page content, except for the footer in this exam
                                     <!-- set stipple parameters -->
                                     <div class="user-box">
                                         <label for="visScale">Scale:</label>
-                                        <input type="number" id="visScale" value="1" step="0.01" onchange="visualizeCurrentStipples()"/>
+                                        <input type="number" id="visScale" value="1.85" step="0.01" onchange="visualizeCurrentStipples()"/>
                                     </div>
                                     <div class="user-box">
                                         <label for="scaleByDensity">Scale stipples by density</label>
@@ -259,17 +259,16 @@ and is wrapped around the whole page content, except for the footer in this exam
                 </div>
             </div>
         </div>
-
-
         <!-- Blog entries -->
         <div class="w3-col l8 s12">
             <!-- Blog entry -->
-            <div class="w3-card-4 w3-margin w3-white">
+            <div class="w3-card w3-margin w3-white" style="height: 42vh">
                 <div class="w3-container">
                     <h3><b>Visualization</b></h3>
                 </div>
 
-                <div id="mapDiv" class="w3-container">
+
+                <div id="mapDiv" class="w3-container" >
                 </div>
             </div>
         </div>
@@ -283,9 +282,8 @@ and is wrapped around the whole page content, except for the footer in this exam
 
 <!-- Footer -->
 <footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
-    <!--    <button class="w3-button w3-black w3-disabled w3-padding-large w3-margin-bottom">Previous</button>-->
-    <!--    <button class="w3-button w3-black w3-padding-large w3-margin-bottom">Next »</button>-->
-    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+    <p>by Lukas Herzberger & Jakob Troidl</p>
+    <p>as part of the course Visualization 2 at Vienna University of Technology</p>
 </footer>
 
 <!-- D3 -->
@@ -297,8 +295,6 @@ and is wrapped around the whole page content, except for the footer in this exam
 
 <!-- OWN JS -->
 <script src="mapVis.js"></script>
-<!--	<script src="js/scatterVis.js"></script>-->
-<!--	<script src="js/brushVis.js"></script>-->
 <script src="data.js"></script>
 <script src="card.js"></script>
 <script src="stippling.js"></script>
