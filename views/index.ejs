@@ -4,9 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="form.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <style>
-    body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    body, h1, h2, h3, h4, h5 {
+        font-family: "Raleway", sans-serif
+    }
 </style>
 <body class="w3-light-grey">
 
@@ -21,245 +24,266 @@ and is wrapped around the whole page content, except for the footer in this exam
     </header>
 
     <!-- Grid -->
-    <div class="w3-row">
+    <div class="w3-row box">
+        <div class="w3-col l4">
+            <div class="w3-row">
+                <div class="w3-card w3-margin">
 
-        <!-- todo: style / clean up -->
-        <!-- set all parameters to stipple a dataset -->
-        <form name="dataSetForm" onsubmit="return stippleDataSet()">
-            <!-- dimensions of density function that's going to be stippled -->
-            <label for="stippleWidth">Width:</label>
-            <input type="number" id="stippleWidth" value="480"/>
-            <label for="stippleHeight">Height:</label>
-            <input type="number" id="stippleHeight" value="250"/>
+                        <div class="w3-container w3-black">
+                            <button class="w3-button" onclick="openTab('Data')">Data</button>
+                            <button class="w3-button" onclick="openTab('Params')">Params</button>
+                            <button class="w3-button" onclick="openTab('Contours')">Contours</button>
+                            <button class="w3-button" onclick="openTab('Style')">Style</button>
+                        </div>
 
-            <!-- size of stipple in target density function's dimensions -->
-            <label for="stippleRadius">Stipple radius:</label>
-            <input type="number" id="stippleRadius" value="1.0" step="0.01"/>
+                        <div class="login-box">
+                            <!-- set all parameters to stipple a dataset -->
+                            <form name="dataSetForm" onsubmit="return stippleDataSet()">
+                                <!-- dimensions of density function that's going to be stippled -->
+                                <div id="Data" class="tab" style="display: block">
 
-            <label for="machbanding">Use Mach-banding</label>
-            <input type="checkbox" id="machbanding" onchange="showMachBandingForm()"/>
-            <div id="machbandingForm" style="display:none;">
-                <!-- todo: maybe allow passing in arrays (but that's tedious) -->
-                <label for="machbandingQuantization">Quantization steps:</label>
-                <input type="number" id="machbandingQuantization" value="5"/>
-                <label for="machbandingWeight">Weight:</label>
-                <input type="number" id="machbandingWeight" value="1.0" step="0.01"/>
-                <label for="machbandingBlurRadius">Blur radius:</label>
-                <input type="number" id="machbandingBlurRadius" value="1.0" step="0.01"/>
+                                    <!-- dataset selection -->
+                                    <div>
+                                        <label for="dataset">Select data set:</label>
+                                    </div>
+                                    <div class="user-box">
+                                        <select name="dataset" id="dataset"  onchange="showDataSetForm()">
+                                            <option value="accidents">Accidents</option>
+                                            <option value="gradient">Gradient</option>
+                                            <option value="image">Image</option>
+                                            <option value="custom">Try your own</option>
+                                        </select>
+                                    </div>
+
+
+
+                                    <!-- todo: depending on datasets value display other subforms -->
+                                    <div id="gradientForm" style="display:none;">
+                                        <div class="user-box">
+                                            <label for="gradientX1">x1:</label>
+                                            <input type="number" id="gradientX1" value="0" step="0.01"/>
+                                        </div>
+                                        <div class="user-box">
+                                            <label for="gradientY1">y1:</label>
+                                            <input type="number" id="gradientY1" value="0" step="0.01"/>
+                                        </div>
+                                        <div class="user-box">
+                                            <label for="gradientX2">x2:</label>
+                                            <input type="number" id="gradientX2" value="1" step="0.01"/>
+                                        </div>
+                                        <div class="user-box">
+                                            <label for="gradientY2">y2:</label>
+                                            <input type="number" id="gradientY2" value="0" step="0.01"/>
+                                        </div>
+
+                                    </div>
+
+                                    <div id="customForm" style="display:none">
+                                        <div class="user-box">
+                                            <label for="customDataURL">Data URL (*.json or *.csv):</label>
+                                            <input type="text" id="customDataURL" value="us-accidents-severity-4-Nov-Dec-2020.csv"/>
+                                        </div>
+
+                                        <div class="user-box">
+                                            <label for="xAttribute">X / Longitude - Attribute:</label>
+                                            <input type="text" id="xAttribute" value="LON"/>
+                                        </div>
+
+                                        <div class="user-box">
+                                            <label for="yAttribute">Y / Latitude - Attribute:</label>
+                                            <input type="text" id="yAttribute" value="LAT"/>
+                                        </div>
+
+                                        <div class="user-box">
+                                            <label for="useGrayscale">Dense dataset:</label>
+                                        </div>
+                                        <div>
+                                            <input type="checkbox" id="useGrayscale"/>
+                                        </div>
+
+
+                                        <label for="customProjection">Projection method:</label>
+                                        <select name="geoprojection" id="customProjection">
+                                            <option value="geoAlbersUsa">Albers - USA</option>
+                                            <option value="none">none</option>
+                                        </select>
+                                    </div>
+
+                                    <div id="imageForm" style="display:none">
+                                        <label for="imageToStipple">Image source:</label>
+                                        <input type="file" id="imageToStipple" accept="image/*"/>
+                                    </div>
+                                </div>
+
+                                <div id="Params" class="tab" style="display: none">
+                                    <div class="user-box">
+                                        <label for="stippleWidth">Width:</label>
+                                        <input type="number" id="stippleWidth" value="480"/>
+                                    </div>
+
+
+                                    <div class="user-box">
+                                        <label for="stippleHeight">Height:</label>
+                                        <input type="number" id="stippleHeight" value="250"/>
+                                    </div>
+
+
+                                    <div class="user-box">
+                                        <!-- size of stipple in target density function's dimensions -->
+                                        <label for="stippleRadius">Stipple radius:</label>
+                                        <input type="number" id="stippleRadius" value="1.0" step="0.01"/>
+                                    </div>
+                                </div>
+
+                                <div id="Contours" class="tab" style="display: none">
+                                    <div class="user-box">
+                                        <label for="machbanding">Use Mach-banding</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="machbanding" onchange="showMachBandingForm()"/>
+                                    </div>
+
+
+                                    <div id="machbandingForm" style="display:none;">
+                                        <!-- todo: maybe allow passing in arrays (but that's tedious) -->
+                                        <div class="user-box">
+                                            <label for="machbandingQuantization">Quantization steps:</label>
+                                            <input type="number" id="machbandingQuantization" value="5"/>
+                                        </div>
+                                        <div class="user-box">
+                                            <label for="machbandingWeight">Weight:</label>
+                                            <input type="number" id="machbandingWeight" value="1.0" step="0.01"/>
+                                        </div>
+                                        <div class="user-box">
+                                            <label for="machbandingBlurRadius">Blur radius:</label>
+                                            <input type="number" id="machbandingBlurRadius" value="1.0" step="0.01"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div id="Style" class="tab" style="display: none">
+                                    <!-- set stipple parameters -->
+                                    <div class="user-box">
+                                        <label for="visScale">Scale:</label>
+                                        <input type="number" id="visScale" value="1.85" step="0.01" onchange="visualizeCurrentStipples()"/>
+                                    </div>
+                                    <div class="user-box">
+                                        <label for="scaleByDensity">Scale stipples by density</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="scaleByDensity" onchange="visualizeCurrentStipples()"/>
+                                    </div>
+
+                                    <div class="user-box">
+                                        <label for="stippleColorMap">Choose color map:</label>
+                                    </div>
+                                    <div class="user-box">
+                                        <select name="stippleColorMap" id="stippleColorMap" onchange="visualizeCurrentStipples()">
+                                            <option value="none">none</option>
+                                            <option value="jet">Jet</option>
+                                            <option value=hsv>HSV</option>
+                                            <option value=hot>Hot</option>
+                                            <option value=spring>Spring</option>
+                                            <option value=summer>Summer</option>
+                                            <option value=autumn>Autumn</option>
+                                            <option value=winter>Winter</option>
+                                            <option value=bone>Bone</option>
+                                            <option value=copper>Copper</option>
+                                            <option value=greys>Greys</option>
+                                            <option value=yignbu>YIGnBu</option>
+                                            <option value=greens>Greens</option>
+                                            <option value=yiorrd>YIOrRd</option>
+                                            <option value=bluered>Bluered</option>
+                                            <option value=rdbu>RdBu</option>
+                                            <option value=picnic>Picnic</option>
+                                            <option value=rainbow>Rainbow</option>
+                                            <option value=portland>Portland</option>
+                                            <option value=blackbody>Blackbody</option>
+                                            <option value=earth>Earth</option>
+                                            <option value=electric>Electric</option>
+                                            <option value=alpha>Alpha</option>
+                                            <option value=viridis>Viridis</option>
+                                            <option value=inferno>Inferno</option>
+                                            <option value=magma>Magma</option>
+                                            <option value=plasma>Plasma</option>
+                                            <option value=warm>Warm</option>
+                                            <option value=cool>Cool</option>
+                                            <option value=rainbow-soft>Rainbow-soft</option>
+                                            <option value=bathymetry>Bathymetry</option>
+                                            <option value=cdom>cdom</option>
+                                            <option value=chlorophyll>Chlorophyll</option>
+                                            <option value=density>Density</option>
+                                            <option value=freesurface-blue>Freesurface - blue</option>
+                                            <option value=freesurface-red>Freesurface - red</option>
+                                            <option value=oxygen>Oxygen</option>
+                                            <option value=par>Par</option>
+                                            <option value=phase>Phase</option>
+                                            <option value=salinity>Salinity</option>
+                                            <option value=temperature>Temperature</option>
+                                            <option value=turbidity>Turbidity</option>
+                                            <option value=velocity-blue>Velocity - blue</option>
+                                            <option value=velocity-green>Velocity - green</option>
+                                            <option value=cubehelix>Cubehelix</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="user-box">
+                                        <label for="interpolateColorMap">Interpolate color map:</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="interpolateColorMap" onchange="visualizeCurrentStipples()"/>
+                                    </div>
+
+                                </div>
+
+                                <div>
+                                    <input type="submit" value="Stipple!">
+                                </div>
+
+                            </form>
+                        </div>
+
+                </div>
+
+
             </div>
+            <div class="w3-row">
+                <div class="w3-card w3-margin w3-margin-top">
+                    <div class="w3-container w3-white">
+                        <h3><b>Details</b></h3>
+                    </div>
 
-            <!-- dataset selection -->
-            <label for="dataset">Select data set:</label>
-            <select name="dataset" id="dataset" onchange="showDataSetForm()">
-                <option value="accidents">Accidents</option>
-                <option value="gradient">Gradient</option>
-                <option value="image">Image</option>
-                <option value="custom">Try your own</option>
-            </select>
-
-            <!-- todo: depending on datasets value display other subforms -->
-            <div id="gradientForm" style="display:none;">
-                <label for="gradientX1">x1:</label>
-                <input type="number" id="gradientX1" value="0" step="0.01"/>
-                <label for="gradientY1">y1:</label>
-                <input type="number" id="gradientY1" value="0" step="0.01"/>
-                <label for="gradientX2">x2:</label>
-                <input type="number" id="gradientX2" value="1" step="0.01"/>
-                <label for="gradientY2">y2:</label>
-                <input type="number" id="gradientY2" value="0" step="0.01"/>
+                    <div id="cardDiv" class="w3-container w3-white" style="width: 100%; height: 300px">
+                    </div>
+                </div>
             </div>
-
-            <div id="customForm" style="display:none">
-                <label for="customDataURL">Data URL (*.json or *.csv):</label>
-                <input type="text" id="customDataURL" value="us-accidents-severity-4-Nov-Dec-2020.csv"/>
-
-                <label for="xAttribute">X / Longitude - Attribute:</label>
-                <input type="text" id="xAttribute" value="LON"/>
-                <label for="yAttribute">Y / Latitude - Attribute:</label>
-                <input type="text" id="yAttribute" value="LAT"/>
-
-                <label for="useGrayscale">Dense dataset:</label>
-                <input type="checkbox" id="useGrayscale"/>
-
-                <label for="customProjection">Projection method:</label>
-                <select name="geoprojection" id="customProjection">
-                    <option value="geoAlbersUsa">Albers - USA</option>
-                    <option value="none">none</option>
-                </select>
-            </div>
-
-            <div id="imageForm" style="display:none">
-                <label for="imageToStipple">Image source:</label>
-                <input type="file" id="imageToStipple" accept="image/*"/>
-            </div>
-
-            <input type="submit" value="Stipple!">
-        </form>
-
-        <!-- set stipple parameters -->
-        <label for="visScale">Scale:</label>
-        <input type="number" id="visScale" value="1" step="0.01" onchange="visualizeCurrentStipples()"/>
-        <label for="scaleByDensity">Scale stipples by density</label>
-        <input type="checkbox" id="scaleByDensity" onchange="visualizeCurrentStipples()"/>
-        <label for="stippleColorMap">Choose color map:</label>
-        <select name="stippleColorMap" id="stippleColorMap" onchange="visualizeCurrentStipples()">
-            <option value="none">none</option>
-            <option value="jet">Jet</option>
-            <option value=hsv>HSV</option>
-            <option value=hot>Hot</option>
-            <option value=spring>Spring</option>
-            <option value=summer>Summer</option>
-            <option value=autumn>Autumn</option>
-            <option value=winter>Winter</option>
-            <option value=bone>Bone</option>
-            <option value=copper>Copper</option>
-            <option value=greys>Greys</option>
-            <option value=yignbu>YIGnBu</option>
-            <option value=greens>Greens</option>
-            <option value=yiorrd>YIOrRd</option>
-            <option value=bluered>Bluered</option>
-            <option value=rdbu>RdBu</option>
-            <option value=picnic>Picnic</option>
-            <option value=rainbow>Rainbow</option>
-            <option value=portland>Portland</option>
-            <option value=blackbody>Blackbody</option>
-            <option value=earth>Earth</option>
-            <option value=electric>Electric</option>
-            <option value=alpha>Alpha</option>
-            <option value=viridis>Viridis</option>
-            <option value=inferno>Inferno</option>
-            <option value=magma>Magma</option>
-            <option value=plasma>Plasma</option>
-            <option value=warm>Warm</option>
-            <option value=cool>Cool</option>
-            <option value=rainbow-soft>Rainbow-soft</option>
-            <option value=bathymetry>Bathymetry</option>
-            <option value=cdom>cdom</option>
-            <option value=chlorophyll>Chlorophyll</option>
-            <option value=density>Density</option>
-            <option value=freesurface-blue>Freesurface - blue</option>
-            <option value=freesurface-red>Freesurface - red</option>
-            <option value=oxygen>Oxygen</option>
-            <option value=par>Par</option>
-            <option value=phase>Phase</option>
-            <option value=salinity>Salinity</option>
-            <option value=temperature>Temperature</option>
-            <option value=turbidity>Turbidity</option>
-            <option value=velocity-blue>Velocity - blue</option>
-            <option value=velocity-green>Velocity - green</option>
-            <option value=cubehelix>Cubehelix</option>
-        </select>
-        <label for="interpolateColorMap">Interpolate color map:</label>
-        <input type="checkbox" id="interpolateColorMap" onchange="visualizeCurrentStipples()"/>
-
+        </div>
         <!-- Blog entries -->
         <div class="w3-col l8 s12">
             <!-- Blog entry -->
-            <div class="w3-card-4 w3-margin w3-white">
+            <div class="w3-card w3-margin w3-white" style="height: 42vh">
                 <div class="w3-container">
-                    <h3><b>Severe Accidents in the US</b></h3>
+                    <h3><b>Visualization</b></h3>
                 </div>
 
-                <div id="mapDiv" class="w3-container">
+
+                <div id="mapDiv" class="w3-container" >
                 </div>
             </div>
-            <hr>
-
-            <!-- Blog entry -->
-            <!--            <div class="w3-card-4 w3-margin w3-white">-->
-            <!--                <img src="/w3images/bridge.jpg" alt="Norway" style="width:100%">-->
-            <!--                <div class="w3-container">-->
-            <!--                    <h3><b>BLOG ENTRY</b></h3>-->
-            <!--                    <h5>Title description, <span class="w3-opacity">April 2, 2014</span></h5>-->
-            <!--                </div>-->
-
-            <!--                <div class="w3-container">-->
-            <!--                    <p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed-->
-            <!--                        tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>-->
-            <!--                    <div class="w3-row">-->
-            <!--                        <div class="w3-col m8 s12">-->
-            <!--                            <p><button class="w3-button w3-padding-large w3-white w3-border"><b>READ MORE »</b></button></p>-->
-            <!--                        </div>-->
-            <!--                        <div class="w3-col m4 w3-hide-small">-->
-            <!--                            <p><span class="w3-padding-large w3-right"><b>Comments  </b> <span class="w3-badge">2</span></span></p>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <!-- END BLOG ENTRIES -->
-        </div>
-
-        <!-- Introduction menu -->
-        <div class="w3-col l4">
-            <!-- About Card -->
-            <div class="w3-card w3-margin w3-margin-top">
-                <div class="w3-container w3-white">
-                    <h3><b>Details</b></h3>
-                </div>
-
-                <div id="cardDiv" class="w3-container w3-white" style="width: 100%; height: 300px" >
-                </div>
-            </div><hr>
-
-            <!-- Posts -->
-            <!--            <div class="w3-card w3-margin">-->
-            <!--                <div class="w3-container w3-padding">-->
-            <!--                    <h4>Popular Posts</h4>-->
-            <!--                </div>-->
-            <!--                <ul class="w3-ul w3-hoverable w3-white">-->
-            <!--                    <li class="w3-padding-16">-->
-            <!--                        <img src="/w3images/workshop.jpg" alt="Image" class="w3-left w3-margin-right" style="width:50px">-->
-            <!--                        <span class="w3-large">Lorem</span><br>-->
-            <!--                        <span>Sed mattis nunc</span>-->
-            <!--                    </li>-->
-            <!--                    <li class="w3-padding-16">-->
-            <!--                        <img src="/w3images/gondol.jpg" alt="Image" class="w3-left w3-margin-right" style="width:50px">-->
-            <!--                        <span class="w3-large">Ipsum</span><br>-->
-            <!--                        <span>Praes tinci sed</span>-->
-            <!--                    </li>-->
-            <!--                    <li class="w3-padding-16">-->
-            <!--                        <img src="/w3images/skies.jpg" alt="Image" class="w3-left w3-margin-right" style="width:50px">-->
-            <!--                        <span class="w3-large">Dorum</span><br>-->
-            <!--                        <span>Ultricies congue</span>-->
-            <!--                    </li>-->
-            <!--                    <li class="w3-padding-16 w3-hide-medium w3-hide-small">-->
-            <!--                        <img src="/w3images/rock.jpg" alt="Image" class="w3-left w3-margin-right" style="width:50px">-->
-            <!--                        <span class="w3-large">Mingsum</span><br>-->
-            <!--                        <span>Lorem ipsum dipsum</span>-->
-            <!--                    </li>-->
-            <!--                </ul>-->
-            <!--            </div>-->
-            <!--            <hr>-->
-
-            <!--            &lt;!&ndash; Labels / tags &ndash;&gt;-->
-            <!--            <div class="w3-card w3-margin">-->
-            <!--                <div class="w3-container w3-padding">-->
-            <!--                    <h4>Tags</h4>-->
-            <!--                </div>-->
-            <!--                <div class="w3-container w3-white">-->
-            <!--                    <p><span class="w3-tag w3-black w3-margin-bottom">Travel</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">New York</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">London</span>-->
-            <!--                        <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">IKEA</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">NORWAY</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">DIY</span>-->
-            <!--                        <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Ideas</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Baby</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Family</span>-->
-            <!--                        <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">News</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Clothing</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Shopping</span>-->
-            <!--                        <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Sports</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Games</span>-->
-            <!--                    </p>-->
-            <!--                </div>-->
-            <!--            </div>-->
-
-            <!-- END Introduction Menu -->
         </div>
 
         <!-- END GRID -->
-    </div><br>
+    </div>
+    <br>
 
     <!-- END w3-content -->
 </div>
 
 <!-- Footer -->
 <footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
-    <!--    <button class="w3-button w3-black w3-disabled w3-padding-large w3-margin-bottom">Previous</button>-->
-    <!--    <button class="w3-button w3-black w3-padding-large w3-margin-bottom">Next »</button>-->
-    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+    <p>by Lukas Herzberger & Jakob Troidl</p>
+    <p>as part of the course Visualization 2 at Vienna University of Technology</p>
 </footer>
 
 <!-- D3 -->
@@ -271,8 +295,6 @@ and is wrapped around the whole page content, except for the footer in this exam
 
 <!-- OWN JS -->
 <script src="mapVis.js"></script>
-<!--	<script src="js/scatterVis.js"></script>-->
-<!--	<script src="js/brushVis.js"></script>-->
 <script src="data.js"></script>
 <script src="card.js"></script>
 <script src="stippling.js"></script>
