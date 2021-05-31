@@ -89,18 +89,18 @@ class Card {
             .data(croppedData).enter()
             .append('circle')
             .attr('cx', function (d) {
-                    const cx = projection([d.LON, d.LAT])[0];
-                    const cy = projection([d.LON, d.LAT])[1];
-                    if(getVoronoiCell([cx, cy], voronoi) === voronoiIndex) {
-                        return cx;
-                    } else {
-                        return 0;
-                    }
+                const cx = projection([d.LON, d.LAT])[0];
+                const cy = projection([d.LON, d.LAT])[1];
+                if (getVoronoiCell([cx, cy], voronoi) === voronoiIndex) {
+                    return cx;
+                } else {
+                    return 0;
+                }
             })
             .attr('cy', function (d) {
                 const cx = projection([d.LON, d.LAT])[0];
                 const cy = projection([d.LON, d.LAT])[1];
-                if(getVoronoiCell([cx, cy], voronoi) === voronoiIndex) {
+                if (getVoronoiCell([cx, cy], voronoi) === voronoiIndex) {
                     return cy;
                 } else {
                     return 0;

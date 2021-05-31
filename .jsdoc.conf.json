@@ -6,14 +6,19 @@
     "destination": "./docs/"
   },
   "source": {
-    "include": ["public"],
+    "include": [
+      "public"
+    ],
     "includePattern": ".+\\.js(doc|x)?$",
     "excludePattern": "node_modules"
   },
   "sourceType": "module",
   "tags": {
     "allowUnknownTags": true,
-    "dictionaries": ["jsdoc", "closure"]
+    "dictionaries": [
+      "jsdoc",
+      "closure"
+    ]
   },
   "templates": {
     "cleverLinks": false,

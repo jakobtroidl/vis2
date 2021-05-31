@@ -205,7 +205,7 @@ function visualizeCurrentStipples() {
                     .style('fill', (colorMap === 'none' ? 'black' : getColorString(s.density, colorMap, interpolateColor)))
                     .on('mouseenter', function () {
                         d3.select(this).style('fill', 'rgb(255, 0, 0)'); // color stipples
-                        if(currentStippledDataSet.geographicalDataset) {
+                        if (currentStippledDataSet.geographicalDataset) {
                             let bounds = stippleBounds(s, currentStippledDataSet.voronoi);
                             card.drawArea(bounds, currentStippledDataSet.voronoi, getVoronoiCell(s.position(), currentStippledDataSet.voronoi));
                         }
@@ -225,7 +225,7 @@ const initCard = (data, geographical) => {
     let detailsDiv = 'details'
     let details = document.getElementById(detailsDiv);
 
-    if(geographical) {
+    if (geographical) {
         details.style.display = 'block';
     } else {
         details.style.display = 'none';
