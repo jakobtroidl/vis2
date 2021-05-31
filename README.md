@@ -9,10 +9,14 @@ Our code implements the following work
 > Görtler, J., Spicker, M., Schulz, C., Weiskopf, D. and Deussen, O., 2019. Stippling of 2D scalar fields. IEEE transactions on visualization and computer graphics, 25(6), pp.2193-2204.
 
 ## Getting started
-run ```npm start```
+```
+npm start
+```
 
 ## Generate documentation
-run  `npm run docs`
+```
+npm run docs
+```
 
 ## Known issues
 
