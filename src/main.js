@@ -193,6 +193,9 @@ function visualizeCurrentStipples() {
             .attr('width', outputWidth)
             .attr('height', outputHeight);
 
+
+        const card = initCard(currentStippledDataSet, currentStippledDataSet.geographicalDataset)
+
         currentStippledDataSet.stipples.forEach(s => {
             if (s.density !== 0.0) {
                 svg.append('circle')
@@ -200,14 +203,35 @@ function visualizeCurrentStipples() {
                     .attr('cy', s.relativeY * outputHeight)
                     .attr('r', currentStippledDataSet.stippleRadius * outputScale * (scaleByDensity ? s.density : 1))
                     .style('fill', (colorMap === 'none' ? 'black' : getColorString(s.density, colorMap, interpolateColor)))
-                    .on("mouseenter", function (s) {
-                        console.log(s);
+                    .on('mouseenter', function () {
+                        d3.select(this).style('fill', 'rgb(255, 0, 0)'); // color stipples
+                        if(currentStippledDataSet.geographicalDataset) {
+                            let bounds = stippleBounds(s, currentStippledDataSet.voronoi);
+                            card.drawArea(bounds, currentStippledDataSet.voronoi, getVoronoiCell(s.position(), currentStippledDataSet.voronoi));
+                        }
+                    })
+                    .on('mouseleave', function () {
+                        d3.select(this).style('fill', (colorMap === 'none' ? 'black' : getColorString(s.density, colorMap, interpolateColor)));
                     })
             }
-        });
-
-        // todo: add mouse hovering stuff
+        })
     }
+}
+
+const initCard = (data, geographical) => {
+    let cardDiv = '#cardDiv';
+    let box = document.querySelector(cardDiv);
+
+    let detailsDiv = 'details'
+    let details = document.getElementById(detailsDiv);
+
+    if(geographical) {
+        details.style.display = 'block';
+    } else {
+        details.style.display = 'none';
+    }
+    let myData = {data: data.locationToData, width: data.width, height: data.height};
+    return new Card(myData, box.clientWidth, box.clientHeight, cardDiv);
 }
 
 const readFile = (file) => {
@@ -243,12 +267,14 @@ function stippleDataSet() {
     // todo: add prepared weather data
     // todo: calculate height from width for geoAlbersUsa
     let dataSourceFunc;
+    let geographicalDataset;
     switch (dataset) {
         case 'accidents':
             dataSourceFunc = async () => {
                 const data = await d3.csv("us-accidents-severity-4-Nov-Dec-2020.csv");
                 return createGeographicDataImage(data, width, height);
             };
+            geographicalDataset = true;
             break;
         case 'gradient':
             const fromTo = [
@@ -264,6 +290,7 @@ function stippleDataSet() {
                     locationToData: gradient
                 };
             };
+            geographicalDataset = false;
             break;
         case 'image':
             const imageFile = document.getElementById('imageToStipple').files[0];
@@ -275,6 +302,8 @@ function stippleDataSet() {
                 const scaledHeight = image.height * ratio;
                 const ctx = new OffscreenCanvas(width, scaledHeight).getContext('2d');
                 ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, scaledHeight);
+
+                geographicalDataset = false;
 
                 return {
                     densityImage: ctx.getImageData(0, 0, width, scaledHeight),
@@ -301,6 +330,9 @@ function stippleDataSet() {
                     return createGeographicDataImage(data, width, height, projection, xAttribute, yAttribute, scaleByMaxDensity);
                 }
             };
+
+            geographicalDataset = false;
+
             break;
     }
 
@@ -323,7 +355,8 @@ function stippleDataSet() {
             densityImage,
             locationToData,
             stipples,
-            voronoi
+            voronoi,
+            geographicalDataset
         };
     })().then(stippledDataset => {
         currentStippledDataSet = stippledDataset;
