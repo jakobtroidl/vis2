@@ -60,7 +60,7 @@ typings/
 # dotenv environment variables file
 .env
 
-# next.public build output
+# next.src build output
 .next
 
 data/us_accidents.csv
