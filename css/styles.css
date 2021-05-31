@@ -16,3 +16,8 @@ div.tooltip {
     /*  pointer-events: none;	This line needs to be removed */
 
 }
+.state {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2px;
+}

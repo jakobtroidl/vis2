@@ -107,6 +107,6 @@ class Card {
                 }
             })
             .attr('r', this.circleRadius * (2 / scale))
-            .style('fill', 'red');
+            .style('fill', '#4CAF50');
     }
 }

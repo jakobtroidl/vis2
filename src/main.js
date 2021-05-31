@@ -175,7 +175,7 @@ function showDataSetForm() {
 
 let currentStippledDataSet = null;
 
-function visualizeCurrentStipples() {
+async function visualizeCurrentStipples() {
     // remove existing visualization
     const visDiv = '#mapDiv';
     d3.select(visDiv).select('svg').remove();
@@ -192,6 +192,22 @@ function visualizeCurrentStipples() {
             .append('svg')
             .attr('width', outputWidth)
             .attr('height', outputHeight);
+
+        if (currentStippledDataSet.geographicalDataset) {
+            const states = await d3.json("county_us.topojson");
+            const projection = createProjection(outputWidth, outputHeight);
+            const path = d3.geoPath().projection(projection);
+
+            svg.append('g')
+                .attr('id', 'states')
+                .selectAll('path')
+                .data(topojson.feature(states, states.objects.states).features)
+                .enter().append('path')
+                .attr('d', path)
+                .style('fill', 'none')
+                .style('stroke', 'grey')
+                .style('stroke-width', '1px');
+        }
 
 
         const card = initCard(currentStippledDataSet, currentStippledDataSet.geographicalDataset)
@@ -232,6 +248,11 @@ const initCard = (data, geographical) => {
     }
     let myData = {data: data.locationToData, width: data.width, height: data.height};
     return new Card(myData, box.clientWidth, box.clientHeight, cardDiv);
+}
+
+async function loadStates(filename) {
+    const states = await d3.json(filename);
+    return topojson.feature(states, states.objects.states).features;
 }
 
 const readFile = (file) => {
@@ -360,7 +381,7 @@ function stippleDataSet() {
         };
     })().then(stippledDataset => {
         currentStippledDataSet = stippledDataset;
-        visualizeCurrentStipples();
+        visualizeCurrentStipples().then(r => console.log("Done with stippling"));
     });
 
     return false; // i.e. do not refresh the page
