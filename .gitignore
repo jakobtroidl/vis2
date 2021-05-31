@@ -65,8 +65,6 @@ typings/
 
 data/us_accidents.csv
 
-hail-2015.csv
-
 *.xlsx
 
 data/hail-2015-sevprob-larger-34.csv
