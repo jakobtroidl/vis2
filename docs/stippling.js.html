@@ -1,4 +1,32 @@
-/*
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: stippling.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: stippling.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
  * Stippling based on Görtler et al. 'Stippling of 2D Scalar Fields'.
  */
 
@@ -19,15 +47,15 @@ const rgbaToLuminance = (r, g, b, _a) => (0.2126 * r + 0.7152 * g + 0.0722 * b) 
 const createQuantization = (num) => {
     const fraction = 1.0 / num;
     const quantization = [];
-    for (let q = fraction; q < 1.0; q += fraction) {
+    for (let q = fraction; q &lt; 1.0; q += fraction) {
         quantization.push(q);
     }
     return quantization;
 };
 const quantize = (arr, quantization) => {
     return arr.map(p => {
-        for (let i = 0; i < quantization.length; ++i) {
-            if (p < quantization[i]) {
+        for (let i = 0; i &lt; quantization.length; ++i) {
+            if (p &lt; quantization[i]) {
                 if (i === 0) {
                     return 0;
                 } else {
@@ -52,7 +80,7 @@ const floatArrayToImageData = (arr, stride, mapFromMinus1 = false) => {
 const imageDataToFloatArray = (imageData, rgbaToFloat = rgbaToLuminance) => {
     const data = [];
     let maxValue = 0;
-    for (let i = 0; i < imageData.data.length; i += 4) {
+    for (let i = 0; i &lt; imageData.data.length; i += 4) {
         const density = rgbaToFloat(
             imageData.data[i],
             imageData.data[i + 1],
@@ -60,7 +88,7 @@ const imageDataToFloatArray = (imageData, rgbaToFloat = rgbaToLuminance) => {
             imageData.data[i + 3]
         );
         data.push(density);
-        if (maxValue < density) {
+        if (maxValue &lt; density) {
             maxValue = density;
         }
     }
@@ -72,13 +100,13 @@ const polygonBounds = (points) => {
     let maxX = 0;
     let maxY = 0;
     for (const [x, y] of points) {
-        if (x < minX) {
+        if (x &lt; minX) {
             minX = x;
         }
         if (x > maxX) {
             maxX = x;
         }
-        if (y < minY) {
+        if (y &lt; minY) {
             minY = y;
         }
         if (y > maxY) {
@@ -189,7 +217,7 @@ class Stipple {
         const xSampler = sampler(0, xScale);
         const ySampler = sampler(0, yScale);
         const stipples = Array(numStipples);
-        for (let i = 0; i < numStipples; ++i) {
+        for (let i = 0; i &lt; numStipples; ++i) {
             stipples[i] = new Stipple(xSampler(), ySampler());
         }
         return stipples;
@@ -256,7 +284,7 @@ class DensityFunction2D {
      *
      * The contours are created as follows:
      *   Φ' = Φ + 2w (C - G_dxd * C - 0.5), if C - G_dxd * C > 0.5
-     *   Φ' = Φ + 2w (C - G_dxd * C - 1.0), if C - G_dxd * C <= 0.5
+     *   Φ' = Φ + 2w (C - G_dxd * C - 1.0), if C - G_dxd * C &lt;= 0.5
      * where...
      *   ...Φ is the original density function (i.e. the {@link ImageData},
      *   ...w is a weight controlling the strength of the contouring effect (w ∈ [0, 1])
@@ -296,7 +324,7 @@ class DensityFunction2D {
 
         const deltaData = [];
         const machBanded = [];
-        for (let i = 0; i < imageData.width * imageData.height; ++i) {
+        for (let i = 0; i &lt; imageData.width * imageData.height; ++i) {
             // Note: in the paper the weight is only doubled and depending on its value either 0.5 or 1 is substracted
             // frm delta. However, our delta values are in a different range
             machBanded.push(clamp(originalData[i] + 4 * weight * (quantizedData[i] - blurredData[i])));
@@ -323,12 +351,12 @@ class DensityFunction2D {
 
     async areaDensity(polygon) {
         // this doesn't have any async calls, but we could e.g. add a backing tf.tensor2D to perform this operation
-        // which would be asynchronous (& hopefully faster)
+        // which would be asynchronous (&amp; hopefully faster)
         console.log(polygon);
         const {min, max} = integerBounds(polygon);
         let density = 0;
-        for (let y = min[1]; y < max[1]; ++y) {
-            for (let x = min[0]; x < max[0]; ++x) {
+        for (let y = min[1]; y &lt; max[1]; ++y) {
+            for (let x = min[0]; x &lt; max[0]; ++x) {
                 if (d3.polygonContains(polygon, [x, y])) {
                     density += this.density(x, y);
                 }
@@ -341,8 +369,8 @@ class DensityFunction2D {
         stipples.forEach(s => s.density = 0);
         let lastFound = 0;
         let lastFoundRow = Array(this.width);
-        for (let y = 0; y < this.height; ++y) {
-            for (let x = 0; x < this.width; ++x) {
+        for (let y = 0; y &lt; this.height; ++y) {
+            for (let x = 0; x &lt; this.width; ++x) {
                 // We use either the cell index of the pixel above or the pixel to the left, but prefer the one to the
                 // top. Both choices are correct in approximately 60% of the cases, but if the choice was wrong then
                 // choosing the pixel to the top will require us only to search (width + 1) cells in the worst case
@@ -390,22 +418,22 @@ class RestrictedStipplingDensityFunction2D extends DensityFunction2D {
  * @param stippleRadius
  * @param initialErrorThreshold the initial error threshold used for splitting and merging stipples.
  * @param thresholdConvergenceRate the error threshold is increased by this amount in every iteration
- * @return {Promise<{voronoi: *, stipples: any[]}>}
+ * @return {Promise&lt;{voronoi: *, stipples: any[]}>}
  */
 const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorThreshold = 0.0, thresholdConvergenceRate = 0.01) => {
     /* Görtler et al:
      *   Input: target density function PHI
      *   Output: list of stipples S
      *
-     *   S <- initialize random stipples
+     *   S &lt;- initialize random stipples
      *   repeat
-     *     V <- compute Voronoi diagram of S using PHI
+     *     V &lt;- compute Voronoi diagram of S using PHI
      *       foreach s in S do
-     *         Ts <- Integral over Vs (PHI(x,y)) dA
+     *         Ts &lt;- Integral over Vs (PHI(x,y)) dA
      *         if restricted stippling then
-     *           Ts <- argmax Integral over Vs (c_i(x,y) PHI(x,y)) dA
+     *           Ts &lt;- argmax Integral over Vs (c_i(x,y) PHI(x,y)) dA
      *         else if Mach-banding
-     *           Ts <- Integral over Vs (PHI'(x,y)) dA
+     *           Ts &lt;- Integral over Vs (PHI'(x,y)) dA
      *       end
      *       foreach Voronoi cell Vs in V and resp. stipple s do
      *         if Density Ts too low then
@@ -466,10 +494,10 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
         // would work better, but it probably wouldn't be faster.
         const deleteThreshold = stippleArea - errorThreshold;
         const splitThreshold = stippleArea + errorThreshold;
-        for (let i = 0; i < stipples.length; ++i) {
+        for (let i = 0; i &lt; stipples.length; ++i) {
             const s = stipples[i];
             const cell = d3.polygonHull(voronoi.cellPolygon(i));
-            if (s.density < deleteThreshold) {
+            if (s.density &lt; deleteThreshold) {
                 splitsOrMerges = true;
             } else if (s.density > splitThreshold) {
                 splitsOrMerges = true;
@@ -534,7 +562,7 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
  * @param stippleRadius
  * @param initialErrorThreshold the initial error threshold used for splitting and merging stipples.
  * @param thresholdConvergenceRate the error threshold is increased by this amount in every iteration
- * @return {Promise<{voronoi: *, stipples: any[]}>}
+ * @return {Promise&lt;{voronoi: *, stipples: any[]}>}
  */
 const stippleParallel = async (targetDensityFunction, stippleRadius = 5.0, initialErrorThreshold = 0.0, thresholdConvergenceRate = 0.01) => {
     // keep track of computation time for indiviual steps
@@ -570,7 +598,7 @@ const stippleParallel = async (targetDensityFunction, stippleRadius = 5.0, initi
             stipples.map(async (s, i) => {
                 const cell = d3.polygonHull(voronoi.cellPolygon(i));
                 const density = await targetDensityFunction.areaDensity(cell);
-                if (density < deleteThreshold) {
+                if (density &lt; deleteThreshold) {
                     return null;
                 } else if (density > splitThreshold) {
                     const {position1, position2} = splitCell(cell);
@@ -627,4 +655,26 @@ const stippleParallel = async (targetDensityFunction, stippleRadius = 5.0, initi
     });
 
     return {stipples, voronoi: lastVoronoi};
-};
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon May 31 2021 13:04:33 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: DensityFunction2D</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: DensityFunction2D</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>DensityFunction2D<span class="signature">(data, stride)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">A discrete 2-dimensional density function.Can be created from an ImageData instance.</div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id="DensityFunction2D"><span class="type-signature"></span>new DensityFunction2D<span class="signature">(data, stride)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Note: For performance reasons, if data is a 1d-array it is destroyed in the process of building the densityfunction.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stride</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last">the width of the 2d function. only needed if data is a 1d-array</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line212">line 212</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".fromImageData2D"><span class="type-signature">(static) </span>fromImageData2D<span class="signature">(imageData, rgbaToDensity)</span><span class="type-signature"> &rarr; {<a href="DensityFunction2D.html">DensityFunction2D</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a basic <a href="DensityFunction2D.html">DensityFunction2D</a> from an ImageData instance.Pixel data is mapped to a float value and scaled to the range [0,1]
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>imageData</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an ImageData instance (e.g. from CanvasRenderingContext2D.getImageData()).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rgbaToDensity</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">(optional) maps 4 positive integers (r,g,b,a) to a float value</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line249">line 249</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="DensityFunction2D.html">DensityFunction2D</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".machBandingFromImageData2D"><span class="type-signature">(static) </span>machBandingFromImageData2D<span class="signature">(imageData, quantization, weight, blurRadius, rgbaToDensity, debugDiv)</span><span class="type-signature"> &rarr; {<a href="DensityFunction2D.html">DensityFunction2D</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a <a href="DensityFunction2D.html">DensityFunction2D</a> with artificial contours from an ImageData instance.The contours are created as follows:  Φ' = Φ + 2w (C - G_dxd * C - 0.5), if C - G_dxd * C > 0.5  Φ' = Φ + 2w (C - G_dxd * C - 1.0), if C - G_dxd * C <= 0.5where...  ...Φ is the original density function (i.e. the ImageData,  ...w is a weight controlling the strength of the contouring effect (w ∈ [0, 1])  ...C is a quantized version of Φ  ...G_dxd is a Gaussian blur kernel with radius dSee: Görtler et al. Stippling of 2D Scalar Fields
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>imageData</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">an ImageData instance (e.g. from CanvasImageData.getImageData).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>quantization</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    5
+                
+                </td>
+            
+
+            <td class="description last">a positive integer (quantization will be equal steps of size 1/quantization) or an array of quantization steps</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>weight</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    0.5
+                
+                </td>
+            
+
+            <td class="description last">(optional) a float in range [0,1], determines the strength of the contours. Default: 0.5</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>blurRadius</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    4
+                
+                </td>
+            
+
+            <td class="description last">(optional) the radius of the Gaussian blur applied to imageData. Default: 4</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rgbaToDensity</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">(optional) maps 4 positive integers (r,g,b,a) to a float value. Default: rgbaToLuminance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>debugDiv</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    mapDiv
+                
+                </td>
+            
+
+            <td class="description last">(optional) a string, the id of a div that should be used to display intermediate results. Default: undefined</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line276">line 276</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="DensityFunction2D.html">DensityFunction2D</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon May 31 2021 13:04:33 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: card.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: card.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Info Card showing details when hovering over a stipple
+ */
+class Card {
+    /**
+     *
+     * @param data holding the detailed meta information about individual data points
+     * @param width
+     * @param height
+     * @param div where the info card should appear
+     */
+    constructor(data, width, height, div) {
+        this.data = data;
+        this.width = width;
+        this.height = height;
+        this.svg = this.setupSVG();
+
+        this.circleRadius = 2.0;
+        this.lineWidth = 1.0;
+    }
+
+    setupSVG() {
+        return d3.select('#cardDiv')
+            .append('svg')
+            .attr('width', this.width)
+            .attr('height', this.height);
+    }
+
+    /**
+     *
+     * @param bounds of the region that is investigated in more detail
+     * @param voronoi
+     * @param voronoiIndex
+     */
+    drawArea(bounds, voronoi, voronoiIndex) {
+        let [maxX, maxY] = bounds.max;
+        let [minX, minY] = bounds.min;
+
+        maxX = Math.ceil(maxX);
+        maxY = Math.ceil(maxY);
+
+        minY = Math.floor(minY);
+        minX = Math.floor(minX);
+
+        let croppedData = [];
+
+        for (let x = minX; x &lt; maxX; x++) {
+            for (let y = minY; y &lt; maxY; y++) {
+                let thisVoronoiIndex = getVoronoiCell([x, y], voronoi);
+                if (thisVoronoiIndex === voronoiIndex) { // check whether the coordinate is in the voronoi region
+                    const idx = (y * this.data.width) + x;
+                    croppedData = croppedData.concat(this.data.data[idx]);
+                }
+            }
+        }
+
+        this.svg.selectAll("*").remove(); // clear svg before plotting new elements
+
+        let dx = maxX - minX;
+        let dy = maxY - minY;
+        let x = (minX + maxX) / 2;
+        let y = (minY + maxY) / 2;
+        let scale = 0.9 / Math.max(dx / this.data.width, dy / this.data.height);
+        let translate = [this.data.width / 2 - scale * x, this.data.height / 2 - scale * y];
+
+        const projection = d3.geoAlbersUsa()
+            .translate([this.data.width / 2, this.data.height / 2])
+            .scale(this.data.width);
+
+        let g = this.svg.append("g")
+            .attr('transform', 'translate(' + translate + ')scale(' + scale + ')')
+            .attr('width', this.width)
+            .attr('height', this.height);
+
+        let lineFunc = d3.line()
+            .x(function (d) {
+                return d[0];
+            })
+            .y(function (d) {
+                return d[1];
+            });
+
+        g.append('path')
+            .attr('d', lineFunc(voronoi.cellPolygon(voronoiIndex)))
+            .attr('stroke', 'black')
+            .attr('stroke-width', this.lineWidth * (1 / scale))
+            .attr('fill', 'none');
+
+        g.selectAll('circle')
+            .data(croppedData).enter()
+            .append('circle')
+            .attr('cx', function (d) {
+                if (projection([d.LON, d.LAT]) !== null) {
+                    return projection([d.LON, d.LAT])[0];
+                } else {
+                    return 0;
+                }
+            })
+            .attr('cy', function (d) {
+                if (projection([d.LON, d.LAT]) !== null) {
+                    return projection([d.LON, d.LAT])[1];
+                } else {
+                    return 0;
+                }
+            })
+            .attr('r', this.circleRadius * (1 / scale))
+            .style('fill', 'red');
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon May 31 2021 13:04:33 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
