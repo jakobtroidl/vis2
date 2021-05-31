@@ -1,15 +1,3 @@
-/* * * * * * * * * * * * * *
-*           MAIN           *
-* * * * * * * * * * * * * */
-
-// init global variables
-let myMapVis;
-//let myScatterVis;
-//let myBrushVis;
-
-// init global switches
-let selectedState = '';
-
 // load data using promises
 let promises = [
     d3.json("county_us.topojson"),

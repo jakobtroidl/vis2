@@ -29,83 +29,83 @@ and is wrapped around the whole page content, except for the footer in this exam
             <div class="w3-row">
                 <div class="w3-card w3-margin">
 
-                        <div class="w3-container w3-black">
-                            <button class="w3-button" onclick="openTab('Data')">Data</button>
-                            <button class="w3-button" onclick="openTab('Params')">Params</button>
-                            <button class="w3-button" onclick="openTab('Contours')">Contours</button>
-                            <button class="w3-button" onclick="openTab('Style')">Style</button>
-                        </div>
+                    <div class="w3-container w3-black">
+                        <button class="w3-button" onclick="openTab('Data')">Data</button>
+                        <button class="w3-button" onclick="openTab('Params')">Params</button>
+                        <button class="w3-button" onclick="openTab('Contours')">Contours</button>
+                        <button class="w3-button" onclick="openTab('Style')">Style</button>
+                    </div>
 
-                        <div class="login-box">
-                            <!-- set all parameters to stipple a dataset -->
-                            <form name="dataSetForm" onsubmit="return stippleDataSet()">
-                                <!-- dimensions of density function that's going to be stippled -->
-                                <div id="Data" class="tab" style="display: block">
+                    <div class="login-box">
+                        <!-- set all parameters to stipple a dataset -->
+                        <form name="dataSetForm" onsubmit="return stippleDataSet()">
+                            <!-- dimensions of density function that's going to be stippled -->
+                            <div id="Data" class="tab" style="display: block">
 
-                                    <!-- dataset selection -->
-                                    <div>
-                                        <label for="dataset">Select data set:</label>
-                                    </div>
+                                <!-- dataset selection -->
+                                <div>
+                                    <label for="dataset">Select data set:</label>
+                                </div>
+
+                                <div class="user-box">
+                                    <select name="dataset" id="dataset" onchange="showDataSetForm()">
+                                        <option value="accidents">Accidents</option>
+                                        <option value="gradient">Gradient</option>
+                                        <option value="image">Image</option>
+                                        <option value="custom">Try your own</option>
+                                    </select>
+                                </div>
+
+
+                                <!-- todo: depending on datasets value display other subforms -->
+                                <div id="gradientForm" style="display:none;">
                                     <br>
                                     <div class="user-box">
-                                        <select name="dataset" id="dataset"  onchange="showDataSetForm()">
-                                            <option value="accidents">Accidents</option>
-                                            <option value="gradient">Gradient</option>
-                                            <option value="image">Image</option>
-                                            <option value="custom">Try your own</option>
-                                        </select>
+                                        <label for="gradientX1">x1:</label>
+                                        <input type="number" id="gradientX1" value="0" step="0.01"/>
+                                    </div>
+                                    <div class="user-box">
+                                        <label for="gradientY1">y1:</label>
+                                        <input type="number" id="gradientY1" value="0" step="0.01"/>
+                                    </div>
+                                    <div class="user-box">
+                                        <label for="gradientX2">x2:</label>
+                                        <input type="number" id="gradientX2" value="1" step="0.01"/>
+                                    </div>
+                                    <div class="user-box">
+                                        <label for="gradientY2">y2:</label>
+                                        <input type="number" id="gradientY2" value="0" step="0.01"/>
                                     </div>
 
+                                </div>
 
-
-                                    <!-- todo: depending on datasets value display other subforms -->
-                                    <div id="gradientForm" style="display:none;">
-                                        <br>
-                                        <div class="user-box">
-                                            <label for="gradientX1">x1:</label>
-                                            <input type="number" id="gradientX1" value="0" step="0.01"/>
-                                        </div>
-                                        <div class="user-box">
-                                            <label for="gradientY1">y1:</label>
-                                            <input type="number" id="gradientY1" value="0" step="0.01"/>
-                                        </div>
-                                        <div class="user-box">
-                                            <label for="gradientX2">x2:</label>
-                                            <input type="number" id="gradientX2" value="1" step="0.01"/>
-                                        </div>
-                                        <div class="user-box">
-                                            <label for="gradientY2">y2:</label>
-                                            <input type="number" id="gradientY2" value="0" step="0.01"/>
-                                        </div>
-
+                                <div id="customForm" style="display:none">
+                                    <br>
+                                    <div class="user-box">
+                                        <label for="customDataURL">Data URL (*.json or *.csv):</label>
+                                        <input type="text" id="customDataURL"
+                                               value="us-accidents-severity-4-Nov-Dec-2020.csv"/>
                                     </div>
 
-                                    <div id="customForm" style="display:none">
-                                        <br>
-                                        <div class="user-box">
-                                            <label for="customDataURL">Data URL (*.json or *.csv):</label>
-                                            <input type="text" id="customDataURL" value="us-accidents-severity-4-Nov-Dec-2020.csv"/>
-                                        </div>
+                                    <div class="user-box">
+                                        <label for="xAttribute">X / Longitude - Attribute:</label>
+                                        <input type="text" id="xAttribute" value="LON"/>
+                                    </div>
 
-                                        <div class="user-box">
-                                            <label for="xAttribute">X / Longitude - Attribute:</label>
-                                            <input type="text" id="xAttribute" value="LON"/>
-                                        </div>
+                                    <div class="user-box">
+                                        <label for="yAttribute">Y / Latitude - Attribute:</label>
+                                        <input type="text" id="yAttribute" value="LAT"/>
+                                    </div>
 
-                                        <div class="user-box">
-                                            <label for="yAttribute">Y / Latitude - Attribute:</label>
-                                            <input type="text" id="yAttribute" value="LAT"/>
-                                        </div>
+                                    <div class="font">
+                                        <input type="checkbox" id="useGrayscale"/>
+                                        &nbsp; &nbsp;
+                                        <label for="useGrayscale">Dense dataset</label>
+                                    </div>
 
-                                        <div class="user-box">
-                                            <label for="useGrayscale">Dense dataset:</label>
-                                        </div>
-                                        <div>
-                                            <input type="checkbox" id="useGrayscale"/>
-                                        </div>
+                                    <br>
 
-                                        <br>
-                                        
+                                    <div class="font">
                                         <label for="customProjection">Projection method:</label>
                                         <div>
                                             <select name="geoprojection" id="customProjection">
@@ -114,144 +114,149 @@ and is wrapped around the whole page content, except for the footer in this exam
                                             </select>
                                         </div>
                                     </div>
-                                    <br>
-                                    <div id="imageForm" style="display:none">
-                                        <label for="imageToStipple">Image source:</label>
-                                        <div>
-                                            <input type="file" id="imageToStipple" accept="image/*"/>
-                                        </div>
-                                    </div>
 
                                 </div>
-
-                                <div id="Params" class="tab" style="display: none">
-                                    <div class="user-box">
-                                        <label for="stippleWidth">Width:</label>
-                                        <input type="number" id="stippleWidth" value="480"/>
-                                    </div>
-
-
-                                    <div class="user-box">
-                                        <label for="stippleHeight">Height:</label>
-                                        <input type="number" id="stippleHeight" value="250"/>
-                                    </div>
-
-
-                                    <div class="user-box">
-                                        <!-- size of stipple in target density function's dimensions -->
-                                        <label for="stippleRadius">Stipple radius:</label>
-                                        <input type="number" id="stippleRadius" value="1.0" step="0.01"/>
-                                    </div>
-                                </div>
-
-                                <div id="Contours" class="tab" style="display: none">
-                                    <div class="user-box">
-                                        <label for="machbanding">Use Mach-banding</label>
-                                    </div>
+                                <br>
+                                <div id="imageForm" style="display:none">
+                                    <label for="imageToStipple">Image source:</label>
                                     <div>
-                                        <input type="checkbox" id="machbanding" onchange="showMachBandingForm()"/>
-                                    </div>
-
-
-                                    <div id="machbandingForm" style="display:none;">
-                                        <!-- todo: maybe allow passing in arrays (but that's tedious) -->
-                                        <div class="user-box">
-                                            <label for="machbandingQuantization">Quantization steps:</label>
-                                            <input type="number" id="machbandingQuantization" value="5"/>
-                                        </div>
-                                        <div class="user-box">
-                                            <label for="machbandingWeight">Weight:</label>
-                                            <input type="number" id="machbandingWeight" value="1.0" step="0.01"/>
-                                        </div>
-                                        <div class="user-box">
-                                            <label for="machbandingBlurRadius">Blur radius:</label>
-                                            <input type="number" id="machbandingBlurRadius" value="1.0" step="0.01"/>
-                                        </div>
-
+                                        <input type="file" id="imageToStipple" accept="image/*"/>
                                     </div>
                                 </div>
+                                <br>
 
-                                <div id="Style" class="tab" style="display: none">
-                                    <!-- set stipple parameters -->
-                                    <div class="user-box">
-                                        <label for="visScale">Scale:</label>
-                                        <input type="number" id="visScale" value="1.85" step="0.01" onchange="visualizeCurrentStipples()"/>
-                                    </div>
-                                    <div class="user-box">
-                                        <label for="scaleByDensity">Scale stipples by density</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" id="scaleByDensity" onchange="visualizeCurrentStipples()"/>
-                                    </div>
-                                    <br>
-                                    <div class="user-box">
-                                        <label for="stippleColorMap">Choose color map:</label>
-                                    </div>
-                                    <div class="user-box">
-                                        <select name="stippleColorMap" id="dropdown" onchange="visualizeCurrentStipples()">
-                                            <option value="none">none</option>
-                                            <option value="jet">Jet</option>
-                                            <option value=hsv>HSV</option>
-                                            <option value=hot>Hot</option>
-                                            <option value=spring>Spring</option>
-                                            <option value=summer>Summer</option>
-                                            <option value=autumn>Autumn</option>
-                                            <option value=winter>Winter</option>
-                                            <option value=bone>Bone</option>
-                                            <option value=copper>Copper</option>
-                                            <option value=greys>Greys</option>
-                                            <option value=yignbu>YIGnBu</option>
-                                            <option value=greens>Greens</option>
-                                            <option value=yiorrd>YIOrRd</option>
-                                            <option value=bluered>Bluered</option>
-                                            <option value=rdbu>RdBu</option>
-                                            <option value=picnic>Picnic</option>
-                                            <option value=rainbow>Rainbow</option>
-                                            <option value=portland>Portland</option>
-                                            <option value=blackbody>Blackbody</option>
-                                            <option value=earth>Earth</option>
-                                            <option value=electric>Electric</option>
-                                            <option value=alpha>Alpha</option>
-                                            <option value=viridis>Viridis</option>
-                                            <option value=inferno>Inferno</option>
-                                            <option value=magma>Magma</option>
-                                            <option value=plasma>Plasma</option>
-                                            <option value=warm>Warm</option>
-                                            <option value=cool>Cool</option>
-                                            <option value=rainbow-soft>Rainbow-soft</option>
-                                            <option value=bathymetry>Bathymetry</option>
-                                            <option value=cdom>cdom</option>
-                                            <option value=chlorophyll>Chlorophyll</option>
-                                            <option value=density>Density</option>
-                                            <option value=freesurface-blue>Freesurface - blue</option>
-                                            <option value=freesurface-red>Freesurface - red</option>
-                                            <option value=oxygen>Oxygen</option>
-                                            <option value=par>Par</option>
-                                            <option value=phase>Phase</option>
-                                            <option value=salinity>Salinity</option>
-                                            <option value=temperature>Temperature</option>
-                                            <option value=turbidity>Turbidity</option>
-                                            <option value=velocity-blue>Velocity - blue</option>
-                                            <option value=velocity-green>Velocity - green</option>
-                                            <option value=cubehelix>Cubehelix</option>
-                                        </select>
-                                    </div>
-                                    <br>
-                                    <div class="user-box">
-                                        <label for="interpolateColorMap">Interpolate color map:</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" id="interpolateColorMap" onchange="visualizeCurrentStipples()"/>
-                                    </div>
+                            </div>
+
+                            <div id="Params" class="tab" style="display: none">
+                                <div class="user-box">
+                                    <label for="stippleWidth">Width:</label>
+                                    <input type="number" id="stippleWidth" value="480"/>
+                                </div>
+
+
+                                <div class="user-box">
+                                    <label for="stippleHeight">Height:</label>
+                                    <input type="number" id="stippleHeight" value="250"/>
+                                </div>
+
+
+                                <div class="user-box">
+                                    <!-- size of stipple in target density function's dimensions -->
+                                    <label for="stippleRadius">Stipple radius:</label>
+                                    <input type="number" id="stippleRadius" value="1.0" step="0.01"/>
+                                </div>
+                            </div>
+
+                            <div id="Contours" class="tab" style="display: none">
+                                <div class="font">
+                                    <label for="machbanding">Use Mach-banding</label>
+                                    &nbsp; &nbsp;
+                                    <input type="checkbox" id="machbanding" onchange="showMachBandingForm()"/>
+
 
                                 </div>
 
-                                <div>
-                                    <input type="submit" value="Stipple!">
+
+                                <div id="machbandingForm" style="display:none;">
+                                    <!-- todo: maybe allow passing in arrays (but that's tedious) -->
+                                    <div class="user-box">
+                                        <label for="machbandingQuantization">Quantization steps:</label>
+                                        <input type="number" id="machbandingQuantization" value="5"/>
+                                    </div>
+                                    <div class="user-box">
+                                        <label for="machbandingWeight">Weight:</label>
+                                        <input type="number" id="machbandingWeight" value="1.0" step="0.01"/>
+                                    </div>
+                                    <div class="user-box">
+                                        <label for="machbandingBlurRadius">Blur radius:</label>
+                                        <input type="number" id="machbandingBlurRadius" value="1.0" step="0.01"/>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div id="Style" class="tab" style="display: none">
+                                <!-- set stipple parameters -->
+                                <div class="user-box">
+                                    <label for="visScale">Scale:</label>
+                                    <input type="number" id="visScale" value="1.85" step="0.01"
+                                           onchange="visualizeCurrentStipples()"/>
+                                </div>
+                                <div class="font">
+                                    <input type="checkbox" id="scaleByDensity" onchange="visualizeCurrentStipples()"/>
+                                    &nbsp; &nbsp;
+                                    <label for="scaleByDensity">Scale stipples by density</label>
+
+                                </div>
+                                <div class="user-box">
+                                    <label for="stippleColorMap">Choose color map:</label>
+                                </div>
+                                <div class="user-box">
+                                    <select name="stippleColorMap" id="stippleColorMap"
+                                            onchange="visualizeCurrentStipples()">
+                                        <option value="none">none</option>
+                                        <option value="jet">Jet</option>
+                                        <option value=hsv>HSV</option>
+                                        <option value=hot>Hot</option>
+                                        <option value=spring>Spring</option>
+                                        <option value=summer>Summer</option>
+                                        <option value=autumn>Autumn</option>
+                                        <option value=winter>Winter</option>
+                                        <option value=bone>Bone</option>
+                                        <option value=copper>Copper</option>
+                                        <option value=greys>Greys</option>
+                                        <option value=yignbu>YIGnBu</option>
+                                        <option value=greens>Greens</option>
+                                        <option value=yiorrd>YIOrRd</option>
+                                        <option value=bluered>Bluered</option>
+                                        <option value=rdbu>RdBu</option>
+                                        <option value=picnic>Picnic</option>
+                                        <option value=rainbow>Rainbow</option>
+                                        <option value=portland>Portland</option>
+                                        <option value=blackbody>Blackbody</option>
+                                        <option value=earth>Earth</option>
+                                        <option value=electric>Electric</option>
+                                        <option value=alpha>Alpha</option>
+                                        <option value=viridis>Viridis</option>
+                                        <option value=inferno>Inferno</option>
+                                        <option value=magma>Magma</option>
+                                        <option value=plasma>Plasma</option>
+                                        <option value=warm>Warm</option>
+                                        <option value=cool>Cool</option>
+                                        <option value=rainbow-soft>Rainbow-soft</option>
+                                        <option value=bathymetry>Bathymetry</option>
+                                        <option value=cdom>cdom</option>
+                                        <option value=chlorophyll>Chlorophyll</option>
+                                        <option value=density>Density</option>
+                                        <option value=freesurface-blue>Freesurface - blue</option>
+                                        <option value=freesurface-red>Freesurface - red</option>
+                                        <option value=oxygen>Oxygen</option>
+                                        <option value=par>Par</option>
+                                        <option value=phase>Phase</option>
+                                        <option value=salinity>Salinity</option>
+                                        <option value=temperature>Temperature</option>
+                                        <option value=turbidity>Turbidity</option>
+                                        <option value=velocity-blue>Velocity - blue</option>
+                                        <option value=velocity-green>Velocity - green</option>
+                                        <option value=cubehelix>Cubehelix</option>
+                                    </select>
                                 </div>
 
-                            </form>
-                        </div>
+                                <div class="font">
+                                    <input type="checkbox" id="interpolateColorMap"
+                                           onchange="visualizeCurrentStipples()"/>
+                                    &nbsp;&nbsp;
+                                    <label for="interpolateColorMap">Interpolate color map</label>
+                                </div>
+
+                            </div>
+
+                            <div>
+                                <input type="submit" value="Stipple!">
+                            </div>
+
+                        </form>
+                    </div>
 
                 </div>
 

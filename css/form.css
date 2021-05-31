@@ -42,6 +42,10 @@ html {
     outline: none;
     background: transparent;
 }
+
+.font{
+    font-size: 16px;
+}
 .login-box .user-box label {
     top:0;
     left: 0;
