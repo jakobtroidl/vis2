@@ -10,6 +10,9 @@ Our code implements the following work
 
 ## Getting started
 ```
+npm install
+```
+```
 npm start
 ```
 
