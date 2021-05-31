@@ -5,8 +5,8 @@ class Card {
     /**
      *
      * @param data holding the detailed meta information about individual data points
-     * @param width
-     * @param height
+     * @param width of the card div
+     * @param height of the card div
      * @param div where the info card should appear
      */
     constructor(data, width, height, div) {
@@ -56,16 +56,15 @@ class Card {
 
         this.svg.selectAll("*").remove(); // clear svg before plotting new elements
 
+        const projection = createProjection(this.data.width, this.data.height)
+
         let dx = maxX - minX;
         let dy = maxY - minY;
         let x = (minX + maxX) / 2;
         let y = (minY + maxY) / 2;
-        let scale = 0.9 / Math.max(dx / this.data.width, dy / this.data.height);
-        let translate = [this.data.width / 2 - scale * x, this.data.height / 2 - scale * y];
+        let scale = 1.0 / Math.max(dx / this.width, dy / this.height);
+        let translate = [this.width / 2 - scale * x, this.height / 2 - scale * y];
 
-        const projection = d3.geoAlbersUsa()
-            .translate([this.data.width / 2, this.data.height / 2])
-            .scale(this.data.width);
 
         let g = this.svg.append("g")
             .attr('transform', 'translate(' + translate + ')scale(' + scale + ')')
@@ -90,20 +89,24 @@ class Card {
             .data(croppedData).enter()
             .append('circle')
             .attr('cx', function (d) {
-                if (projection([d.LON, d.LAT]) !== null) {
-                    return projection([d.LON, d.LAT])[0];
-                } else {
-                    return 0;
-                }
+                    const cx = projection([d.LON, d.LAT])[0];
+                    const cy = projection([d.LON, d.LAT])[1];
+                    if(getVoronoiCell([cx, cy], voronoi) === voronoiIndex) {
+                        return cx;
+                    } else {
+                        return 0;
+                    }
             })
             .attr('cy', function (d) {
-                if (projection([d.LON, d.LAT]) !== null) {
-                    return projection([d.LON, d.LAT])[1];
+                const cx = projection([d.LON, d.LAT])[0];
+                const cy = projection([d.LON, d.LAT])[1];
+                if(getVoronoiCell([cx, cy], voronoi) === voronoiIndex) {
+                    return cy;
                 } else {
                     return 0;
                 }
             })
-            .attr('r', this.circleRadius * (1 / scale))
+            .attr('r', this.circleRadius * (2 / scale))
             .style('fill', 'red');
     }
 }
