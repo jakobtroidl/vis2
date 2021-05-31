@@ -1,7 +1,7 @@
 /**
  * Info Card showing details when hovering over a stipple
  */
-class Card{
+class Card {
     /**
      *
      * @param data holding the detailed meta information about individual data points
@@ -19,7 +19,7 @@ class Card{
         this.lineWidth = 1.0;
     }
 
-    setupSVG(){
+    setupSVG() {
         return d3.select('#cardDiv')
             .append('svg')
             .attr('width', this.width)
@@ -32,7 +32,7 @@ class Card{
      * @param voronoi
      * @param voronoiIndex
      */
-    drawArea(bounds, voronoi, voronoiIndex){
+    drawArea(bounds, voronoi, voronoiIndex) {
         let [maxX, maxY] = bounds.max;
         let [minX, minY] = bounds.min;
 
@@ -44,10 +44,10 @@ class Card{
 
         let croppedData = [];
 
-        for(let x = minX; x < maxX; x++) {
+        for (let x = minX; x < maxX; x++) {
             for (let y = minY; y < maxY; y++) {
                 let thisVoronoiIndex = getVoronoiCell([x, y], voronoi);
-                if(thisVoronoiIndex === voronoiIndex){ // check whether the coordinate is in the voronoi region
+                if (thisVoronoiIndex === voronoiIndex) { // check whether the coordinate is in the voronoi region
                     const idx = (y * this.data.width) + x;
                     croppedData = croppedData.concat(this.data.data[idx]);
                 }
@@ -73,8 +73,12 @@ class Card{
             .attr('height', this.height);
 
         let lineFunc = d3.line()
-            .x(function(d) { return d[0]; })
-            .y(function(d) { return d[1]; });
+            .x(function (d) {
+                return d[0];
+            })
+            .y(function (d) {
+                return d[1];
+            });
 
         g.append('path')
             .attr('d', lineFunc(voronoi.cellPolygon(voronoiIndex)))
@@ -85,7 +89,7 @@ class Card{
         g.selectAll('circle')
             .data(croppedData).enter()
             .append('circle')
-            .attr('cx', function(d) {
+            .attr('cx', function (d) {
                 if (projection([d.LON, d.LAT]) !== null) {
                     return projection([d.LON, d.LAT])[0];
                 } else {

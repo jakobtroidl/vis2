@@ -8,10 +8,12 @@ let promises = [
 let accidents = [[], []];
 
 Promise.all(promises)
-    .then( function(data){
+    .then(function (data) {
         accidents = data;//initMainPage(data)
     })
-    .catch( function (err){console.log(err)} );
+    .catch(function (err) {
+        console.log(err)
+    });
 
 const testStippling = async (data, width, height, outputScale = 1.5, machBanding = false, stippleRadius = 1.0, fromTo = undefined) => {
     const bounds = [0, 0, width, height];
@@ -44,12 +46,12 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
     // stipple
     const {stipples, voronoi} = await stipple(
         (machBanding ?
-                DensityFunction2D.machBandingFromImageData2D(
-                    imageData,//context2D.getImageData(...bounds),
-                    5,
-                    1.0, // full weight
-                    stippleRadius) :
-                DensityFunction2D.fromImageData2D(imageData)),
+            DensityFunction2D.machBandingFromImageData2D(
+                imageData,//context2D.getImageData(...bounds),
+                5,
+                1.0, // full weight
+                stippleRadius) :
+            DensityFunction2D.fromImageData2D(imageData)),
         stippleRadius);
 
     // draw
@@ -101,10 +103,10 @@ const testStippling = async (data, width, height, outputScale = 1.5, machBanding
     svg.selectAll("circle")
         .data(stipples).enter()
         .append('circle')
-        .attr('cx', function(s){
+        .attr('cx', function (s) {
             return s.relativeX * outputWidth;
         })
-        .attr('cy', function(s){
+        .attr('cy', function (s) {
             return s.relativeY * outputHeight;
         })
         .attr('r', function (s) {
@@ -158,15 +160,21 @@ function showDataSetForm() {
 
     // todo: maybe fill other form fields based on selection (e.g. from/to for gradient)
     switch (document.forms['dataSetForm']['dataset'].value) {
-        case 'accidents': break;
-        case 'image': break;
-        case 'gradient': break;
-        case 'custom': break;
-        default: break;
+        case 'accidents':
+            break;
+        case 'image':
+            break;
+        case 'gradient':
+            break;
+        case 'custom':
+            break;
+        default:
+            break;
     }
 }
 
 let currentStippledDataSet = null;
+
 function visualizeCurrentStipples() {
     // remove existing visualization
     const visDiv = '#mapDiv';

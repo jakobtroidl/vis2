@@ -1,5 +1,5 @@
 // constructor
-scatterVis = function(_parentElement, _data) {
+scatterVis = function (_parentElement, _data) {
     this.parentElement = _parentElement;
     this.data = _data;
     this.selectedRegion = [];
@@ -10,7 +10,7 @@ scatterVis = function(_parentElement, _data) {
 
 
 // init scatterVis
-scatterVis.prototype.initVis = function() {
+scatterVis.prototype.initVis = function () {
     let vis = this;
 
     vis.margin = {top: 50, right: 50, bottom: 50, left: 50};
@@ -29,7 +29,7 @@ scatterVis.prototype.initVis = function() {
         .attr('class', 'title')
         .append('text')
         .text('Title for Scatter')
-        .attr('transform', `translate(${vis.width/2}, -20)`)
+        .attr('transform', `translate(${vis.width / 2}, -20)`)
         .attr('text-anchor', 'middle');
 
     // init x & y scales
@@ -44,23 +44,23 @@ scatterVis.prototype.initVis = function() {
         .attr("class", "axis axis--y");
 
     // init group for circles;
-    vis.circleGroup = vis.svg.append('g').attr('class','circleGroup');
+    vis.circleGroup = vis.svg.append('g').attr('class', 'circleGroup');
 
     this.wrangleData()
 };
 
-scatterVis.prototype.wrangleData = function() {
+scatterVis.prototype.wrangleData = function () {
     let vis = this;
 
     // filter according to selectedRegion, init empty array
     let filteredData = [];
 
     // if there is a region selected
-    if (vis.selectedRegion.length !== 0){
+    if (vis.selectedRegion.length !== 0) {
         // iterate over all rows of the csv (vis.data)
-        vis.data.forEach( row => {
+        vis.data.forEach(row => {
             // and push rows with proper dates into filteredData
-            if (vis.selectedRegion[0].getTime() <= row.date.getTime() && row.date.getTime() <= vis.selectedRegion[1].getTime() ){
+            if (vis.selectedRegion[0].getTime() <= row.date.getTime() && row.date.getTime() <= vis.selectedRegion[1].getTime()) {
                 filteredData.push(row);
             }
         });
@@ -70,26 +70,33 @@ scatterVis.prototype.wrangleData = function() {
 
     // nest data(filteredData) by state
     let dataByState = d3.nest()
-        .key(function(d) { return d.state; })
+        .key(function (d) {
+            return d.state;
+        })
         .entries(filteredData);
 
     vis.displayData = [];
 
     // iterate over each year
-    dataByState.forEach( state => {
+    dataByState.forEach(state => {
         let tmpSumCategoryOne = 0;
         let tmpSumCategoryTwo = 0;
         let tmpLength = state.values.length;
         let tmpState = state.values[0].state;
 
         // and calculate average for all values
-        state.values.forEach( value => {
+        state.values.forEach(value => {
             tmpSumCategoryOne += +value.salary;
             tmpSumCategoryTwo += +value.average;
         });
         // then create an object with that info and push it into the displayData array
-        vis.displayData.push (
-            {state: tmpState, ratio: (tmpSumCategoryOne/tmpLength)/(tmpSumCategoryTwo/tmpLength), averageCategoryOne: tmpSumCategoryOne/tmpLength, averageCategoryTwo: tmpSumCategoryTwo/tmpLength}
+        vis.displayData.push(
+            {
+                state: tmpState,
+                ratio: (tmpSumCategoryOne / tmpLength) / (tmpSumCategoryTwo / tmpLength),
+                averageCategoryOne: tmpSumCategoryOne / tmpLength,
+                averageCategoryTwo: tmpSumCategoryTwo / tmpLength
+            }
         )
     });
 
@@ -98,16 +105,22 @@ scatterVis.prototype.wrangleData = function() {
 
 
 // init scatterVis
-scatterVis.prototype.updateVis = function() {
+scatterVis.prototype.updateVis = function () {
     let vis = this;
 
     // color scale
-    vis.colorScale = d3.scaleLinear().range(['white','steelblue']).domain(d3.extent(vis.displayData, function(d) { return d.ratio }));
+    vis.colorScale = d3.scaleLinear().range(['white', 'steelblue']).domain(d3.extent(vis.displayData, function (d) {
+        return d.ratio
+    }));
 
 
     // update domains
-    vis.x.domain( d3.extent(vis.displayData, function(d) { return d.averageCategoryOne }) );
-    vis.y.domain( d3.extent(vis.displayData, function(d) { return d.averageCategoryTwo }) );
+    vis.x.domain(d3.extent(vis.displayData, function (d) {
+        return d.averageCategoryOne
+    }));
+    vis.y.domain(d3.extent(vis.displayData, function (d) {
+        return d.averageCategoryTwo
+    }));
 
 
     // draw x & y axis
@@ -121,8 +134,10 @@ scatterVis.prototype.updateVis = function() {
 
     vis.circles.enter().append('circle')
         .attr('class', 'scatter-circle')
-        .attr('id', function (d){ return `circle_${d.state}`})
-        .on('mouseover', function(d){
+        .attr('id', function (d) {
+            return `circle_${d.state}`
+        })
+        .on('mouseover', function (d) {
             // tooltip - in case one wants it
             div.transition().duration(400)
                 .style('opacity', 1)
@@ -130,20 +145,32 @@ scatterVis.prototype.updateVis = function() {
                 .style("top", (d3.event.pageY) + "px");
             div
                 .html(`<div class="row"><div class="col-12" style="color: lightcyan">ratio: ${d.ratio}</div></div>`);
-            d3.select(this).attr('fill', 'rgba(255,10,22,0.72)').attr('stroke', 'darkred')})
-        .on('mouseout', function(d){
+            d3.select(this).attr('fill', 'rgba(255,10,22,0.72)').attr('stroke', 'darkred')
+        })
+        .on('mouseout', function (d) {
             // tooltip
-             div.transition().duration(500)
-                 .style('opacity', 0);
+            div.transition().duration(500)
+                .style('opacity', 0);
 
-            d3.select(this).attr('stroke', 'transparent').attr('fill', function(d){ return vis.colorScale(d.ratio) });})
+            d3.select(this).attr('stroke', 'transparent').attr('fill', function (d) {
+                return vis.colorScale(d.ratio)
+            });
+        })
         .merge(vis.circles)
         .transition()
         .duration(500)
-        .attr('r', function(d,i){return 10})
-        .attr('cx', function (d) { return vis.x(d.averageCategoryOne) })
-        .attr('cy', function (d) { return vis.y(d.averageCategoryTwo) })
-        .attr('fill', function(d){ return vis.colorScale(d.ratio) });
+        .attr('r', function (d, i) {
+            return 10
+        })
+        .attr('cx', function (d) {
+            return vis.x(d.averageCategoryOne)
+        })
+        .attr('cy', function (d) {
+            return vis.y(d.averageCategoryTwo)
+        })
+        .attr('fill', function (d) {
+            return vis.colorScale(d.ratio)
+        });
 };
 
 

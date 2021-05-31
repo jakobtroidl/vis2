@@ -3,9 +3,10 @@ html {
 }
 
 .tab-bar {
-    width:100%;
+    width: 100%;
 }
-.tab{
+
+.tab {
     margin-bottom: 20px;
 }
 
@@ -43,11 +44,12 @@ html {
     background: transparent;
 }
 
-.font{
+.font {
     font-size: 16px;
 }
+
 .login-box .user-box label {
-    top:0;
+    top: 0;
     left: 0;
     padding: 10px 0;
     font-size: 16px;

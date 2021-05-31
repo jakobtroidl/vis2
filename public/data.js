@@ -1,8 +1,7 @@
-
 /**
  * A utility class that renders multiple data sets in ImageData objects
  */
-class DataLoader{
+class DataLoader {
     /**
      * Creates an ImageData object holding representing the given data
      * @param data array holding all objects. Each object must contain a LON, LAT value
@@ -15,10 +14,10 @@ class DataLoader{
         const projection = d3.geoAlbersUsa()
             .translate([width / 2, height / 2])
             .scale(width);
-        const array = new Array(width *  height).fill(0.0);
+        const array = new Array(width * height).fill(0.0);
 
         const metaData = new Array(width * height);
-        for( let i = 0; i < metaData.length; i++){
+        for (let i = 0; i < metaData.length; i++) {
             metaData[i] = [];
         }
 
@@ -38,7 +37,7 @@ class DataLoader{
         const maxValue = array.reduce((max, x) => {
             return max > x ? max : x;
         }, 0.0);
-        console.log(array.map(x => x/maxValue), width);
+        console.log(array.map(x => x / maxValue), width);
         let density = floatArrayToImageData(array, width);
         return [density, metaData];
     }

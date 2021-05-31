@@ -80,9 +80,9 @@ const createImageFromData = (data, width, height, xAttribute, yAttribute, mapLoc
         mapLocation = (xy) => [scaleX(xy[0]), scaleY(xy[1])];
     }
 
-    const density = new Array(width *  height).fill(0.0);
+    const density = new Array(width * height).fill(0.0);
     const locationToData = new Array(width * height);
-    for(let i = 0; i < locationToData.length; i++){
+    for (let i = 0; i < locationToData.length; i++) {
         locationToData[i] = [];
     }
 
@@ -100,7 +100,7 @@ const createImageFromData = (data, width, height, xAttribute, yAttribute, mapLoc
 
     return {
         densityImage: floatArrayToImageData(
-            scaleByMaxDensity ? density.map(d => d/maxDensity) : density,
+            scaleByMaxDensity ? density.map(d => d / maxDensity) : density,
             width),
         locationToData
     };

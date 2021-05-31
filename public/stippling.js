@@ -55,9 +55,9 @@ const imageDataToFloatArray = (imageData, rgbaToFloat = rgbaToLuminance) => {
     for (let i = 0; i < imageData.data.length; i += 4) {
         const density = rgbaToFloat(
             imageData.data[i],
-            imageData.data[i+1],
-            imageData.data[i+2],
-            imageData.data[i+3]
+            imageData.data[i + 1],
+            imageData.data[i + 2],
+            imageData.data[i + 3]
         );
         data.push(density);
         if (maxValue < density) {
@@ -185,16 +185,6 @@ class Stipple {
         this.absoluteDensity = 0;
     }
 
-    setPosition(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    position() {
-        return [this.x, this.y];
-    }
-
-
     static createRandomStipples(numStipples, xScale = 1, yScale = 1, sampler = d3.randomUniform) {
         const xSampler = sampler(0, xScale);
         const ySampler = sampler(0, yScale);
@@ -203,6 +193,15 @@ class Stipple {
             stipples[i] = new Stipple(xSampler(), ySampler());
         }
         return stipples;
+    }
+
+    setPosition(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    position() {
+        return [this.x, this.y];
     }
 }
 
@@ -229,7 +228,7 @@ class DensityFunction2D {
             }
             this.width = stride;
             this.data = [];
-            while(data.length) {
+            while (data.length) {
                 this.data.push(data.splice(0, stride));
             }
             this.height = this.data.length;
@@ -238,52 +237,6 @@ class DensityFunction2D {
             this.width = data.length;
             this.height = data[0].length;
         }
-    }
-
-    density(x, y) {
-        return this.data[y][x];
-    }
-
-    async areaDensity(polygon) {
-        // this doesn't have any async calls, but we could e.g. add a backing tf.tensor2D to perform this operation
-        // which would be asynchronous (& hopefully faster)
-        console.log(polygon);
-        const {min, max} = integerBounds(polygon);
-        let density = 0;
-        for (let y = min[1]; y < max[1]; ++y) {
-            for (let x = min[0]; x < max[0]; ++x) {
-                if (d3.polygonContains(polygon, [x, y])) {
-                    density += this.density(x, y);
-                }
-            }
-        }
-        return density;
-    }
-
-    assignDensity(stipples, voronoi) {
-        stipples.forEach(s => s.density = 0);
-        let lastFound = 0;
-        let lastFoundRow = Array(this.width);
-        for (let y = 0; y < this.height; ++y) {
-            for (let x = 0; x < this.width; ++x) {
-                // We use either the cell index of the pixel above or the pixel to the left, but prefer the one to the
-                // top. Both choices are correct in approximately 60% of the cases, but if the choice was wrong then
-                // choosing the pixel to the top will require us only to search (width + 1) cells in the worst case
-                // whereas when choosing the pixel to the pixel to left we would have to search almost all other cells
-                // in the worst case (because of how Delaunay.find is implemented).
-                if (lastFoundRow[x]) {
-                    lastFound = lastFoundRow[x];
-                }
-                lastFound = voronoi.delaunay.find(x, y, lastFound);
-                lastFoundRow[x] = lastFound;
-                if(stipples[lastFound] === undefined){
-                    console.log("undefined")
-                }
-
-                stipples[lastFound].density += this.density(x, y);
-            }
-        }
-        return stipples;
     }
 
     /**
@@ -362,6 +315,52 @@ class DensityFunction2D {
         }
 
         return new DensityFunction2D(machBanded, imageData.width);
+    }
+
+    density(x, y) {
+        return this.data[y][x];
+    }
+
+    async areaDensity(polygon) {
+        // this doesn't have any async calls, but we could e.g. add a backing tf.tensor2D to perform this operation
+        // which would be asynchronous (& hopefully faster)
+        console.log(polygon);
+        const {min, max} = integerBounds(polygon);
+        let density = 0;
+        for (let y = min[1]; y < max[1]; ++y) {
+            for (let x = min[0]; x < max[0]; ++x) {
+                if (d3.polygonContains(polygon, [x, y])) {
+                    density += this.density(x, y);
+                }
+            }
+        }
+        return density;
+    }
+
+    assignDensity(stipples, voronoi) {
+        stipples.forEach(s => s.density = 0);
+        let lastFound = 0;
+        let lastFoundRow = Array(this.width);
+        for (let y = 0; y < this.height; ++y) {
+            for (let x = 0; x < this.width; ++x) {
+                // We use either the cell index of the pixel above or the pixel to the left, but prefer the one to the
+                // top. Both choices are correct in approximately 60% of the cases, but if the choice was wrong then
+                // choosing the pixel to the top will require us only to search (width + 1) cells in the worst case
+                // whereas when choosing the pixel to the pixel to left we would have to search almost all other cells
+                // in the worst case (because of how Delaunay.find is implemented).
+                if (lastFoundRow[x]) {
+                    lastFound = lastFoundRow[x];
+                }
+                lastFound = voronoi.delaunay.find(x, y, lastFound);
+                lastFoundRow[x] = lastFound;
+                if (stipples[lastFound] === undefined) {
+                    console.log("undefined")
+                }
+
+                stipples[lastFound].density += this.density(x, y);
+            }
+        }
+        return stipples;
     }
 }
 
@@ -493,9 +492,9 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
         lastVoronoi = voronoi;
         errorThreshold += thresholdConvergenceRate;
 
-        timeVoronoi += endVoronoi-startVoronoi;
-        timeDensity += endDensity-startDensity;
-        timeStipples += endStipples-startStipples;
+        timeVoronoi += endVoronoi - startVoronoi;
+        timeDensity += endDensity - startDensity;
+        timeStipples += endStipples - startStipples;
     } while (splitsOrMerges);
 
     // timing
@@ -592,8 +591,7 @@ const stippleParallel = async (targetDensityFunction, stippleRadius = 5.0, initi
                     acc.splitsOrMerges = true;
                     acc.stipples.push(s[0]);
                     acc.stipples.push(s[1]);
-                }
-                else {
+                } else {
                     acc.stipples.push(s);
                 }
             } else {

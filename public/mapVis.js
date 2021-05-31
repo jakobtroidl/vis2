@@ -164,10 +164,9 @@ mapVis.prototype.ready = function (us, data) {
         .attr("cx", function (d) {
             let proj = projection([d.LON, d.LAT]);
             if (proj != null) {
-                 return proj[0];
-            }
-            else {
-               // console.log(d.LON, " ", d.LAT);
+                return proj[0];
+            } else {
+                // console.log(d.LON, " ", d.LAT);
             }
             return 0
         })
@@ -175,8 +174,7 @@ mapVis.prototype.ready = function (us, data) {
             let proj = projection([d.LON, d.LAT]);
             if (proj != null) {
                 return proj[1];
-            }
-            else {
+            } else {
                 console.log(d.LON, " ", d.LAT);
             }
             return 0

@@ -1,4 +1,4 @@
-brushVis = function(_parentElement, _data) {
+brushVis = function (_parentElement, _data) {
     this.parentElement = _parentElement;
     this.data = _data;
     this.displayData = [];
@@ -8,7 +8,7 @@ brushVis = function(_parentElement, _data) {
 };
 
 // init brushVis
-brushVis.prototype.initVis = function() {
+brushVis.prototype.initVis = function () {
     let vis = this;
 
     vis.margin = {top: 20, right: 50, bottom: 20, left: 50};
@@ -35,7 +35,7 @@ brushVis.prototype.initVis = function() {
         .attr('class', 'title')
         .append('text')
         .text('Title for Timeline')
-        .attr('transform', `translate(${vis.width/2}, -20)`)
+        .attr('transform', `translate(${vis.width / 2}, -20)`)
         .attr('text-anchor', 'middle');
 
     // init scales
@@ -50,7 +50,7 @@ brushVis.prototype.initVis = function() {
         .attr("class", "axis axis--y");
 
     // init pathGroup
-    vis.pathGroup = vis.svg.append('g').attr('class','pathGroup');
+    vis.pathGroup = vis.svg.append('g').attr('class', 'pathGroup');
 
     // init path one (average)
     vis.pathOne = vis.pathGroup
@@ -65,9 +65,13 @@ brushVis.prototype.initVis = function() {
     // init path generator
     vis.area = d3.area()
         .curve(d3.curveMonotoneX)
-        .x(function(d) { return vis.x(d.date); })
+        .x(function (d) {
+            return vis.x(d.date);
+        })
         .y0(vis.y(0))
-        .y1(function(d) { return vis.y(d.average); });
+        .y1(function (d) {
+            return vis.y(d.average);
+        });
 
     // init brushGroup:
     vis.brushGroup = vis.svg.append("g")
@@ -76,7 +80,7 @@ brushVis.prototype.initVis = function() {
     // init brush
     vis.brush = d3.brushX()
         .extent([[0, 0], [vis.width, vis.height]])
-        .on("brush end", function(){
+        .on("brush end", function () {
             let currentBrushRegion = d3.event.selection;
             myMapVis.selectedRegion = [vis.x.invert(currentBrushRegion[0]), vis.x.invert(currentBrushRegion[1])];
             myMapVis.wrangleData();
@@ -89,38 +93,40 @@ brushVis.prototype.initVis = function() {
 };
 
 // initDataWrangling - data wrangling, done only once
-brushVis.prototype.initDataWrangling = function() {
+brushVis.prototype.initDataWrangling = function () {
     let vis = this;
 
     let parseDate = d3.timeParse("%Y");
 
-    vis.data.forEach(function(d){
+    vis.data.forEach(function (d) {
         d.date = parseDate(d.date);
         d.average = parseFloat(d.average);
         d.salary = parseFloat(d.salary);
     });
 
-    vis.filteredData = vis.data.sort(function(a,b){
+    vis.filteredData = vis.data.sort(function (a, b) {
         return a.date - b.date
     });
 
     let dataByDate = d3.nest()
-        .key(function(d) { return d.date; })
+        .key(function (d) {
+            return d.date;
+        })
         .entries(vis.filteredData);
 
     vis.averageData = [];
 
     // iterate over each year
-    dataByDate.forEach( year => {
+    dataByDate.forEach(year => {
         let tmpSum = 0;
         let tmpLength = year.values.length;
         let tmpDate = year.values[0].date;
-        year.values.forEach( value => {
+        year.values.forEach(value => {
             tmpSum += value.average;
         });
 
-        vis.averageData.push (
-            {date: tmpDate, average: tmpSum/tmpLength}
+        vis.averageData.push(
+            {date: tmpDate, average: tmpSum / tmpLength}
         )
     });
 
@@ -128,7 +134,7 @@ brushVis.prototype.initDataWrangling = function() {
 };
 
 // wrangleData - gets called whenever a state is selected
-brushVis.prototype.wrangleData = function(){
+brushVis.prototype.wrangleData = function () {
     let vis = this;
 
     // reset displayData
@@ -152,12 +158,16 @@ brushVis.prototype.wrangleData = function(){
 };
 
 // updateVis
-brushVis.prototype.updateVis = function() {
+brushVis.prototype.updateVis = function () {
     let vis = this;
 
     // update domains
-    vis.x.domain( d3.extent(vis.displayData, function(d) { return d.date }) );
-    vis.y.domain( d3.extent(vis.filteredData, function(d) { return d.average }) );
+    vis.x.domain(d3.extent(vis.displayData, function (d) {
+        return d.date
+    }));
+    vis.y.domain(d3.extent(vis.filteredData, function (d) {
+        return d.average
+    }));
 
     // draw x & y axis
     vis.xAxis.transition().duration(400).call(d3.axisBottom(vis.x));
@@ -170,7 +180,7 @@ brushVis.prototype.updateVis = function() {
         .attr("clip-path", "url(#clip)");
 
     // draw pathTwo if selectedState
-    if (selectedState !== ''){
+    if (selectedState !== '') {
         vis.pathTwo.datum(vis.displayData)
             .transition().duration(400)
             .attr('fill', 'rgba(255,0,0,0.47)')
