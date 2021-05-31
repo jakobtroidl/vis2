@@ -16,10 +16,12 @@ npm install
 npm start
 ```
 
-## Generate documentation
+## Documentation
+After generating the documentation you can access it [here](https://jakobtroidl.github.io/vis2/). You can generate the documentation using the following command:
 ```
 npm run docs
 ```
+
 
 ## Known issues
 
