@@ -11,6 +11,9 @@ Our code implements the following work
 ## Getting started
 run `npm start`
 
+## Generate documentation
+run  `npm run docs`
+
 ## Known issues
 
 Some data points in the detail view are outside of the voronoi region
