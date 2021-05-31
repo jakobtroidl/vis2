@@ -26,7 +26,3 @@ the following command.
 ```
 npm run docs
 ```
-
-## Known issues
-
-Some data points in the detail view are outside of the voronoi region
