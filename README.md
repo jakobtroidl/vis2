@@ -8,6 +8,16 @@ Our code implements the following work
 
 > Görtler, J., Spicker, M., Schulz, C., Weiskopf, D. and Deussen, O., 2019. Stippling of 2D scalar fields. IEEE transactions on visualization and computer graphics, 25(6), pp.2193-2204.
 
+## Getting started
+```
+npm start
+```
+
+## Generate documentation
+```
+npm run docs
+```
+
 ## Known issues
 
 Some data points in the detail view are outside of the voronoi region
