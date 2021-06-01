@@ -1,4 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: main.js</title>
 
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: main.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// load data using promises
+let promises = [
+    d3.json("county_us.topojson"),
+    d3.csv("us-accidents-severity-4-Nov-Dec-2020.csv")
+];
+
+// TODO: do this properly
+let accidents = [[], []];
+
+Promise.all(promises)
+    .then(function (data) {
+        accidents = data;//initMainPage(data)
+    })
+    .catch(function (err) {
+        console.log(err)
+    });
+
+const testStippling = async (data, width, height, outputScale = 1.5, machBanding = false, stippleRadius = 1.0, fromTo = undefined) => {
+    const bounds = [0, 0, width, height];
+    if (!fromTo) {
+        // just point from left to right by default
+        fromTo = [...bounds];
+        fromTo[3] = 0;
+    }
+
+    // init
+    // const context2D = d3.select('#mapDiv')
+    //     .append('canvas')
+    //     .attr('width', width)
+    //     .attr('height', height)
+    //     .node()
+    //     .getContext('2d');
+
+    let [imageData, metaData] = DataLoader.loadUsGeoData(data, width, height);
+
+    //showImage(imageData, "mapDiv")
+
+    //const gradient = context2D.createLinearGradient(...fromTo);
+
+    // gradient.addColorStop(0, 'black');
+    // gradient.addColorStop(1, 'white');
+    // context2D.fillStyle = gradient;
+    // context2D.fillRect(...bounds);
+
+
+    // stipple
+    const {stipples, voronoi} = await stipple(
+        (machBanding ?
+            DensityFunction2D.machBandingFromImageData2D(
+                imageData,//context2D.getImageData(...bounds),
+                5,
+                1.0, // full weight
+                stippleRadius) :
+            DensityFunction2D.fromImageData2D(imageData)),
+        stippleRadius);
+
+    // draw
+    const outputWidth = width * outputScale;
+    const outputHeight = height * outputScale;
+    const svg = d3.select('#mapDiv')
+        .append('svg')
+        .attr('width', outputWidth)
+        .attr('height', outputHeight);
+
+    /*
+     * The stipple size or color could also be dependent on the density (i.e. s.density ∈ [0,1]).
+     * The color could also encode some property of the underlying data (e.g. like in the voting data).
+     *
+     * Hovering on a stipple could also show some description of the data points that are represented by the stipple.
+     * For this you can use the voronoi diagram:
+     *   i = current stipple index
+     *   cell = voronoi.polygonCell(i)
+     *   bounds = polygonBounds(cell)
+     *   dataCoords = []
+     *   for x&amp;y from bounds.min to bounds.max
+     *       if (i === voronoi.delaunay.find(x, y, i)
+     *           dataCoords.push([x,y])
+     *   dataCoords can now be used to index a 2d array containing the actual data
+     *
+     *   e.g.:
+     *   data = [
+     *     [ [{description: 'foo'}, {description: 'bar'}], [], [] ],
+     *     [ [], [], [{description: 'baz'}] ]
+     *   ]
+     *   dataCoords = [[0,0], [1,0]]
+     *   for (const p of dataCoords)
+     *       data[p[1]][p[0]].forEach(x => console.log(x.description));
+     *   >>> 'foo'
+     *   >>> 'bar'
+     */
+
+    let cardDiv = '#cardDiv';
+    let box = document.querySelector(cardDiv);
+    let cardWidth = box.clientWidth;
+    let cardHeight = box.clientHeight;
+
+    console.log(cardWidth, " ", cardHeight);
+
+    let myData = {data: metaData, width: width, height: height};
+
+    let card = new Card(myData, cardWidth, cardHeight, cardDiv);
+
+    svg.selectAll("circle")
+        .data(stipples).enter()
+        .append('circle')
+        .attr('cx', function (s) {
+            return s.relativeX * outputWidth;
+        })
+        .attr('cy', function (s) {
+            return s.relativeY * outputHeight;
+        })
+        .attr('r', function (s) {
+            return stippleRadius * s.density * outputScale;
+        })
+        .style('fill', 'black')
+        .on('mouseover', function (s) {
+            d3.select(this).style('fill', 'rgb(255, 0, 0)'); // color stipples
+            let bounds = stippleBounds(s, voronoi);
+            card.drawArea(bounds, voronoi, getVoronoiCell(s.position(), voronoi));
+        })
+        .on('mouseleave', function (s) {
+            d3.select(this).style('fill', 'black');
+        })
+
+    // stipples.forEach(s => {
+    //     if (s.density !== 0.0) {
+    //         svg.append('circle')
+    //             .attr('cx', s.relativeX * outputWidth)
+    //             .attr('cy', s.relativeY * outputHeight)
+    //             .attr('r', stippleRadius * s.density * outputScale)
+    //             .style('fill', 'black')
+    //             .on("mouseenter", function (s) {
+    //                 console.log(s);
+    //             })
+    //     }
+    // });
+}
 
 function showMachBandingForm() {
     const useMachbanding = document.getElementById('machbanding').checked;
@@ -8,7 +172,7 @@ function showMachBandingForm() {
 function openTab(name) {
     let i;
     let x = document.getElementsByClassName("tab");
-    for (i = 0; i < x.length; i++) {
+    for (i = 0; i &lt; x.length; i++) {
         x[i].style.display = "none";
     }
     document.getElementById(name).style.display = "block";
@@ -88,7 +252,7 @@ async function visualizeCurrentStipples() {
     const visDiv = '#mapDiv';
     d3.select(visDiv).select('svg').remove();
 
-    if (currentStippledDataSet && !stipplingInProgress) {
+    if (currentStippledDataSet &amp;&amp; !stipplingInProgress) {
         const outputScale = document.getElementById('visScale').value;
         const scaleByDensity = document.getElementById('scaleByDensity').checked;
         const colorMap = document.getElementById('stippleColorMap').value;
@@ -318,3 +482,26 @@ function stippleDataSet() {
 
     return false; // i.e. do not refresh the page
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageData">createImageData</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#currentStippledDataSet">currentStippledDataSet</a></li><li><a href="global.html#disableStippling">disableStippling</a></li><li><a href="global.html#enableStippling">enableStippling</a></li><li><a href="global.html#getProjectionHeight">getProjectionHeight</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#readFile">readFile</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li><li><a href="global.html#stipplingInProgress">stipplingInProgress</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Jun 01 2021 17:02:44 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

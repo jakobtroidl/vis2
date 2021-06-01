@@ -1,3 +1,8 @@
+/**
+ * Reads a file and returns the file's contents.
+ * @param file a {@link Blob}
+ * @return {Promise<unknown>} the file's contents
+ */
 const readFile = (file) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -7,6 +12,12 @@ const readFile = (file) => {
         reader.readAsDataURL(file);
     });
 }
+
+/**
+ * Creates an image from a given source.
+ * @param src the source for the image
+ * @return {Promise<Image>} the created image
+ */
 const loadImage = async (src) => {
     return new Promise((resolve, reject) => {
         const image = new Image();
@@ -16,6 +27,12 @@ const loadImage = async (src) => {
     });
 }
 
+/**
+ * Creates an image from an image source and scales it to the requested size.
+ * @param imageSource a file path or a loaded image source (see {@link loadImage})
+ * @param width the width to which the created image should be scaled to.
+ * @return {Promise<{densityImage: ImageData, mapToLocation: ImageData}>}
+ */
 const createImageData = async (imageSource, width) => {
     const image = await loadImage(imageSource);
 
@@ -125,8 +142,12 @@ const createImageFromData = (data, width, height, xAttribute, yAttribute, mapLoc
             const x = Math.floor(location[0]);
             const y = Math.floor(location[1]);
             const i = (y * width) + x;
-            density[i] += 1.0;
-            locationToData[i].push(d);
+            if (locationToData[i]) {
+                density[i] += 1.0;
+                locationToData[i].push(d);
+            } else {
+                console.log(`Sample out of bounds: ${i} not in [0, ${locationToData.length})`);
+            }
         }
     });
     const maxDensity = density.reduce((max, x) => max > x ? max : x, 0.0);
@@ -158,6 +179,12 @@ const createProjection = (width, height, projectionMethod = 'geoAlbersUsa') => {
     }
 };
 
+/**
+ * Calculates the height for a given width and projection method.
+ * @param width the width for which the height should be calculated
+ * @param projectionMethod the projection method for which the height should be calculated
+ * @return {number} the calculated height
+ */
 const getProjectionHeight = (width, projectionMethod = 'geoAlbersUsa') => {
     switch (projectionMethod) {
         case 'geoAlbersUsa':
@@ -169,14 +196,14 @@ const getProjectionHeight = (width, projectionMethod = 'geoAlbersUsa') => {
 
 /**
  * A specialization of {@link createImageFromData} for geographic projections.
- * @param data
- * @param width
- * @param height
- * @param projectionMethod
- * @param longitudeAttribute
- * @param latitudeAttribute
- * @param scaleByMaxDensity
- * @returns {{densityImage: ImageData, locationToData: any[]}}
+ * @param data the data source
+ * @param width the width of the resulting image
+ * @param height the height of the resulting image. If this is not set, it is calculated using {@link getProjectionHeight}.
+ * @param projectionMethod the projection method to use.
+ * @param longitudeAttribute the name of the longitude attribute of items in the data array
+ * @param latitudeAttribute the name of the latitude attribute of items in the data array.
+ * @param scaleByMaxDensity a boolean flag, if set the rendered image is scaled by the maximum density in the image resulting in a grayscale image. Otherwise the result is a binary image. If your data set is sparse you'll probably want the latter.
+ * @returns {{densityImage: ImageData, locationToData: any[]}} an object containing the rendered image and the backing 2d array.
  */
 const createGeographicDataImage = (data, width, height = null, projectionMethod = 'geoAlbersUsa', longitudeAttribute = 'LON', latitudeAttribute = 'LAT', scaleByMaxDensity = false) => {
     height = height === null ? getProjectionHeight(width, projectionMethod) : height;

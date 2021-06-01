@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <title>JSDoc: Source: dataset.js</title>
 
-    <script src="scripts/prettify/prettify.js"></script>
-    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link href="styles/prettify-tomorrow.css" rel="stylesheet" type="text/css">
-    <link href="styles/jsdoc-default.css" rel="stylesheet" type="text/css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
 
 <body>
@@ -19,10 +19,64 @@
 
     <h1 class="page-title">Source: dataset.js</h1>
 
+    
 
+
+
+    
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
+ * Reads a file and returns the file's contents.
+ * @param file a {@link Blob}
+ * @return {Promise&lt;unknown>} the file's contents
+ */
+const readFile = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => resolve(reader.result);
+        console.log(file);
+        reader.readAsDataURL(file);
+    });
+}
+
+/**
+ * Creates an image from a given source.
+ * @param src the source for the image
+ * @return {Promise&lt;Image>} the created image
+ */
+const loadImage = async (src) => {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onerror = reject;
+        image.onload = () => resolve(image);
+        image.src = src;
+    });
+}
+
+/**
+ * Creates an image from an image source and scales it to the requested size.
+ * @param imageSource a file path or a loaded image source (see {@link loadImage})
+ * @param width the width to which the created image should be scaled to.
+ * @return {Promise&lt;{densityImage: ImageData, mapToLocation: ImageData}>}
+ */
+const createImageData = async (imageSource, width) => {
+    const image = await loadImage(imageSource);
+
+    // get image data in target resolution
+    const ratio = width / image.width;
+    const scaledHeight = image.height * ratio;
+    const ctx = new OffscreenCanvas(width, scaledHeight).getContext('2d');
+    ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, scaledHeight);
+
+    return {
+        densityImage: ctx.getImageData(0, 0, width, scaledHeight),
+        mapToLocation: ctx.getImageData(0, 0, width, scaledHeight)
+    };
+}
+
+/**
  * Creates a gradient image.
  * @param width the width of the image.
  * @param height the height of the image.
@@ -138,27 +192,45 @@ const createImageFromData = (data, width, height, xAttribute, yAttribute, mapLoc
  * @returns function a D3 projection.
  */
 const createProjection = (width, height, projectionMethod = 'geoAlbersUsa') => {
+    let defaultHeight = 1;
     switch (projectionMethod) {
         case 'geoAlbersUsa':
+            defaultHeight = 500;
         default:
             return d3[projectionMethod]()
                 .translate([width / 2, height / 2]) // translate to center
-                .scale(d3[projectionMethod]().scale() * (height / 500)); // rescale to target resolution (default uses a height of 500)
+                .scale(d3[projectionMethod]().scale() * (height / defaultHeight));
+    }
+};
+
+/**
+ * Calculates the height for a given width and projection method.
+ * @param width the width for which the height should be calculated
+ * @param projectionMethod the projection method for which the height should be calculated
+ * @return {number} the calculated height
+ */
+const getProjectionHeight = (width, projectionMethod = 'geoAlbersUsa') => {
+    switch (projectionMethod) {
+        case 'geoAlbersUsa':
+            return 500 * (width / 960);
+        default:
+            throw new Error(`Unknown projection method: ${projectionMethod}`);
     }
 };
 
 /**
  * A specialization of {@link createImageFromData} for geographic projections.
- * @param data
- * @param width
- * @param height
- * @param projectionMethod
- * @param longitudeAttribute
- * @param latitudeAttribute
- * @param scaleByMaxDensity
- * @returns {{densityImage: ImageData, locationToData: any[]}}
+ * @param data the data source
+ * @param width the width of the resulting image
+ * @param height the height of the resulting image. If this is not set, it is calculated using {@link getProjectionHeight}.
+ * @param projectionMethod the projection method to use.
+ * @param longitudeAttribute the name of the longitude attribute of items in the data array
+ * @param latitudeAttribute the name of the latitude attribute of items in the data array.
+ * @param scaleByMaxDensity a boolean flag, if set the rendered image is scaled by the maximum density in the image resulting in a grayscale image. Otherwise the result is a binary image. If your data set is sparse you'll probably want the latter.
+ * @returns {{densityImage: ImageData, locationToData: any[]}} an object containing the rendered image and the backing 2d array.
  */
-const createGeographicDataImage = (data, width, height, projectionMethod = 'geoAlbersUsa', longitudeAttribute = 'LON', latitudeAttribute = 'LAT', scaleByMaxDensity = false) => {
+const createGeographicDataImage = (data, width, height = null, projectionMethod = 'geoAlbersUsa', longitudeAttribute = 'LON', latitudeAttribute = 'LAT', scaleByMaxDensity = false) => {
+    height = height === null ? getProjectionHeight(width, projectionMethod) : height;
     const projection = createProjection(width, height, projectionMethod);
     return createImageFromData(data, width, height, longitudeAttribute, latitudeAttribute, projection, scaleByMaxDensity);
 };
@@ -169,45 +241,21 @@ const createGeographicDataImage = (data, width, height, projectionMethod = 'geoA
     </section>
 
 
+
+
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2>
-    <h3>Classes</h3>
-    <ul>
-        <li><a href="Card.html">Card</a></li>
-        <li><a href="DataLoader.html">DataLoader</a></li>
-        <li><a href="DensityFunction2D.html">DensityFunction2D</a></li>
-        <li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li>
-        <li><a href="Stipple.html">Stipple</a></li>
-    </ul>
-    <h3>Global</h3>
-    <ul>
-        <li><a href="global.html#arrayMax">arrayMax</a></li>
-        <li><a href="global.html#arrayMin">arrayMin</a></li>
-        <li><a href="global.html#clamp">clamp</a></li>
-        <li><a href="global.html#colorScales">colorScales</a></li>
-        <li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li>
-        <li><a href="global.html#createGradientImage">createGradientImage</a></li>
-        <li><a href="global.html#createImageFromData">createImageFromData</a></li>
-        <li><a href="global.html#createProjection">createProjection</a></li>
-        <li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li>
-        <li><a href="global.html#scaleToRange">scaleToRange</a></li>
-        <li><a href="global.html#showImage">showImage</a></li>
-        <li><a href="global.html#splitCell">splitCell</a></li>
-        <li><a href="global.html#stipple">stipple</a></li>
-        <li><a href="global.html#stippleParallel">stippleParallel</a></li>
-    </ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageData">createImageData</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#currentStippledDataSet">currentStippledDataSet</a></li><li><a href="global.html#disableStippling">disableStippling</a></li><li><a href="global.html#enableStippling">enableStippling</a></li><li><a href="global.html#getProjectionHeight">getProjectionHeight</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#readFile">readFile</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li><li><a href="global.html#stipplingInProgress">stipplingInProgress</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon May 31 2021 13:04:33
-    GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Jun 01 2021 17:02:44 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"></script>
+<script src="scripts/linenumber.js"> </script>
 </body>
 </html>
