@@ -348,11 +348,10 @@ function stippleDataSet() {
                 };
                 geographicalDataset = true;
                 break;
-            case 'topo':
-                // TODO: replace filename
+            case 'italy':
                 geographicalDataset = false;
                 dataSourceFunc = async () => {
-                    return createImageData('eggholder.png', width);
+                    return createImageData('italy.png', width);
                 }
                 break;
             case 'eggholder':
