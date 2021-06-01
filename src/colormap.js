@@ -402,5 +402,8 @@ const getColor = (v, colorScale = 'jet', interpolate = false) => {
 
 const getColorString = (v, colorScale = 'jet', interpolate = false) => {
     const rgb = getColor(v, colorScale, interpolate);
+    if (rgb[0] === 0 && rgb[1] === 0 && rgb[2] === 0) {
+        console.log(rgb, v, colorScale);
+    }
     return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 };
