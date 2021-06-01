@@ -175,6 +175,16 @@ function showDataSetForm() {
 
 let currentStippledDataSet = null;
 
+async function loadStates(name) {
+    const states = await d3.json(name);
+    return topojson.feature(states, states.objects.states).features;
+}
+
+function geoPath(width, height, projectionMethod = 'geoAlbersUsa') {
+    const projection = createProjection(width, height, projectionMethod);
+    return d3.geoPath().projection(projection);
+}
+
 async function visualizeCurrentStipples() {
     // remove existing visualization
     const visDiv = '#mapDiv';
@@ -194,21 +204,18 @@ async function visualizeCurrentStipples() {
             .attr('height', outputHeight);
 
         if (currentStippledDataSet.geographicalDataset) {
-            const states = await d3.json("county_us.topojson");
-            const projection = createProjection(outputWidth, outputHeight);
-            const path = d3.geoPath().projection(projection);
-
+            const path = geoPath(outputWidth, outputHeight);
             svg.append('g')
                 .attr('id', 'states')
                 .selectAll('path')
-                .data(topojson.feature(states, states.objects.states).features)
+                .data(await loadStates("county_us.topojson"))
                 .enter().append('path')
                 .attr('d', path)
+                //.attr('class', 'state')
                 .style('fill', 'none')
                 .style('stroke', 'grey')
                 .style('stroke-width', '1px');
         }
-
 
         const card = initCard(currentStippledDataSet, currentStippledDataSet.geographicalDataset)
 
