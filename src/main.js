@@ -173,7 +173,37 @@ function showDataSetForm() {
     }
 }
 
+/**
+ * True if stippling is currently in progress, false otherwise.
+ * @type {boolean}
+ */
+let stipplingInProgress = false;
+
+/**
+ * Holds the last stippled dataset.
+ * @type {null}
+ */
 let currentStippledDataSet = null;
+
+/**
+ * Disables triggering the stippling process from the UI.
+ */
+function disableStippling() {
+    stipplingInProgress = true;
+    const stippleButton = document.getElementById('stippleButton');
+    stippleButton.style.backgroundColor = '#929292';
+    stippleButton.value = 'Stippling ...';
+}
+
+/**
+ * Enables triggering the stippling process from the UI.
+ */
+function enableStippling() {
+    stipplingInProgress = false;
+    const stippleButton = document.getElementById('stippleButton');
+    stippleButton.style.backgroundColor = '#4CAF50';
+    stippleButton.value = 'Stipple!';
+}
 
 async function loadStates(name) {
     const states = await d3.json(name);
@@ -190,7 +220,7 @@ async function visualizeCurrentStipples() {
     const visDiv = '#mapDiv';
     d3.select(visDiv).select('svg').remove();
 
-    if (currentStippledDataSet) {
+    if (currentStippledDataSet && !stipplingInProgress) {
         const outputScale = document.getElementById('visScale').value;
         const scaleByDensity = document.getElementById('scaleByDensity').checked;
         const colorMap = document.getElementById('stippleColorMap').value;
@@ -242,184 +272,186 @@ async function visualizeCurrentStipples() {
 }
 
 const initCard = (data, geographical) => {
-    let cardDiv = '#cardDiv';
-    let box = document.querySelector(cardDiv);
+    const cardDiv = '#cardDiv';
+    d3.select(cardDiv).select('svg').remove();
 
-    let detailsDiv = 'details'
-    let details = document.getElementById(detailsDiv);
+    const box = document.querySelector(cardDiv);
+
+    const detailsDiv = 'details'
+    const details = document.getElementById(detailsDiv);
 
     if (geographical) {
         details.style.display = 'block';
     } else {
         details.style.display = 'none';
     }
-    let myData = {data: data.locationToData, width: data.width, height: data.height};
+    const myData = {data: data.locationToData, width: data.width, height: data.height};
     return new Card(myData, box.clientWidth, box.clientHeight, cardDiv);
 }
 
-async function loadStates(filename) {
-    const states = await d3.json(filename);
-    return topojson.feature(states, states.objects.states).features;
-}
-
-
-
 function stippleDataSet() {
-    // todo: height depends on width in most cases: only set height for gradient and custom datasets
-    const width = parseInt(document.getElementById('stippleWidth').value);
-    const height = parseInt(document.getElementById('stippleHeight').value);
-    const stippleRadius = parseFloat(document.getElementById('stippleRadius').value);
-    const useMachbanding = document.getElementById('machbanding').checked;
-    const machbandingQuantization = parseInt(document.getElementById('machbandingQuantization').value);
-    const machbandingWeight = parseFloat(document.getElementById('machbandingWeight').value);
-    const machbandingBlurRadius = parseFloat(document.getElementById('machbandingBlurRadius').value);
-    const dataset = document.forms['dataSetForm']['dataset'].value;
+    if (!stipplingInProgress) {
+        disableStippling();
 
-    // todo: add prepared heightmaps
-    // todo: add prepared weather data
-    // todo: calculate height from width for geoAlbersUsa
-    let dataSourceFunc;
-    let geographicalDataset;
-    switch (dataset) {
-        case 'accidentsNov':
-            dataSourceFunc = async () => {
-                const data = await d3.csv("us-accidents-severity-4-Nov-Dec-2020.csv");
-                return createGeographicDataImage(data, width, height);
-            };
-            geographicalDataset = true;
-            break;
-        case 'accidentsDec':
-            dataSourceFunc = async () => {
-                const data = await d3.csv("us-accidents-severity-4-Dec-2020.csv");
-                return createGeographicDataImage(data, width, height);
-            };
-            geographicalDataset = true;
-            break;
-        case 'hailstorm0':
-            dataSourceFunc = async () => {
-                const data = await d3.csv("hail-2015-sevprob-larger-0.csv");
-                return createGeographicDataImage(data, width, height);
-            };
-            geographicalDataset = true;
-            break;
-        case 'hailstorm56':
-            dataSourceFunc = async () => {
-                const data = await d3.csv("hail-2015-sevprob-larger-56.csv");
-                return createGeographicDataImage(data, width, height);
-            };
-            geographicalDataset = true;
-            break;
-        case 'hailstorm80':
-            dataSourceFunc = async () => {
-                const data = await d3.csv("hail-2015-sevprob-larger-80.csv");
-                return createGeographicDataImage(data, width, height);
-            };
-            geographicalDataset = true;
-            break;
-        case 'topo':
-            // TODO: replace filename
-            geographicalDataset = false;
-            dataSourceFunc = async () => {
-                return createImageData('eggholder.png', width);
-            }
-            break;
-        case 'eggholder':
-            geographicalDataset = false;
-            dataSourceFunc = async () => {
-                return createImageData('eggholder.png', width);
-            }
-            break;
-        case 'cglogo':
-            // TODO: replace filename
-            geographicalDataset = false;
-            dataSourceFunc = async () => {
-                return createImageData('eggholder.png', width);
-            }
-            break;
-        case 'meister':
-            // TODO: replace filename
-            geographicalDataset = false;
-            dataSourceFunc = async () => {
-                return createImageData('eggholder.png', width);
-            }
-            break;
-        case 'gradient':
-            const fromTo = [
-                document.getElementById('gradientX1').value,
-                document.getElementById('gradientY1').value,
-                document.getElementById('gradientX2').value,
-                document.getElementById('gradientY2').value,
-            ];
-            dataSourceFunc = async () => {
-                const gradient = createGradientImage(width, height, fromTo);
-                return {
-                    densityImage: gradient,
-                    locationToData: gradient
+        // todo: height depends on width in most cases: only set height for gradient and custom datasets
+        const width = parseInt(document.getElementById('stippleWidth').value);
+        const height = parseInt(document.getElementById('stippleHeight').value);
+        const stippleRadius = parseFloat(document.getElementById('stippleRadius').value);
+        const useMachbanding = document.getElementById('machbanding').checked;
+        const machbandingQuantization = parseInt(document.getElementById('machbandingQuantization').value);
+        const machbandingWeight = parseFloat(document.getElementById('machbandingWeight').value);
+        const machbandingBlurRadius = parseFloat(document.getElementById('machbandingBlurRadius').value);
+        const dataset = document.forms['dataSetForm']['dataset'].value;
+
+        // todo: add prepared heightmaps
+        // todo: add prepared weather data
+        // todo: calculate height from width for geoAlbersUsa
+        let dataSourceFunc;
+        let geographicalDataset;
+        switch (dataset) {
+            case 'accidentsNov':
+                dataSourceFunc = async () => {
+                    const data = await d3.csv("us-accidents-severity-4-Nov-Dec-2020.csv");
+                    return createGeographicDataImage(data, width, height);
                 };
-            };
-            geographicalDataset = false;
-            break;
-        case 'image':
-            const imageFile = document.getElementById('imageToStipple').files[0];
-            geographicalDataset = false;
-            dataSourceFunc = async () => {
-                return createImageData(await readFile(imageFile), width);
-            }
-            break;
-        case 'custom':
-            const dataSource = document.getElementById('customDataURL').value;
-            const projection = document.getElementById('customProjection').value;
-            const xAttribute = document.getElementById('xAttribute').value;
-            const yAttribute = document.getElementById('yAttribute').value;
-            const scaleByMaxDensity = document.getElementById('useGrayscale').checked;
-
-            if (projection === 'none') {
+                geographicalDataset = true;
+                break;
+            case 'accidentsDec':
+                dataSourceFunc = async () => {
+                    const data = await d3.csv("us-accidents-severity-4-Dec-2020.csv");
+                    return createGeographicDataImage(data, width, height);
+                };
+                geographicalDataset = true;
+                break;
+            case 'hailstorm0':
+                dataSourceFunc = async () => {
+                    const data = await d3.csv("hail-2015-sevprob-larger-0.csv");
+                    return createGeographicDataImage(data, width, height);
+                };
+                geographicalDataset = true;
+                break;
+            case 'hailstorm56':
+                dataSourceFunc = async () => {
+                    const data = await d3.csv("hail-2015-sevprob-larger-56.csv");
+                    return createGeographicDataImage(data, width, height);
+                };
+                geographicalDataset = true;
+                break;
+            case 'hailstorm80':
+                dataSourceFunc = async () => {
+                    const data = await d3.csv("hail-2015-sevprob-larger-80.csv");
+                    return createGeographicDataImage(data, width, height);
+                };
+                geographicalDataset = true;
+                break;
+            case 'topo':
+                // TODO: replace filename
                 geographicalDataset = false;
-            }
-
-            dataSourceFunc = async () => {
-                let data;
-                if (dataSource.toLowerCase().endsWith('.csv')) {
-                    data = await d3.csv(dataSource);
-                } else if (dataSource.toLowerCase().endsWith('.json')) {
-                    data = await d3.json(dataSource);
+                dataSourceFunc = async () => {
+                    return createImageData('eggholder.png', width);
                 }
+                break;
+            case 'eggholder':
+                geographicalDataset = false;
+                dataSourceFunc = async () => {
+                    return createImageData('eggholder.png', width);
+                }
+                break;
+            case 'cglogo':
+                // TODO: replace filename
+                geographicalDataset = false;
+                dataSourceFunc = async () => {
+                    return createImageData('eggholder.png', width);
+                }
+                break;
+            case 'meister':
+                // TODO: replace filename
+                geographicalDataset = false;
+                dataSourceFunc = async () => {
+                    return createImageData('eggholder.png', width);
+                }
+                break;
+            case 'gradient':
+                const fromTo = [
+                    document.getElementById('gradientX1').value,
+                    document.getElementById('gradientY1').value,
+                    document.getElementById('gradientX2').value,
+                    document.getElementById('gradientY2').value,
+                ];
+                dataSourceFunc = async () => {
+                    const gradient = createGradientImage(width, height, fromTo);
+                    return {
+                        densityImage: gradient,
+                        locationToData: gradient
+                    };
+                };
+                geographicalDataset = false;
+                break;
+            case 'image':
+                const imageFile = document.getElementById('imageToStipple').files[0];
+                geographicalDataset = false;
+                dataSourceFunc = async () => {
+                    return createImageData(await readFile(imageFile), width);
+                }
+                break;
+            case 'custom':
+                const dataSource = document.getElementById('customDataURL').value;
+                const projection = document.getElementById('customProjection').value;
+                const xAttribute = document.getElementById('xAttribute').value;
+                const yAttribute = document.getElementById('yAttribute').value;
+                const scaleByMaxDensity = document.getElementById('useGrayscale').checked;
+
                 if (projection === 'none') {
-                    return createImageFromData(data, width, height, xAttribute, yAttribute, null, scaleByMaxDensity);
-                } else {
-                    return createGeographicDataImage(data, width, height, projection, xAttribute, yAttribute, scaleByMaxDensity);
+                    geographicalDataset = false;
                 }
-            };
 
-            break;
-    }
+                dataSourceFunc = async () => {
+                    let data;
+                    if (dataSource.toLowerCase().endsWith('.csv')) {
+                        data = await d3.csv(dataSource);
+                    } else if (dataSource.toLowerCase().endsWith('.json')) {
+                        data = await d3.json(dataSource);
+                    }
+                    if (projection === 'none') {
+                        return createImageFromData(data, width, height, xAttribute, yAttribute, null, scaleByMaxDensity);
+                    } else {
+                        return createGeographicDataImage(data, width, height, projection, xAttribute, yAttribute, scaleByMaxDensity);
+                    }
+                };
 
-    (async () => {
-        const {densityImage, locationToData} = await dataSourceFunc();
-        let densityFunction;
-        if (useMachbanding) {
-            densityFunction = DensityFunction2D.machBandingFromImageData2D(
-                densityImage, machbandingQuantization, machbandingWeight, machbandingBlurRadius, rgbaToLuminance, null);
-        } else {
-            densityFunction = DensityFunction2D.fromImageData2D(densityImage);
+                break;
         }
-        const {stipples, voronoi} = await stipple(densityFunction, stippleRadius);
 
-        return {
-            width: densityFunction.width,
-            height: densityFunction.height,
-            stippleRadius,
-            datasetType: dataset,
-            densityImage,
-            locationToData,
-            stipples,
-            voronoi,
-            geographicalDataset
-        };
-    })().then(stippledDataset => {
-        currentStippledDataSet = stippledDataset;
-        visualizeCurrentStipples().then(r => console.log("Done with stippling"));
-    });
+        (async () => {
+            const {densityImage, locationToData} = await dataSourceFunc();
+            let densityFunction;
+            if (useMachbanding) {
+                densityFunction = DensityFunction2D.machBandingFromImageData2D(
+                    densityImage, machbandingQuantization, machbandingWeight, machbandingBlurRadius, rgbaToLuminance, null);
+            } else {
+                densityFunction = DensityFunction2D.fromImageData2D(densityImage);
+            }
+            const {stipples, voronoi} = await stipple(densityFunction, stippleRadius);
+
+            return {
+                width: densityFunction.width,
+                height: densityFunction.height,
+                stippleRadius,
+                datasetType: dataset,
+                densityImage,
+                locationToData,
+                stipples,
+                voronoi,
+                geographicalDataset
+            };
+        })().then(stippledDataset => {
+            currentStippledDataSet = stippledDataset;
+            enableStippling();
+            visualizeCurrentStipples().then(r => {
+                console.log("Done with stippling");
+            });
+        });
+    }
 
     return false; // i.e. do not refresh the page
 }
