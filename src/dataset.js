@@ -1,3 +1,36 @@
+const readFile = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => resolve(reader.result);
+        console.log(file);
+        reader.readAsDataURL(file);
+    });
+}
+const loadImage = async (src) => {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onerror = reject;
+        image.onload = () => resolve(image);
+        image.src = src;
+    });
+}
+
+const createImageData = async (imageSource, width) => {
+    const image = await loadImage(imageSource);
+
+    // get image data in target resolution
+    const ratio = width / image.width;
+    const scaledHeight = image.height * ratio;
+    const ctx = new OffscreenCanvas(width, scaledHeight).getContext('2d');
+    ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, scaledHeight);
+
+    return {
+        densityImage: ctx.getImageData(0, 0, width, scaledHeight),
+        mapToLocation: ctx.getImageData(0, 0, width, scaledHeight)
+    };
+}
+
 /**
  * Creates a gradient image.
  * @param width the width of the image.

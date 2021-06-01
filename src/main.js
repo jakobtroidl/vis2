@@ -255,23 +255,7 @@ async function loadStates(filename) {
     return topojson.feature(states, states.objects.states).features;
 }
 
-const readFile = (file) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onerror = reject;
-        reader.onload = () => resolve(reader.result);
-        console.log(file);
-        reader.readAsDataURL(file);
-    });
-}
-const loadImage = async (src) => {
-    return new Promise((resolve, reject) => {
-        const image = new Image();
-        image.onerror = reject;
-        image.onload = () => resolve(image);
-        image.src = src;
-    });
-}
+
 
 function stippleDataSet() {
     // todo: height depends on width in most cases: only set height for gradient and custom datasets
@@ -290,12 +274,67 @@ function stippleDataSet() {
     let dataSourceFunc;
     let geographicalDataset;
     switch (dataset) {
-        case 'accidents':
+        case 'accidentsNov':
             dataSourceFunc = async () => {
                 const data = await d3.csv("us-accidents-severity-4-Nov-Dec-2020.csv");
                 return createGeographicDataImage(data, width, height);
             };
             geographicalDataset = true;
+            break;
+        case 'accidentsDec':
+            dataSourceFunc = async () => {
+                const data = await d3.csv("us-accidents-severity-4-Dec-2020.csv");
+                return createGeographicDataImage(data, width, height);
+            };
+            geographicalDataset = true;
+            break;
+        case 'hailstorm0':
+            dataSourceFunc = async () => {
+                const data = await d3.csv("hail-2015-sevprob-larger-0.csv");
+                return createGeographicDataImage(data, width, height);
+            };
+            geographicalDataset = true;
+            break;
+        case 'hailstorm56':
+            dataSourceFunc = async () => {
+                const data = await d3.csv("hail-2015-sevprob-larger-56.csv");
+                return createGeographicDataImage(data, width, height);
+            };
+            geographicalDataset = true;
+            break;
+        case 'hailstorm80':
+            dataSourceFunc = async () => {
+                const data = await d3.csv("hail-2015-sevprob-larger-80.csv");
+                return createGeographicDataImage(data, width, height);
+            };
+            geographicalDataset = true;
+            break;
+        case 'topo':
+            // TODO: replace filename
+            geographicalDataset = false;
+            dataSourceFunc = async () => {
+                return createImageData('eggholder.png', width);
+            }
+            break;
+        case 'eggholder':
+            geographicalDataset = false;
+            dataSourceFunc = async () => {
+                return createImageData('eggholder.png', width);
+            }
+            break;
+        case 'cglogo':
+            // TODO: replace filename
+            geographicalDataset = false;
+            dataSourceFunc = async () => {
+                return createImageData('eggholder.png', width);
+            }
+            break;
+        case 'meister':
+            // TODO: replace filename
+            geographicalDataset = false;
+            dataSourceFunc = async () => {
+                return createImageData('eggholder.png', width);
+            }
             break;
         case 'gradient':
             const fromTo = [
@@ -315,22 +354,10 @@ function stippleDataSet() {
             break;
         case 'image':
             const imageFile = document.getElementById('imageToStipple').files[0];
+            geographicalDataset = false;
             dataSourceFunc = async () => {
-                const image = await loadImage(await readFile(imageFile));
-
-                // get image data in target resolution
-                const ratio = width / image.width;
-                const scaledHeight = image.height * ratio;
-                const ctx = new OffscreenCanvas(width, scaledHeight).getContext('2d');
-                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, width, scaledHeight);
-
-                geographicalDataset = false;
-
-                return {
-                    densityImage: ctx.getImageData(0, 0, width, scaledHeight),
-                    mapToLocation: ctx.getImageData(0, 0, width, scaledHeight)
-                };
-            };
+                return createImageData(await readFile(imageFile), width);
+            }
             break;
         case 'custom':
             const dataSource = document.getElementById('customDataURL').value;
@@ -338,6 +365,11 @@ function stippleDataSet() {
             const xAttribute = document.getElementById('xAttribute').value;
             const yAttribute = document.getElementById('yAttribute').value;
             const scaleByMaxDensity = document.getElementById('useGrayscale').checked;
+
+            if (projection === 'none') {
+                geographicalDataset = false;
+            }
+
             dataSourceFunc = async () => {
                 let data;
                 if (dataSource.toLowerCase().endsWith('.csv')) {
@@ -351,8 +383,6 @@ function stippleDataSet() {
                     return createGeographicDataImage(data, width, height, projection, xAttribute, yAttribute, scaleByMaxDensity);
                 }
             };
-
-            geographicalDataset = false;
 
             break;
     }
