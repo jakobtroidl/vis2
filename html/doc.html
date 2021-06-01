@@ -49,16 +49,18 @@
     <div class="row">
         <h4>Description</h4>
         <p>Our interactive web application is designed to stipple a wide range of the 2D scalar fields and is publicly
-            accessible <a href="https://ieeexplore.ieee.org/document/8667696">here</a>. We support two data formats.
-            First, .csv or .json files supported to stipple discrete data sets such as data with spatial context.
-            For example, the image below shows a stippled representation of severe car accidents in the United States
-            during November of 2020. We also provide a detail view for these data sets by showing the respective voronoi
+            accessible <a href="https://stippling.herokuapp.com/">here</a>. We support two data formats.
+            First, .csv or .json files are supported to stipple discrete data sets such as data with spatial context.
+            For example, the image below shows a stippled representation of severe car accidents in the United States during November 2020. We also provide a detailed view for these data sets by showing the respective Voronoi
             region
-            and the data points when hovering over a stipple (see Figure below). For these data sets, a x and y (or
-            lon/lat) attribute must be specified to render the data points correctly. </p>
+            and the data points when hovering over a stipple. For such data sets, x and y (or lon/lat) attributes must be specified to render the data points correctly. </p>
         <p>
-            Second, we stipple continous data sets by supporting images as an input. We first convert the images to
-            greyscale images and then use the as a density function with values on a regular grid.
+            Second, we stipple continuous data sets by supporting images as an input. We first convert the images to greyscale images and then use them as a density function with values on a regular grid.
+        </p>
+
+        <p> The web application lets user tuned stippling parameters via the top left input panel. This panel allows setting the data set,
+            adjusting the stipple size, the color map and enabling/disabling contours (mach banding).
+
         </p>
 
         <div class="col s12">
@@ -68,7 +70,6 @@
                 respective Voronoi region.
             </figcaption>
         </div>
-
     </div>
 
     <div class="row">
