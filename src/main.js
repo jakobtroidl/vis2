@@ -150,6 +150,10 @@ function openTab(name) {
     document.getElementById(name).style.display = "block";
 }
 
+function changeHeightInputVisibility(show = false) {
+    document.getElementById('stippleHeightContainer').style.display = show ? 'block' : 'none';
+}
+
 function showDataSetForm() {
     const dataSetForms = ['imageForm', 'gradientForm', 'customForm'];
     const selected = document.forms['dataSetForm']['dataset'].value;
@@ -160,15 +164,15 @@ function showDataSetForm() {
 
     // todo: maybe fill other form fields based on selection (e.g. from/to for gradient)
     switch (document.forms['dataSetForm']['dataset'].value) {
-        case 'accidents':
-            break;
-        case 'image':
-            break;
         case 'gradient':
+            changeHeightInputVisibility(true);
+            document.getElementById('gradientX2').value = document.getElementById('stippleWidth').value;
             break;
         case 'custom':
+            changeHeightInputVisibility(true);
             break;
         default:
+            changeHeightInputVisibility(false);
             break;
     }
 }
@@ -312,35 +316,35 @@ function stippleDataSet() {
             case 'accidentsNov':
                 dataSourceFunc = async () => {
                     const data = await d3.csv("us-accidents-severity-4-Nov-Dec-2020.csv");
-                    return createGeographicDataImage(data, width, height);
+                    return createGeographicDataImage(data, width);
                 };
                 geographicalDataset = true;
                 break;
             case 'accidentsDec':
                 dataSourceFunc = async () => {
                     const data = await d3.csv("us-accidents-severity-4-Dec-2020.csv");
-                    return createGeographicDataImage(data, width, height);
+                    return createGeographicDataImage(data, width);
                 };
                 geographicalDataset = true;
                 break;
             case 'hailstorm0':
                 dataSourceFunc = async () => {
                     const data = await d3.csv("hail-2015-sevprob-larger-0.csv");
-                    return createGeographicDataImage(data, width, height);
+                    return createGeographicDataImage(data, width);
                 };
                 geographicalDataset = true;
                 break;
             case 'hailstorm56':
                 dataSourceFunc = async () => {
                     const data = await d3.csv("hail-2015-sevprob-larger-56.csv");
-                    return createGeographicDataImage(data, width, height);
+                    return createGeographicDataImage(data, width);
                 };
                 geographicalDataset = true;
                 break;
             case 'hailstorm80':
                 dataSourceFunc = async () => {
                     const data = await d3.csv("hail-2015-sevprob-larger-80.csv");
-                    return createGeographicDataImage(data, width, height);
+                    return createGeographicDataImage(data, width);
                 };
                 geographicalDataset = true;
                 break;
@@ -450,7 +454,7 @@ function stippleDataSet() {
             visualizeCurrentStipples().then(r => {
                 console.log("Done with stippling");
             });
-        });
+        }).catch(console.error);
     }
 
     return false; // i.e. do not refresh the page

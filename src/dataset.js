@@ -147,12 +147,23 @@ const createImageFromData = (data, width, height, xAttribute, yAttribute, mapLoc
  * @returns function a D3 projection.
  */
 const createProjection = (width, height, projectionMethod = 'geoAlbersUsa') => {
+    let defaultHeight = 1;
     switch (projectionMethod) {
         case 'geoAlbersUsa':
+            defaultHeight = 500;
         default:
             return d3[projectionMethod]()
                 .translate([width / 2, height / 2]) // translate to center
-                .scale(d3[projectionMethod]().scale() * (height / 500)); // rescale to target resolution (default uses a height of 500)
+                .scale(d3[projectionMethod]().scale() * (height / defaultHeight));
+    }
+};
+
+const getProjectionHeight = (width, projectionMethod = 'geoAlbersUsa') => {
+    switch (projectionMethod) {
+        case 'geoAlbersUsa':
+            return 500 * (width / 960);
+        default:
+            throw new Error(`Unknown projection method: ${projectionMethod}`);
     }
 };
 
@@ -167,7 +178,8 @@ const createProjection = (width, height, projectionMethod = 'geoAlbersUsa') => {
  * @param scaleByMaxDensity
  * @returns {{densityImage: ImageData, locationToData: any[]}}
  */
-const createGeographicDataImage = (data, width, height, projectionMethod = 'geoAlbersUsa', longitudeAttribute = 'LON', latitudeAttribute = 'LAT', scaleByMaxDensity = false) => {
+const createGeographicDataImage = (data, width, height = null, projectionMethod = 'geoAlbersUsa', longitudeAttribute = 'LON', latitudeAttribute = 'LAT', scaleByMaxDensity = false) => {
+    height = height === null ? getProjectionHeight(width, projectionMethod) : height;
     const projection = createProjection(width, height, projectionMethod);
     return createImageFromData(data, width, height, longitudeAttribute, latitudeAttribute, projection, scaleByMaxDensity);
 };
