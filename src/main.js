@@ -280,17 +280,15 @@ function stippleDataSet() {
                 }
                 break;
             case 'cglogo':
-                // TODO: replace filename
                 geographicalDataset = false;
                 dataSourceFunc = async () => {
                     return createImageData('E193-02.png', width);
                 }
                 break;
             case 'meister':
-                // TODO: replace filename
                 geographicalDataset = false;
                 dataSourceFunc = async () => {
-                    return createImageData('eggholder.png', width);
+                    return createImageData('Meister.jpg', width);
                 }
                 break;
             case 'gradient':
