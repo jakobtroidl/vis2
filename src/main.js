@@ -1,10 +1,15 @@
-
-
+/**
+ * Shows the machbanding form in the UI.
+ */
 function showMachBandingForm() {
     const useMachbanding = document.getElementById('machbanding').checked;
     document.getElementById('machbandingForm').style.display = (useMachbanding ? 'block' : 'none');
 }
 
+/**
+ * Shows the form corresponding to a tab referenced by its name.
+ * @param name the name of the tab to show.
+ */
 function openTab(name) {
     let i;
     let x = document.getElementsByClassName("tab");
@@ -14,10 +19,20 @@ function openTab(name) {
     document.getElementById(name).style.display = "block";
 }
 
+/**
+ * Changes the visibility of the height field in the UI.
+ * @param show a boolean flag. If true, this shows the field in the UI and hides it otherwise.
+ */
 function changeHeightInputVisibility(show = false) {
     document.getElementById('stippleHeightContainer').style.display = show ? 'block' : 'none';
 }
 
+/**
+ * Shows the data set form corresponding to the user's data set selection in the UI.
+ *
+ * This also sets some default values for specific data set selections.
+ * E.g. the default width for image data sets is set to 200.
+ */
 function showDataSetForm() {
     const dataSetForms = ['imageForm', 'gradientForm', 'customForm'];
     const selected = document.forms['dataSetForm']['dataset'].value;
@@ -90,11 +105,23 @@ function enableStippling() {
     stippleButton.value = 'Stipple!';
 }
 
+/**
+ * Loads the topojson-features from a JSON file referenced by its name.
+ * @param name the name of the JSON file.
+ * @return {Promise<{inspector: boolean, debug: boolean, uv: boolean, ipv6: boolean, tls_alpn: boolean, tls_sni: boolean, tls_ocsp: boolean, tls: boolean}>} the laoded features
+ */
 async function loadStates(name) {
     const states = await d3.json(name);
     return topojson.feature(states, states.objects.states).features;
 }
 
+/**
+ * Creates a geoPath for a given resolution and projection method.
+ * @param width the target width of the projection
+ * @param height the target height of the projection
+ * @param projectionMethod the projection method to use when creating the geoPath. Defaults to 'geoAlbersUsa'
+ * @return {any} the created geoPath
+ */
 function geoPath(width, height, projectionMethod = 'geoAlbersUsa') {
     const projection = createProjection(width, height, projectionMethod);
     return d3.geoPath().projection(projection);
@@ -117,6 +144,19 @@ function getStippleScale(density, stippleScaleMethod) {
     }
 }
 
+/**
+ * Calculates a color based on a density value (assumed to be in range [0,1]) and chosen color scale configuration.
+ *
+ * See also:
+ *  - {@link colorScales}
+ *  - {@link getColorString}
+ *
+ * @param density the density value used to calculate the color
+ * @param invertColors a boolean flag. If true 1-density is used instead of density.
+ * @param colorMap the name of a color map in {@link colorScales} or 'none'. If this is 'none' the resulting color will be either 'black' or 'white' depending on invertColors.
+ * @param interpolateColor a boolean flag. If true the colors between colors in the chosen color map are interpolated.
+ * @return {string} a color string which can be used as value for a 'fill' attribute.
+ */
 const getStippleColor = (density, invertColors, colorMap, interpolateColor) => {
     if (invertColors) {
         if (colorMap === 'none') {
@@ -133,6 +173,14 @@ const getStippleColor = (density, invertColors, colorMap, interpolateColor) => {
     }
 }
 
+/**
+ * Visualizes {@link currentStippledDataSet} if it is not null.
+ * Triggered on every change in the 'style' tab in the UI.
+ *
+ * If {@link stipplingInProgress} is true this function has no effect.
+ *
+ * @return {Promise<void>}
+ */
 async function visualizeCurrentStipples() {
     // remove existing visualization
     const visDiv = '#mapDiv';
@@ -198,6 +246,12 @@ async function visualizeCurrentStipples() {
     }
 }
 
+/**
+ * Creates a {@link Card} filled with a given stippled data set.
+ * @param data a stippled data set (e.g. {@link currentStippledDataSet}
+ * @param geographical a boolean flag. If true, the created {@link Card} is displayed, otherwise it's hidden.
+ * @return {Card} the created {@link Card}.
+ */
 const initCard = (data, geographical) => {
     const cardDiv = '#cardDiv';
     d3.select(cardDiv).select('svg').remove();
@@ -216,6 +270,24 @@ const initCard = (data, geographical) => {
     return new Card(myData, box.clientWidth, box.clientHeight, cardDiv);
 }
 
+/**
+ * Collects all data from the UI and stipples the chosen data set using the chosen parameters.
+ * As soon as it has completed {@link currentStippledDataSet} is overwritten and {@link visualizeCurrentStipples} is
+ * triggered.
+ *
+ * If {@link stipplingInProgress} is true this function has no effect.
+ *
+ * See also:
+ *  - {@link stipple}
+ *  - {@link DensityFunction2D#fromImageData2D}
+ *  - {@link DensityFunction2D#machBandingFromImageData2D}
+ *  - {@link createGeographicDataImage}
+ *  - {@link createImageData}
+ *  - {@link createGradientImage}
+ *  - {@link createImageFromData}
+ *
+ * @return {boolean} always false.
+ */
 function stippleDataSet() {
     if (!stipplingInProgress) {
         disableStippling();
