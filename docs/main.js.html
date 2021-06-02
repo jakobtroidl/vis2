@@ -26,149 +26,18 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// load data using promises
-let promises = [
-    d3.json("county_us.topojson"),
-    d3.csv("us-accidents-severity-4-Nov-Dec-2020.csv")
-];
-
-// TODO: do this properly
-let accidents = [[], []];
-
-Promise.all(promises)
-    .then(function (data) {
-        accidents = data;//initMainPage(data)
-    })
-    .catch(function (err) {
-        console.log(err)
-    });
-
-const testStippling = async (data, width, height, outputScale = 1.5, machBanding = false, stippleRadius = 1.0, fromTo = undefined) => {
-    const bounds = [0, 0, width, height];
-    if (!fromTo) {
-        // just point from left to right by default
-        fromTo = [...bounds];
-        fromTo[3] = 0;
-    }
-
-    // init
-    // const context2D = d3.select('#mapDiv')
-    //     .append('canvas')
-    //     .attr('width', width)
-    //     .attr('height', height)
-    //     .node()
-    //     .getContext('2d');
-
-    let [imageData, metaData] = DataLoader.loadUsGeoData(data, width, height);
-
-    //showImage(imageData, "mapDiv")
-
-    //const gradient = context2D.createLinearGradient(...fromTo);
-
-    // gradient.addColorStop(0, 'black');
-    // gradient.addColorStop(1, 'white');
-    // context2D.fillStyle = gradient;
-    // context2D.fillRect(...bounds);
-
-
-    // stipple
-    const {stipples, voronoi} = await stipple(
-        (machBanding ?
-            DensityFunction2D.machBandingFromImageData2D(
-                imageData,//context2D.getImageData(...bounds),
-                5,
-                1.0, // full weight
-                stippleRadius) :
-            DensityFunction2D.fromImageData2D(imageData)),
-        stippleRadius);
-
-    // draw
-    const outputWidth = width * outputScale;
-    const outputHeight = height * outputScale;
-    const svg = d3.select('#mapDiv')
-        .append('svg')
-        .attr('width', outputWidth)
-        .attr('height', outputHeight);
-
-    /*
-     * The stipple size or color could also be dependent on the density (i.e. s.density ∈ [0,1]).
-     * The color could also encode some property of the underlying data (e.g. like in the voting data).
-     *
-     * Hovering on a stipple could also show some description of the data points that are represented by the stipple.
-     * For this you can use the voronoi diagram:
-     *   i = current stipple index
-     *   cell = voronoi.polygonCell(i)
-     *   bounds = polygonBounds(cell)
-     *   dataCoords = []
-     *   for x&amp;y from bounds.min to bounds.max
-     *       if (i === voronoi.delaunay.find(x, y, i)
-     *           dataCoords.push([x,y])
-     *   dataCoords can now be used to index a 2d array containing the actual data
-     *
-     *   e.g.:
-     *   data = [
-     *     [ [{description: 'foo'}, {description: 'bar'}], [], [] ],
-     *     [ [], [], [{description: 'baz'}] ]
-     *   ]
-     *   dataCoords = [[0,0], [1,0]]
-     *   for (const p of dataCoords)
-     *       data[p[1]][p[0]].forEach(x => console.log(x.description));
-     *   >>> 'foo'
-     *   >>> 'bar'
-     */
-
-    let cardDiv = '#cardDiv';
-    let box = document.querySelector(cardDiv);
-    let cardWidth = box.clientWidth;
-    let cardHeight = box.clientHeight;
-
-    console.log(cardWidth, " ", cardHeight);
-
-    let myData = {data: metaData, width: width, height: height};
-
-    let card = new Card(myData, cardWidth, cardHeight, cardDiv);
-
-    svg.selectAll("circle")
-        .data(stipples).enter()
-        .append('circle')
-        .attr('cx', function (s) {
-            return s.relativeX * outputWidth;
-        })
-        .attr('cy', function (s) {
-            return s.relativeY * outputHeight;
-        })
-        .attr('r', function (s) {
-            return stippleRadius * s.density * outputScale;
-        })
-        .style('fill', 'black')
-        .on('mouseover', function (s) {
-            d3.select(this).style('fill', 'rgb(255, 0, 0)'); // color stipples
-            let bounds = stippleBounds(s, voronoi);
-            card.drawArea(bounds, voronoi, getVoronoiCell(s.position(), voronoi));
-        })
-        .on('mouseleave', function (s) {
-            d3.select(this).style('fill', 'black');
-        })
-
-    // stipples.forEach(s => {
-    //     if (s.density !== 0.0) {
-    //         svg.append('circle')
-    //             .attr('cx', s.relativeX * outputWidth)
-    //             .attr('cy', s.relativeY * outputHeight)
-    //             .attr('r', stippleRadius * s.density * outputScale)
-    //             .style('fill', 'black')
-    //             .on("mouseenter", function (s) {
-    //                 console.log(s);
-    //             })
-    //     }
-    // });
-}
-
+            <pre class="prettyprint source linenums"><code>/**
+ * Shows the machbanding form in the UI.
+ */
 function showMachBandingForm() {
     const useMachbanding = document.getElementById('machbanding').checked;
     document.getElementById('machbandingForm').style.display = (useMachbanding ? 'block' : 'none');
 }
 
+/**
+ * Shows the form corresponding to a tab referenced by its name.
+ * @param name the name of the tab to show.
+ */
 function openTab(name) {
     let i;
     let x = document.getElementsByClassName("tab");
@@ -178,10 +47,20 @@ function openTab(name) {
     document.getElementById(name).style.display = "block";
 }
 
+/**
+ * Changes the visibility of the height field in the UI.
+ * @param show a boolean flag. If true, this shows the field in the UI and hides it otherwise.
+ */
 function changeHeightInputVisibility(show = false) {
     document.getElementById('stippleHeightContainer').style.display = show ? 'block' : 'none';
 }
 
+/**
+ * Shows the data set form corresponding to the user's data set selection in the UI.
+ *
+ * This also sets some default values for specific data set selections.
+ * E.g. the default width for image data sets is set to 200.
+ */
 function showDataSetForm() {
     const dataSetForms = ['imageForm', 'gradientForm', 'customForm'];
     const selected = document.forms['dataSetForm']['dataset'].value;
@@ -190,15 +69,32 @@ function showDataSetForm() {
         document.getElementById(id).style.display = (id === selectedForm ? 'block' : 'none');
     })
 
-    // todo: maybe fill other form fields based on selection (e.g. from/to for gradient)
+    const currentWidth = document.getElementById('stippleWidth').value;
+
     switch (document.forms['dataSetForm']['dataset'].value) {
         case 'gradient':
             changeHeightInputVisibility(true);
-            document.getElementById('gradientX2').value = document.getElementById('stippleWidth').value;
+            let x2 = currentWidth;
+            if (parseInt(currentWidth) === 480) {
+                const newWidth = 300;
+                document.getElementById('stippleWidth').value = newWidth;
+                document.getElementById('stippleHeight').value = 150;
+                x2 = newWidth;
+            }
+            document.getElementById('gradientX2').value = x2;
             break;
         case 'custom':
             changeHeightInputVisibility(true);
             break;
+        case 'italy':
+        case 'eggholder':
+        case 'cglogo':
+        case 'meister':
+        case 'image':
+            if (parseInt(currentWidth) === 480) {
+                document.getElementById('stippleWidth').value = 200;
+            }
+            // fallthrough is intentional
         default:
             changeHeightInputVisibility(false);
             break;
@@ -237,16 +133,82 @@ function enableStippling() {
     stippleButton.value = 'Stipple!';
 }
 
+/**
+ * Loads the topojson-features from a JSON file referenced by its name.
+ * @param name the name of the JSON file.
+ * @return {Promise&lt;{inspector: boolean, debug: boolean, uv: boolean, ipv6: boolean, tls_alpn: boolean, tls_sni: boolean, tls_ocsp: boolean, tls: boolean}>} the laoded features
+ */
 async function loadStates(name) {
     const states = await d3.json(name);
     return topojson.feature(states, states.objects.states).features;
 }
 
+/**
+ * Creates a geoPath for a given resolution and projection method.
+ * @param width the target width of the projection
+ * @param height the target height of the projection
+ * @param projectionMethod the projection method to use when creating the geoPath. Defaults to 'geoAlbersUsa'
+ * @return {any} the created geoPath
+ */
 function geoPath(width, height, projectionMethod = 'geoAlbersUsa') {
     const projection = createProjection(width, height, projectionMethod);
     return d3.geoPath().projection(projection);
 }
 
+/**
+ * Calculates the scaling factor for a stipple based on the density it represents and a scaling method.
+ * @param density the density represented by a stipple
+ * @param stippleScaleMethod a scaling method
+ * @return {number} the scaling factor for the stipple.
+ */
+function getStippleScale(density, stippleScaleMethod) {
+    switch (stippleScaleMethod) {
+        case 'density':
+            return density;
+        case 'inverseDensity':
+            return 1 - density;
+        default:
+            return 1;
+    }
+}
+
+/**
+ * Calculates a color based on a density value (assumed to be in range [0,1]) and chosen color scale configuration.
+ *
+ * See also:
+ *  - {@link colorScales}
+ *  - {@link getColorString}
+ *
+ * @param density the density value used to calculate the color
+ * @param invertColors a boolean flag. If true 1-density is used instead of density.
+ * @param colorMap the name of a color map in {@link colorScales} or 'none'. If this is 'none' the resulting color will be either 'black' or 'white' depending on invertColors.
+ * @param interpolateColor a boolean flag. If true the colors between colors in the chosen color map are interpolated.
+ * @return {string} a color string which can be used as value for a 'fill' attribute.
+ */
+const getStippleColor = (density, invertColors, colorMap, interpolateColor) => {
+    if (invertColors) {
+        if (colorMap === 'none') {
+            return 'white';
+        } else {
+            return getColorString(1.0 - density, colorMap, interpolateColor);
+        }
+    } else {
+        if (colorMap === 'none') {
+            return 'black';
+        } else {
+            return getColorString(density, colorMap, interpolateColor);
+        }
+    }
+}
+
+/**
+ * Visualizes {@link currentStippledDataSet} if it is not null.
+ * Triggered on every change in the 'style' tab in the UI.
+ *
+ * If {@link stipplingInProgress} is true this function has no effect.
+ *
+ * @return {Promise&lt;void>}
+ */
 async function visualizeCurrentStipples() {
     // remove existing visualization
     const visDiv = '#mapDiv';
@@ -254,9 +216,11 @@ async function visualizeCurrentStipples() {
 
     if (currentStippledDataSet &amp;&amp; !stipplingInProgress) {
         const outputScale = document.getElementById('visScale').value;
-        const scaleByDensity = document.getElementById('scaleByDensity').checked;
+        const scalingMethod = document.getElementById('stippleScale').value;
         const colorMap = document.getElementById('stippleColorMap').value;
         const interpolateColor = document.getElementById('interpolateColorMap').checked;
+        const invertColors = document.getElementById('invertColors').checked;
+        const matchBackground = document.getElementById('matchBackground').checked;
 
         const outputWidth = currentStippledDataSet.width * outputScale;
         const outputHeight = currentStippledDataSet.height * outputScale;
@@ -264,6 +228,13 @@ async function visualizeCurrentStipples() {
             .append('svg')
             .attr('width', outputWidth)
             .attr('height', outputHeight);
+
+        if ((invertColors &amp;&amp; matchBackground) || (!invertColors &amp;&amp; !matchBackground)) {
+            svg.append('rect')
+                .attr('width', '100%')
+                .attr('height', '100%')
+                .attr('fill', 'black');
+        }
 
         if (currentStippledDataSet.geographicalDataset) {
             const path = geoPath(outputWidth, outputHeight);
@@ -286,8 +257,8 @@ async function visualizeCurrentStipples() {
                 svg.append('circle')
                     .attr('cx', s.relativeX * outputWidth)
                     .attr('cy', s.relativeY * outputHeight)
-                    .attr('r', currentStippledDataSet.stippleRadius * outputScale * (scaleByDensity ? s.density : 1))
-                    .style('fill', (colorMap === 'none' ? 'black' : getColorString(s.density, colorMap, interpolateColor)))
+                    .attr('r', currentStippledDataSet.stippleRadius * outputScale * getStippleScale(s.density, scalingMethod))
+                    .style('fill', getStippleColor(s.density, invertColors, colorMap, interpolateColor))
                     .on('mouseenter', function () {
                         d3.select(this).style('fill', 'rgb(255, 0, 0)'); // color stipples
                         if (currentStippledDataSet.geographicalDataset) {
@@ -296,13 +267,19 @@ async function visualizeCurrentStipples() {
                         }
                     })
                     .on('mouseleave', function () {
-                        d3.select(this).style('fill', (colorMap === 'none' ? 'black' : getColorString(s.density, colorMap, interpolateColor)));
+                        d3.select(this).style('fill', getStippleColor(s.density, invertColors, colorMap, interpolateColor));
                     })
             }
         })
     }
 }
 
+/**
+ * Creates a {@link Card} filled with a given stippled data set.
+ * @param data a stippled data set (e.g. {@link currentStippledDataSet}
+ * @param geographical a boolean flag. If true, the created {@link Card} is displayed, otherwise it's hidden.
+ * @return {Card} the created {@link Card}.
+ */
 const initCard = (data, geographical) => {
     const cardDiv = '#cardDiv';
     d3.select(cardDiv).select('svg').remove();
@@ -321,6 +298,24 @@ const initCard = (data, geographical) => {
     return new Card(myData, box.clientWidth, box.clientHeight, cardDiv);
 }
 
+/**
+ * Collects all data from the UI and stipples the chosen data set using the chosen parameters.
+ * As soon as it has completed {@link currentStippledDataSet} is overwritten and {@link visualizeCurrentStipples} is
+ * triggered.
+ *
+ * If {@link stipplingInProgress} is true this function has no effect.
+ *
+ * See also:
+ *  - {@link stipple}
+ *  - {@link DensityFunction2D#fromImageData2D}
+ *  - {@link DensityFunction2D#machBandingFromImageData2D}
+ *  - {@link createGeographicDataImage}
+ *  - {@link createImageData}
+ *  - {@link createGradientImage}
+ *  - {@link createImageFromData}
+ *
+ * @return {boolean} always false.
+ */
 function stippleDataSet() {
     if (!stipplingInProgress) {
         disableStippling();
@@ -385,17 +380,15 @@ function stippleDataSet() {
                 }
                 break;
             case 'cglogo':
-                // TODO: replace filename
                 geographicalDataset = false;
                 dataSourceFunc = async () => {
-                    return createImageData('eggholder.png', width);
+                    return createImageData('E193-02.png', width);
                 }
                 break;
             case 'meister':
-                // TODO: replace filename
                 geographicalDataset = false;
                 dataSourceFunc = async () => {
-                    return createImageData('eggholder.png', width);
+                    return createImageData('Meister.jpg', width);
                 }
                 break;
             case 'gradient':
@@ -492,13 +485,13 @@ function stippleDataSet() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageData">createImageData</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#currentStippledDataSet">currentStippledDataSet</a></li><li><a href="global.html#disableStippling">disableStippling</a></li><li><a href="global.html#enableStippling">enableStippling</a></li><li><a href="global.html#getProjectionHeight">getProjectionHeight</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#readFile">readFile</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li><li><a href="global.html#stipplingInProgress">stipplingInProgress</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#changeHeightInputVisibility">changeHeightInputVisibility</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageData">createImageData</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#createQuantization">createQuantization</a></li><li><a href="global.html#currentStippledDataSet">currentStippledDataSet</a></li><li><a href="global.html#disableStippling">disableStippling</a></li><li><a href="global.html#enableStippling">enableStippling</a></li><li><a href="global.html#floatArrayToImageData">floatArrayToImageData</a></li><li><a href="global.html#geoPath">geoPath</a></li><li><a href="global.html#getColor">getColor</a></li><li><a href="global.html#getColorString">getColorString</a></li><li><a href="global.html#getProjectionHeight">getProjectionHeight</a></li><li><a href="global.html#getStippleColor">getStippleColor</a></li><li><a href="global.html#getStippleScale">getStippleScale</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#imageDataToFloatArray">imageDataToFloatArray</a></li><li><a href="global.html#initCard">initCard</a></li><li><a href="global.html#integerBounds">integerBounds</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#loadStates">loadStates</a></li><li><a href="global.html#openTab">openTab</a></li><li><a href="global.html#polygonBounds">polygonBounds</a></li><li><a href="global.html#quantize">quantize</a></li><li><a href="global.html#readFile">readFile</a></li><li><a href="global.html#rgbaToLuminance">rgbaToLuminance</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showDataSetForm">showDataSetForm</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#showMachBandingForm">showMachBandingForm</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleBounds">stippleBounds</a></li><li><a href="global.html#stippleDataSet">stippleDataSet</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li><li><a href="global.html#stipplingInProgress">stipplingInProgress</a></li><li><a href="global.html#visualizeCurrentStipples">visualizeCurrentStipples</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Jun 01 2021 17:02:44 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Jun 02 2021 12:16:06 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

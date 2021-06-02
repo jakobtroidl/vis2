@@ -173,7 +173,7 @@ function.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line212">line 212</a>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line305">line 305</a>
     </li></ul></dd>
     
 
@@ -344,7 +344,7 @@ Pixel data is mapped to a float value and scaled to the range [0,1]
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line249">line 249</a>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line342">line 342</a>
     </li></ul></dd>
     
 
@@ -564,7 +564,7 @@ See: Görtler et al. Stippling of 2D Scalar Fields
                 </td>
             
 
-            <td class="description last">(optional) maps 4 positive integers (r,g,b,a) to a float value. Default: rgbaToLuminance</td>
+            <td class="description last">(optional) maps 4 positive integers (r,g,b,a) to a float value. Default: <a href="global.html#rgbaToLuminance">rgbaToLuminance</a></td>
         </tr>
 
     
@@ -629,7 +629,7 @@ See: Görtler et al. Stippling of 2D Scalar Fields
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line276">line 276</a>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line369">line 369</a>
     </li></ul></dd>
     
 
@@ -678,6 +678,493 @@ See: Görtler et al. Stippling of 2D Scalar Fields
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id="areaDensity"><span class="type-signature">(async) </span>areaDensity<span class="signature">(polygon)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Returns the accumulated density within a given polygon on this 2D density function.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>polygon</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a polygon given as array of points (i.e.: [[x1,y1], [x2,y2], ... , [xN, yN]])</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line428">line 428</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the accumulated density within the given polygon on this 2D density function.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;number></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="assignDensity"><span class="type-signature"></span>assignDensity<span class="signature">(stipples, voronoi)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Assigns density values to each element in a given array of <a href="Stipple.html">Stipple</a> instances based on the accumulated
+density in their corresponding Voronoi regions.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>stipples</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an array of <a href="Stipple.html">Stipple</a> instances.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>voronoi</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Voronoi regions for the given stipples - must be in the same order.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line451">line 451</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Stipple[]
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="density"><span class="type-signature"></span>density<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Returns the density at a point given as x & y coordinates on this 2D density function.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line419">line 419</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the density at the given point
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
     
 
     
@@ -693,13 +1180,13 @@ See: Görtler et al. Stippling of 2D Scalar Fields
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageData">createImageData</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#currentStippledDataSet">currentStippledDataSet</a></li><li><a href="global.html#disableStippling">disableStippling</a></li><li><a href="global.html#enableStippling">enableStippling</a></li><li><a href="global.html#getProjectionHeight">getProjectionHeight</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#readFile">readFile</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li><li><a href="global.html#stipplingInProgress">stipplingInProgress</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#changeHeightInputVisibility">changeHeightInputVisibility</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageData">createImageData</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#createQuantization">createQuantization</a></li><li><a href="global.html#currentStippledDataSet">currentStippledDataSet</a></li><li><a href="global.html#disableStippling">disableStippling</a></li><li><a href="global.html#enableStippling">enableStippling</a></li><li><a href="global.html#floatArrayToImageData">floatArrayToImageData</a></li><li><a href="global.html#geoPath">geoPath</a></li><li><a href="global.html#getColor">getColor</a></li><li><a href="global.html#getColorString">getColorString</a></li><li><a href="global.html#getProjectionHeight">getProjectionHeight</a></li><li><a href="global.html#getStippleColor">getStippleColor</a></li><li><a href="global.html#getStippleScale">getStippleScale</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#imageDataToFloatArray">imageDataToFloatArray</a></li><li><a href="global.html#initCard">initCard</a></li><li><a href="global.html#integerBounds">integerBounds</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#loadStates">loadStates</a></li><li><a href="global.html#openTab">openTab</a></li><li><a href="global.html#polygonBounds">polygonBounds</a></li><li><a href="global.html#quantize">quantize</a></li><li><a href="global.html#readFile">readFile</a></li><li><a href="global.html#rgbaToLuminance">rgbaToLuminance</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showDataSetForm">showDataSetForm</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#showMachBandingForm">showMachBandingForm</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleBounds">stippleBounds</a></li><li><a href="global.html#stippleDataSet">stippleDataSet</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li><li><a href="global.html#stipplingInProgress">stipplingInProgress</a></li><li><a href="global.html#visualizeCurrentStipples">visualizeCurrentStipples</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Jun 01 2021 17:02:44 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Jun 02 2021 12:16:06 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -214,7 +214,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line190">line 190</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line86">line 86</a>
     </li></ul></dd>
     
 
@@ -286,7 +286,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line184">line 184</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line80">line 80</a>
     </li></ul></dd>
     
 
@@ -598,12 +598,156 @@
     
 
     
+    <h4 class="name" id="changeHeightInputVisibility"><span class="type-signature"></span>changeHeightInputVisibility<span class="signature">(show)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Changes the visibility of the height field in the UI.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>show</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">a boolean flag. If true, this shows the field in the UI and hides it otherwise.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line26">line 26</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="clamp"><span class="type-signature"></span>clamp<span class="signature">(val, lower, upper)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
 
     
 
 
+
+<div class="description">
+    Clamps a number to a given range.
+</div>
 
 
 
@@ -655,7 +799,7 @@
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last">the number to clamp to the given range</td>
         </tr>
 
     
@@ -679,7 +823,7 @@
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last">the lower bound of the range val will be clamped to. Defaults to 0.</td>
         </tr>
 
     
@@ -703,7 +847,7 @@
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last">the upper bound of the range val will be clamped to. Defaults to 1.</td>
         </tr>
 
     
@@ -772,6 +916,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    the clamped value.
+</div>
+
 
 
 <dl>
@@ -1042,7 +1190,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dataset.js.html">dataset.js</a>, <a href="dataset.js.html#line204">line 204</a>
+        <a href="dataset.js.html">dataset.js</a>, <a href="dataset.js.html#line208">line 208</a>
     </li></ul></dd>
     
 
@@ -1891,7 +2039,7 @@ array that can be used to map locations in the rendered image to their correspon
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dataset.js.html">dataset.js</a>, <a href="dataset.js.html#line166">line 166</a>
+        <a href="dataset.js.html">dataset.js</a>, <a href="dataset.js.html#line170">line 170</a>
     </li></ul></dd>
     
 
@@ -1924,6 +2072,160 @@ array that can be used to map locations in the rendered image to their correspon
 </div>
 
 
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createQuantization"><span class="type-signature"></span>createQuantization<span class="signature">(num)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates an array of num equally spaced quantization steps.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>num</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the number of quantization steps.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line36">line 36</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    an array of quantization steps.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;number></span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -1989,7 +2291,7 @@ array that can be used to map locations in the rendered image to their correspon
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line195">line 195</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line91">line 91</a>
     </li></ul></dd>
     
 
@@ -2077,7 +2379,7 @@ array that can be used to map locations in the rendered image to their correspon
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line205">line 205</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line101">line 101</a>
     </li></ul></dd>
     
 
@@ -2102,6 +2404,817 @@ array that can be used to map locations in the rendered image to their correspon
 
 
 
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="floatArrayToImageData"><span class="type-signature"></span>floatArrayToImageData<span class="signature">(arr, stride, mapFromMinus1)</span><span class="type-signature"> &rarr; {ImageData}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates an ImageData from a given 1D array of floating point values, where each value will be converted to a
+single RGBA value.
+The alpha component of all values in the resulting ImageData is 255.
+The length of the array must be divisible by the given stride.
+The values in the given array are assumed to be either in range [0,1] or [-1,1]. In the latter case, use
+mapFromMinus1 to indicate that the values should be mapped to [0,1] before converting them to RGBA values.
+However, the computed color values are clamped to range [0, 255], so unexpected values in the given array are silently
+ignored.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>arr</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">a 1D array of floating point values</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stride</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">the stride to use when converting the array (i.e. the width of the resulting ImageData).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mapFromMinus1</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">a boolean flag. If set to true, the values in arr are assumed to be in range [-1,1] and are converted to range [0,1] before calculating the RGBA value.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line82">line 82</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the created ImageData instance
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">ImageData</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="geoPath"><span class="type-signature"></span>geoPath<span class="signature">(width, height, projectionMethod)</span><span class="type-signature"> &rarr; {any}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a geoPath for a given resolution and projection method.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">the target width of the projection</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">the target height of the projection</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>projectionMethod</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    geoAlbersUsa
+                
+                </td>
+            
+
+            <td class="description last">the projection method to use when creating the geoPath. Defaults to 'geoAlbersUsa'</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line125">line 125</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the created geoPath
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">any</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getColor"><span class="type-signature"></span>getColor<span class="signature">(v, colorScale, interpolate)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Calculates an RGB color for a floating point value.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">a floating point value in range [0, 1]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>colorScale</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    jet
+                
+                </td>
+            
+
+            <td class="description last">the name of a color scale in <a href="global.html#colorScales">colorScales</a></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>interpolate</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">a boolean flag. If true, the colors between to steps of the color scale are interpolated</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="colormap.js.html">colormap.js</a>, <a href="colormap.js.html#line386">line 386</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    number[] the calculated RGB color
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getColorString"><span class="type-signature"></span>getColorString<span class="signature">(v, colorScale, interpolate)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Calculates an RGB color using <a href="global.html#getColor">getColor</a> and returns a string in the form of 'rgb(r, g, b)'.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">a floating point value in range [0, 1]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>colorScale</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    jet
+                
+                </td>
+            
+
+            <td class="description last">the name of a color scale in <a href="global.html#colorScales">colorScales</a></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>interpolate</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">a boolean flag. If true, the colors between to steps of the color scale are interpolated</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="colormap.js.html">colormap.js</a>, <a href="colormap.js.html#line417">line 417</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    string the calculated RGB color as a string
+</div>
+
+
+
+    
 
 
 
@@ -2239,7 +3352,7 @@ array that can be used to map locations in the rendered image to their correspon
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dataset.js.html">dataset.js</a>, <a href="dataset.js.html#line184">line 184</a>
+        <a href="dataset.js.html">dataset.js</a>, <a href="dataset.js.html#line188">line 188</a>
     </li></ul></dd>
     
 
@@ -2297,12 +3410,400 @@ array that can be used to map locations in the rendered image to their correspon
     
 
     
+    <h4 class="name" id="getStippleColor"><span class="type-signature"></span>getStippleColor<span class="signature">(density, invertColors, colorMap, interpolateColor)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Calculates a color based on a density value (assumed to be in range [0,1]) and chosen color scale configuration.
+
+See also:
+ - <a href="global.html#colorScales">colorScales</a>
+ - <a href="global.html#getColorString">getColorString</a>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>density</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the density value used to calculate the color</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>invertColors</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a boolean flag. If true 1-density is used instead of density.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>colorMap</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the name of a color map in <a href="global.html#colorScales">colorScales</a> or 'none'. If this is 'none' the resulting color will be either 'black' or 'white' depending on invertColors.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>interpolateColor</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a boolean flag. If true the colors between colors in the chosen color map are interpolated.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line160">line 160</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    a color string which can be used as value for a 'fill' attribute.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getStippleScale"><span class="type-signature"></span>getStippleScale<span class="signature">(density, stippleScaleMethod)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Calculates the scaling factor for a stipple based on the density it represents and a scaling method.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>density</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the density represented by a stipple</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stippleScaleMethod</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a scaling method</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line136">line 136</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the scaling factor for the stipple.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="getVoronoiCell"><span class="type-signature"></span>getVoronoiCell<span class="signature">(x, y, voronoi)</span><span class="type-signature"></span></h4>
     
 
     
 
 
+
+<div class="description">
+    Finds the index of the Voronoi region a given point falls into in a given Voronoi diagram.
+</div>
 
 
 
@@ -2348,7 +3849,7 @@ array that can be used to map locations in the rendered image to their correspon
 
             
 
-            <td class="description last">position</td>
+            <td class="description last">the x coordinate of the given point</td>
         </tr>
 
     
@@ -2366,7 +3867,7 @@ array that can be used to map locations in the rendered image to their correspon
 
             
 
-            <td class="description last">position</td>
+            <td class="description last">the y coordinate of the given point</td>
         </tr>
 
     
@@ -2384,7 +3885,7 @@ array that can be used to map locations in the rendered image to their correspon
 
             
 
-            <td class="description last"></td>
+            <td class="description last">a Voronoi diagram</td>
         </tr>
 
     
@@ -2425,7 +3926,7 @@ array that can be used to map locations in the rendered image to their correspon
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line104">line 104</a>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line166">line 166</a>
     </li></ul></dd>
     
 
@@ -2454,10 +3955,528 @@ array that can be used to map locations in the rendered image to their correspon
 
         
 <div class="param-desc">
-    the index of the voronoi region of the given position
+    number the index of the Voronoi region the given point falls into
 </div>
 
 
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="imageDataToFloatArray"><span class="type-signature"></span>imageDataToFloatArray<span class="signature">(imageData, rgbaToFloat)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Converts an ImageData instance to a float array.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>imageData</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the ImageData to convert</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rgbaToFloat</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a mapping function for converting an RGBA value to a floating point value. Must have the signature (number, number, number, number) => number. Defaults to <a href="global.html#rgbaToLuminance">rgbaToLuminance</a>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line99">line 99</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    an object containing the created array as well as the maximum value in the created array.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="initCard"><span class="type-signature"></span>initCard<span class="signature">(data, geographical)</span><span class="type-signature"> &rarr; {<a href="Card.html">Card</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a <a href="Card.html">Card</a> filled with a given stippled data set.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a stippled data set (e.g. <a href="global.html#currentStippledDataSet">currentStippledDataSet</a></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>geographical</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a boolean flag. If true, the created <a href="Card.html">Card</a> is displayed, otherwise it's hidden.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line255">line 255</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the created <a href="Card.html">Card</a>.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Card.html">Card</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="integerBounds"><span class="type-signature"></span>integerBounds<span class="signature">(points, toInt)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    The axis aligned bounding box of a polygon given as a set of points (i.e. [[x1,y1], [x2,y2], ... , [xN, yN]]) rounded
+to integer coordinates.
+Calls <a href="global.html#polygonBounds">polygonBounds</a> internally.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>points</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an array of points on a polygon (i.e. [[x1,y1], [x2,y2], ... , [xN, yN]]).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toInt</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a function for mapping floating point values to integers. Must have the signature (number) => number. Defaults to Math#round.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line152">line 152</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the axis aligned bounding box of the given polygon with integer coordinates only.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -2625,6 +4644,620 @@ array that can be used to map locations in the rendered image to their correspon
     
 
     
+    <h4 class="name" id="loadStates"><span class="type-signature">(async) </span>loadStates<span class="signature">(name)</span><span class="type-signature"> &rarr; {Promise.&lt;{inspector: boolean, debug: boolean, uv: boolean, ipv6: boolean, tls_alpn: boolean, tls_sni: boolean, tls_ocsp: boolean, tls: boolean}>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Loads the topojson-features from a JSON file referenced by its name.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the name of the JSON file.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line113">line 113</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the laoded features
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;{inspector: boolean, debug: boolean, uv: boolean, ipv6: boolean, tls_alpn: boolean, tls_sni: boolean, tls_ocsp: boolean, tls: boolean}></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="openTab"><span class="type-signature"></span>openTab<span class="signature">(name)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Shows the form corresponding to a tab referenced by its name.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the name of the tab to show.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line13">line 13</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="polygonBounds"><span class="type-signature"></span>polygonBounds<span class="signature">(points)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Calculates the axis aligned bounding box of a given polygon given as a set of points (i.e. [[x1,y1], [x2,y2], ... , [xN, yN]]).
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>points</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an array of points on a polygon (i.e. [[x1,y1], [x2,y2], ... , [xN, yN]]).</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line122">line 122</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the axis aligned bounding box of the given polygon given by its minimum and maximum position (i.e. their coordinates as a number array [x1,y1]).
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="quantize"><span class="type-signature"></span>quantize<span class="signature">(arr, quantization)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Quantize a given array of floating point values based on a given quantization array (e.g. as returned by <a href="global.html#createQuantization">createQuantization</a>).
+All values in the given array are assumed to be between 0 and 1.
+Otherwise the given quantization steps should match the scale of the given array.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>arr</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the array of floating point values that should be quantized.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>quantization</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an array of quantization steps (e.g. as returned by <a href="global.html#createQuantization">createQuantization</a>).</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line53">line 53</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the quantized array of floating point values
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;number></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="readFile"><span class="type-signature"></span>readFile<span class="signature">(file)</span><span class="type-signature"> &rarr; {Promise.&lt;unknown>}</span></h4>
     
 
@@ -2762,6 +5395,216 @@ array that can be used to map locations in the rendered image to their correspon
     <dd>
         
 <span class="param-type">Promise.&lt;unknown></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="rgbaToLuminance"><span class="type-signature"></span>rgbaToLuminance<span class="signature">(r, g, b, _a)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Converts an RGBA color to a luminance value.
+Each component is assumed to be in range [0, 255].
+The alpha component is ignored.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the R component of the RGBA color.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>g</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the G component of the RGBA color.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the B component of the RGBA color.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>_a</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the A component of the RGBA color. This value is ignored.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the calculated luminance value.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
 
 
     </dd>
@@ -2993,6 +5836,97 @@ array that can be used to map locations in the rendered image to their correspon
     
 
     
+    <h4 class="name" id="showDataSetForm"><span class="type-signature"></span>showDataSetForm<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Shows the data set form corresponding to the user's data set selection in the UI.
+
+This also sets some default values for specific data set selections.
+E.g. the default width for image data sets is set to 200.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line36">line 36</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="showImage"><span class="type-signature"></span>showImage<span class="signature">(img, divName)</span><span class="type-signature"></span></h4>
     
 
@@ -3107,7 +6041,95 @@ array that can be used to map locations in the rendered image to their correspon
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line118">line 118</a>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line193">line 193</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="showMachBandingForm"><span class="type-signature"></span>showMachBandingForm<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Shows the machbanding form in the UI.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line4">line 4</a>
     </li></ul></dd>
     
 
@@ -3198,7 +6220,7 @@ array that can be used to map locations in the rendered image to their correspon
 
             
 
-            <td class="description last"></td>
+            <td class="description last">the convex hull of a Voronoi cell as an array of points (i.e. [[x1,y1], [x2,y2], ... , [xN, yN]]).</td>
         </tr>
 
     
@@ -3239,7 +6261,7 @@ array that can be used to map locations in the rendered image to their correspon
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line134">line 134</a>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line208">line 208</a>
     </li></ul></dd>
     
 
@@ -3267,6 +6289,10 @@ array that can be used to map locations in the rendered image to their correspon
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    the two new centers of the split Voronoi cell
+</div>
+
 
 
 <dl>
@@ -3293,7 +6319,7 @@ array that can be used to map locations in the rendered image to their correspon
     
 
     
-    <h4 class="name" id="stipple"><span class="type-signature">(async) </span>stipple<span class="signature">(targetDensityFunction, stippleRadius, initialErrorThreshold, thresholdConvergenceRate)</span><span class="type-signature"> &rarr; {Promise.&lt;{voronoi: *, stipples: Array.&lt;any>}>}</span></h4>
+    <h4 class="name" id="stipple"><span class="type-signature">(async) </span>stipple<span class="signature">(targetDensityFunction, stippleRadius, initialErrorThreshold, thresholdConvergenceRate)</span><span class="type-signature"> &rarr; {Promise.&lt;{voronoi: any, stipples: Array.&lt;<a href="Stipple.html">Stipple</a>>}>}</span></h4>
     
 
     
@@ -3304,7 +6330,8 @@ array that can be used to map locations in the rendered image to their correspon
     Creates stipples for a given target density function (<a href="DensityFunction2D.html">DensityFunction2D</a>) using the algorithm presented by
 Görtler et al. (Stippling of 2D Scalar Fields).
 
-For contouring techniques use a <a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a> instead of a plain <a href="DensityFunction2D.html">DensityFunction2D</a>.
+For contouring techniques either use a <a href="DensityFunction2D.html">DensityFunction2D</a> created via DensityFunction2D#machBandingFromImageData2D
+or a <a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a> instead of a plain <a href="DensityFunction2D.html">DensityFunction2D</a>.
 
 Note that the function returns a Promise, so you either have to await it in an async context or use its
 return values in a Promise chain.
@@ -3384,7 +6411,7 @@ return values in a Promise chain.
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last">the radius of a <a href="Stipple.html">Stipple</a> with respect to the resolution of the <a href="DensityFunction2D.html">DensityFunction2D</a></td>
         </tr>
 
     
@@ -3473,7 +6500,7 @@ return values in a Promise chain.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line395">line 395</a>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line507">line 507</a>
     </li></ul></dd>
     
 
@@ -3501,6 +6528,10 @@ return values in a Promise chain.
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    an object containing an array of genereated <a href="Stipple.html">Stipple</a> instances as well as a corresponding Voronoi diagram.
+</div>
+
 
 
 <dl>
@@ -3509,7 +6540,7 @@ return values in a Promise chain.
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;{voronoi: *, stipples: Array.&lt;any>}></span>
+<span class="param-type">Promise.&lt;{voronoi: any, stipples: Array.&lt;<a href="Stipple.html">Stipple</a>>}></span>
 
 
     </dd>
@@ -3527,7 +6558,307 @@ return values in a Promise chain.
     
 
     
-    <h4 class="name" id="stippleParallel"><span class="type-signature">(async) </span>stippleParallel<span class="signature">(targetDensityFunction, stippleRadius, initialErrorThreshold, thresholdConvergenceRate)</span><span class="type-signature"> &rarr; {Promise.&lt;{voronoi: *, stipples: Array.&lt;any>}>}</span></h4>
+    <h4 class="name" id="stippleBounds"><span class="type-signature"></span>stippleBounds<span class="signature">(stipple, voronoi)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Calculates the axis aligned bounding box of a <a href="Stipple.html">Stipple</a> using the corresponding Voronoi diagram that was
+returned alongside the <a href="Stipple.html">Stipple</a> by <a href="global.html#stipple">stipple</a> or <a href="global.html#stippleParallel">stippleParallel</a>.
+
+See also:
+ - <a href="global.html#getVoronoiCell">getVoronoiCell</a>
+ - <a href="global.html#polygonBounds">polygonBounds</a>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>stipple</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the given <a href="Stipple.html">Stipple</a></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>voronoi</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the Voronoi diagram</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line182">line 182</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the axis aligned bounding box of the given <a href="Stipple.html">Stipple</a>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="stippleDataSet"><span class="type-signature"></span>stippleDataSet<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Collects all data from the UI and stipples the chosen data set using the chosen parameters.
+As soon as it has completed <a href="global.html#currentStippledDataSet">currentStippledDataSet</a> is overwritten and <a href="global.html#visualizeCurrentStipples">visualizeCurrentStipples</a> is
+triggered.
+
+If <a href="global.html#stipplingInProgress">stipplingInProgress</a> is true this function has no effect.
+
+See also:
+ - <a href="global.html#stipple">stipple</a>
+ - DensityFunction2D#fromImageData2D
+ - DensityFunction2D#machBandingFromImageData2D
+ - <a href="global.html#createGeographicDataImage">createGeographicDataImage</a>
+ - <a href="global.html#createImageData">createImageData</a>
+ - <a href="global.html#createGradientImage">createGradientImage</a>
+ - <a href="global.html#createImageFromData">createImageFromData</a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line291">line 291</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    always false.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="stippleParallel"><span class="type-signature">(async) </span>stippleParallel<span class="signature">(targetDensityFunction, stippleRadius, initialErrorThreshold, thresholdConvergenceRate)</span><span class="type-signature"> &rarr; {Promise.&lt;{voronoi: any, stipples: Array.&lt;any>}>}</span></h4>
     
 
     
@@ -3538,7 +6869,8 @@ return values in a Promise chain.
     Creates stipples for a given target density function (<a href="DensityFunction2D.html">DensityFunction2D</a>) using the algorithm presented by
 Görtler et al. (Stippling of 2D Scalar Fields).
 
-For contouring techniques use a <a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a> instead of a plain <a href="DensityFunction2D.html">DensityFunction2D</a>.
+For contouring techniques either use a <a href="DensityFunction2D.html">DensityFunction2D</a> created via DensityFunction2D#machBandingFromImageData2D
+or a <a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a> instead of a plain <a href="DensityFunction2D.html">DensityFunction2D</a>.
 
 Note that the function returns a Promise, so you either have to await it in an async context or use its
 return values in a Promise chain.
@@ -3622,7 +6954,7 @@ Probably because some density values don't contribute to the density of their Vo
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last">the radius of a <a href="Stipple.html">Stipple</a> with respect to the resolution of the <a href="DensityFunction2D.html">DensityFunction2D</a></td>
         </tr>
 
     
@@ -3711,7 +7043,120 @@ Probably because some density values don't contribute to the density of their Vo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line539">line 539</a>
+        <a href="stippling.js.html">stippling.js</a>, <a href="stippling.js.html#line653">line 653</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    an object containing an array of genereated <a href="Stipple.html">Stipple</a> instances as well as a corresponding Voronoi diagram.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;{voronoi: any, stipples: Array.&lt;any>}></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="visualizeCurrentStipples"><span class="type-signature">(async) </span>visualizeCurrentStipples<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Visualizes <a href="global.html#currentStippledDataSet">currentStippledDataSet</a> if it is not null.
+Triggered on every change in the 'style' tab in the UI.
+
+If <a href="global.html#stipplingInProgress">stipplingInProgress</a> is true this function has no effect.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line184">line 184</a>
     </li></ul></dd>
     
 
@@ -3747,7 +7192,7 @@ Probably because some density values don't contribute to the density of their Vo
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;{voronoi: *, stipples: Array.&lt;any>}></span>
+<span class="param-type">Promise.&lt;void></span>
 
 
     </dd>
@@ -3775,13 +7220,13 @@ Probably because some density values don't contribute to the density of their Vo
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageData">createImageData</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#currentStippledDataSet">currentStippledDataSet</a></li><li><a href="global.html#disableStippling">disableStippling</a></li><li><a href="global.html#enableStippling">enableStippling</a></li><li><a href="global.html#getProjectionHeight">getProjectionHeight</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#readFile">readFile</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li><li><a href="global.html#stipplingInProgress">stipplingInProgress</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Card.html">Card</a></li><li><a href="DataLoader.html">DataLoader</a></li><li><a href="DensityFunction2D.html">DensityFunction2D</a></li><li><a href="RestrictedStipplingDensityFunction2D.html">RestrictedStipplingDensityFunction2D</a></li><li><a href="Stipple.html">Stipple</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayMax">arrayMax</a></li><li><a href="global.html#arrayMin">arrayMin</a></li><li><a href="global.html#changeHeightInputVisibility">changeHeightInputVisibility</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#colorScales">colorScales</a></li><li><a href="global.html#createGeographicDataImage">createGeographicDataImage</a></li><li><a href="global.html#createGradientImage">createGradientImage</a></li><li><a href="global.html#createImageData">createImageData</a></li><li><a href="global.html#createImageFromData">createImageFromData</a></li><li><a href="global.html#createProjection">createProjection</a></li><li><a href="global.html#createQuantization">createQuantization</a></li><li><a href="global.html#currentStippledDataSet">currentStippledDataSet</a></li><li><a href="global.html#disableStippling">disableStippling</a></li><li><a href="global.html#enableStippling">enableStippling</a></li><li><a href="global.html#floatArrayToImageData">floatArrayToImageData</a></li><li><a href="global.html#geoPath">geoPath</a></li><li><a href="global.html#getColor">getColor</a></li><li><a href="global.html#getColorString">getColorString</a></li><li><a href="global.html#getProjectionHeight">getProjectionHeight</a></li><li><a href="global.html#getStippleColor">getStippleColor</a></li><li><a href="global.html#getStippleScale">getStippleScale</a></li><li><a href="global.html#getVoronoiCell">getVoronoiCell</a></li><li><a href="global.html#imageDataToFloatArray">imageDataToFloatArray</a></li><li><a href="global.html#initCard">initCard</a></li><li><a href="global.html#integerBounds">integerBounds</a></li><li><a href="global.html#loadImage">loadImage</a></li><li><a href="global.html#loadStates">loadStates</a></li><li><a href="global.html#openTab">openTab</a></li><li><a href="global.html#polygonBounds">polygonBounds</a></li><li><a href="global.html#quantize">quantize</a></li><li><a href="global.html#readFile">readFile</a></li><li><a href="global.html#rgbaToLuminance">rgbaToLuminance</a></li><li><a href="global.html#scaleToRange">scaleToRange</a></li><li><a href="global.html#showDataSetForm">showDataSetForm</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#showMachBandingForm">showMachBandingForm</a></li><li><a href="global.html#splitCell">splitCell</a></li><li><a href="global.html#stipple">stipple</a></li><li><a href="global.html#stippleBounds">stippleBounds</a></li><li><a href="global.html#stippleDataSet">stippleDataSet</a></li><li><a href="global.html#stippleParallel">stippleParallel</a></li><li><a href="global.html#stipplingInProgress">stipplingInProgress</a></li><li><a href="global.html#visualizeCurrentStipples">visualizeCurrentStipples</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Jun 01 2021 17:02:44 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Jun 02 2021 12:16:06 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
