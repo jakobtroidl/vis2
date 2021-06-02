@@ -83,6 +83,39 @@ function geoPath(width, height, projectionMethod = 'geoAlbersUsa') {
     return d3.geoPath().projection(projection);
 }
 
+/**
+ * Calculates the scaling factor for a stipple based on the density it represents and a scaling method.
+ * @param density the density represented by a stipple
+ * @param stippleScaleMethod a scaling method
+ * @return {number} the scaling factor for the stipple.
+ */
+function getStippleScale(density, stippleScaleMethod) {
+    switch (stippleScaleMethod) {
+        case 'density':
+            return density;
+        case 'inverseDensity':
+            return 1 - density;
+        default:
+            return 1;
+    }
+}
+
+const getStippleColor = (density, invertColors, colorMap, interpolateColor) => {
+    if (invertColors) {
+        if (colorMap === 'none') {
+            return 'white';
+        } else {
+            return getColorString(1.0 - density, colorMap, interpolateColor);
+        }
+    } else {
+        if (colorMap === 'none') {
+            return 'black';
+        } else {
+            return getColorString(density, colorMap, interpolateColor);
+        }
+    }
+}
+
 async function visualizeCurrentStipples() {
     // remove existing visualization
     const visDiv = '#mapDiv';
@@ -90,10 +123,11 @@ async function visualizeCurrentStipples() {
 
     if (currentStippledDataSet && !stipplingInProgress) {
         const outputScale = document.getElementById('visScale').value;
-        const scaleByDensity = document.getElementById('scaleByDensity').checked;
+        const scalingMethod = document.getElementById('stippleScale').value;
         const colorMap = document.getElementById('stippleColorMap').value;
         const interpolateColor = document.getElementById('interpolateColorMap').checked;
-        const reverseColors = document.getElementById('reverseColors').checked;
+        const invertColors = document.getElementById('invertColors').checked;
+        const matchBackground = document.getElementById('matchBackground').checked;
 
         const outputWidth = currentStippledDataSet.width * outputScale;
         const outputHeight = currentStippledDataSet.height * outputScale;
@@ -102,7 +136,7 @@ async function visualizeCurrentStipples() {
             .attr('width', outputWidth)
             .attr('height', outputHeight);
 
-        if (reverseColors) {
+        if (invertColors && matchBackground) {
             svg.append('rect')
                 .attr('width', '100%')
                 .attr('height', '100%')
@@ -125,29 +159,13 @@ async function visualizeCurrentStipples() {
 
         const card = initCard(currentStippledDataSet, currentStippledDataSet.geographicalDataset)
 
-        const getStippleColor = (density) => {
-            if (reverseColors) {
-                if (colorMap === 'none') {
-                    return 'white';
-                } else {
-                    return getColorString(1.0 - density, colorMap, interpolateColor);
-                }
-            } else {
-                if (colorMap === 'none') {
-                    return 'black';
-                } else {
-                    return getColorString(density, colorMap, interpolateColor);
-                }
-            }
-        }
-
         currentStippledDataSet.stipples.forEach(s => {
             if (s.density !== 0.0) {
                 svg.append('circle')
                     .attr('cx', s.relativeX * outputWidth)
                     .attr('cy', s.relativeY * outputHeight)
-                    .attr('r', currentStippledDataSet.stippleRadius * outputScale * (scaleByDensity ? s.density : 1))
-                    .style('fill', getStippleColor(s.density))
+                    .attr('r', currentStippledDataSet.stippleRadius * outputScale * getStippleScale(s.density, scalingMethod))
+                    .style('fill', getStippleColor(s.density, invertColors, colorMap, interpolateColor))
                     .on('mouseenter', function () {
                         d3.select(this).style('fill', 'rgb(255, 0, 0)'); // color stipples
                         if (currentStippledDataSet.geographicalDataset) {
@@ -156,7 +174,7 @@ async function visualizeCurrentStipples() {
                         }
                     })
                     .on('mouseleave', function () {
-                        d3.select(this).style('fill', getStippleColor(s.density));
+                        d3.select(this).style('fill', getStippleColor(s.density, invertColors, colorMap, interpolateColor));
                     })
             }
         })

@@ -191,12 +191,18 @@ and is wrapped around the whole page content, except for the footer in this exam
                                     <input type="number" id="visScale" value="1.85" step="0.01"
                                            onchange="visualizeCurrentStipples()"/>
                                 </div>
-                                <div class="font">
-                                    <input type="checkbox" id="scaleByDensity" onchange="visualizeCurrentStipples()"/>
-                                    &nbsp; &nbsp;
-                                    <label for="scaleByDensity">Scale stipples by density</label>
-
+                                <div class="user-box">
+                                    <label for="stippleScale">Choose stipple scaling method:</label>
                                 </div>
+                                <div class="user-box">
+                                    <select name="stippleScale" id="stippleScale"
+                                            onchange="visualizeCurrentStipples()">
+                                        <option value="none">none</option>
+                                        <option value="density">by density</option>
+                                        <option value="inverseDensity">by inverse density</option>
+                                    </select>
+                                </div>
+
                                 <br>
                                 <div class="user-box">
                                     <label for="stippleColorMap">Choose color map:</label>
@@ -259,10 +265,18 @@ and is wrapped around the whole page content, except for the footer in this exam
                                     <label for="interpolateColorMap">Interpolate color map</label>
                                 </div>
 
+                                <br>
                                 <div class="font">
-                                    <input type="checkbox", id="reverseColors" onchange="visualizeCurrentStipples()"/>
+                                    <input type="checkbox" id="invertColors" onchange="visualizeCurrentStipples()"/>
                                     &nbsp;&nbsp;
-                                    <label for="reverseColors">Reverse colors</label>
+                                    <label for="invertColors">Invert colors</label>
+                                </div>
+
+                                <br>
+                                <div class="font">
+                                    <input type="checkbox" id="matchBackground" onchange="visualizeCurrentStipples()" checked/>
+                                    &nbsp;&nbsp;
+                                    <label for="matchBackground">Match background to color scale</label>
                                 </div>
 
                             </div>
