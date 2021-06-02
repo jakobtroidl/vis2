@@ -283,7 +283,7 @@ function stippleDataSet() {
                 // TODO: replace filename
                 geographicalDataset = false;
                 dataSourceFunc = async () => {
-                    return createImageData('eggholder.png', width);
+                    return createImageData('E193-02.png', width);
                 }
                 break;
             case 'meister':
