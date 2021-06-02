@@ -376,6 +376,13 @@ const colorScales = {
     }, {"index": 1, "rgb": [227, 253, 198]}]
 };
 
+/**
+ * Calculates an RGB color for a floating point value.
+ * @param v a floating point value in range [0, 1]
+ * @param colorScale the name of a color scale in {@link colorScales}
+ * @param interpolate a boolean flag. If true, the colors between to steps of the color scale are interpolated
+ * @return number[] the calculated RGB color
+ */
 const getColor = (v, colorScale = 'jet', interpolate = false) => {
     if (!colorScales[colorScale]) {
         throw new Error(`Color scale doesn't exist: ${colorScale}`);
@@ -397,9 +404,16 @@ const getColor = (v, colorScale = 'jet', interpolate = false) => {
             }
         }
     }
-    return scale[scale.length - 1];
+    return scale[scale.length - 1].rgb;
 };
 
+/**
+ * Calculates an RGB color using {@link getColor} and returns a string in the form of 'rgb(r, g, b)'.
+ * @param v a floating point value in range [0, 1]
+ * @param colorScale the name of a color scale in {@link colorScales}
+ * @param interpolate a boolean flag. If true, the colors between to steps of the color scale are interpolated
+ * @return string the calculated RGB color as a string
+ */
 const getColorString = (v, colorScale = 'jet', interpolate = false) => {
     const rgb = getColor(v, colorScale, interpolate);
     if (rgb[0] === 0 && rgb[1] === 0 && rgb[2] === 0) {

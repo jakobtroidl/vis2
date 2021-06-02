@@ -8,14 +8,31 @@
  */
 
 /**
- *
- * @param val
- * @param lower
- * @param upper
- * @returns {number}
+ * Clamps a number to a given range.
+ * @param val the number to clamp to the given range
+ * @param lower the lower bound of the range val will be clamped to. Defaults to 0.
+ * @param upper the upper bound of the range val will be clamped to. Defaults to 1.
+ * @returns {number} the clamped value.
  */
 const clamp = (val, lower = 0.0, upper = 1.0) => Math.min(upper, Math.max(lower, val));
+
+/**
+ * Converts an RGBA color to a luminance value.
+ * Each component is assumed to be in range [0, 255].
+ * The alpha component is ignored.
+ * @param r the R component of the RGBA color.
+ * @param g the G component of the RGBA color.
+ * @param b the B component of the RGBA color.
+ * @param _a the A component of the RGBA color. This value is ignored.
+ * @return {number} the calculated luminance value.
+ */
 const rgbaToLuminance = (r, g, b, _a) => (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255.0;
+
+/**
+ * Creates an array of num equally spaced quantization steps.
+ * @param num the number of quantization steps.
+ * @return {number[]} an array of quantization steps.
+ */
 const createQuantization = (num) => {
     const fraction = 1.0 / num;
     const quantization = [];
@@ -24,6 +41,15 @@ const createQuantization = (num) => {
     }
     return quantization;
 };
+
+/**
+ * Quantize a given array of floating point values based on a given quantization array (e.g. as returned by {@link createQuantization}).
+ * All values in the given array are assumed to be between 0 and 1.
+ * Otherwise the given quantization steps should match the scale of the given array.
+ * @param arr the array of floating point values that should be quantized.
+ * @param quantization an array of quantization steps (e.g. as returned by {@link createQuantization}).
+ * @return {number[]} the quantized array of floating point values
+ */
 const quantize = (arr, quantization) => {
     return arr.map(p => {
         for (let i = 0; i < quantization.length; ++i) {
@@ -38,7 +64,21 @@ const quantize = (arr, quantization) => {
         return 1.0;
     });
 };
-// TODO: document arr requirements
+
+/**
+ * Creates an {@link ImageData} from a given 1D array of floating point values, where each value will be converted to a
+ * single RGBA value.
+ * The alpha component of all values in the resulting {@link ImageData} is 255.
+ * The length of the array must be divisible by the given stride.
+ * The values in the given array are assumed to be either in range [0,1] or [-1,1]. In the latter case, use
+ * mapFromMinus1 to indicate that the values should be mapped to [0,1] before converting them to RGBA values.
+ * However, the computed color values are clamped to range [0, 255], so unexpected values in the given array are silently
+ * ignored.
+ * @param arr a 1D array of floating point values
+ * @param stride the stride to use when converting the array (i.e. the width of the resulting {@link ImageData}).
+ * @param mapFromMinus1 a boolean flag. If set to true, the values in arr are assumed to be in range [-1,1] and are converted to range [0,1] before calculating the RGBA value.
+ * @return {ImageData} the created {@link ImageData} instance
+ */
 const floatArrayToImageData = (arr, stride, mapFromMinus1 = false) => {
     const mapVal = mapFromMinus1 ? p => (p + 1.0) / 2.0 : p => p;
     return new ImageData(
@@ -49,6 +89,13 @@ const floatArrayToImageData = (arr, stride, mapFromMinus1 = false) => {
         stride,
         arr.length / stride);
 }
+
+/**
+ * Converts an {@link ImageData} instance to a float array.
+ * @param imageData the {@link ImageData} to convert
+ * @param rgbaToFloat a mapping function for converting an RGBA value to a floating point value. Must have the signature (number, number, number, number) => number. Defaults to {@link rgbaToLuminance}.
+ * @return {{data: number[], maxValue: number}} an object containing the created array as well as the maximum value in the created array.
+ */
 const imageDataToFloatArray = (imageData, rgbaToFloat = rgbaToLuminance) => {
     const data = [];
     let maxValue = 0;
@@ -66,6 +113,12 @@ const imageDataToFloatArray = (imageData, rgbaToFloat = rgbaToLuminance) => {
     }
     return {data, maxValue};
 }
+
+/**
+ * Calculates the axis aligned bounding box of a given polygon given as a set of points (i.e. [[x1,y1], [x2,y2], ... , [xN, yN]]).
+ * @param points an array of points on a polygon (i.e. [[x1,y1], [x2,y2], ... , [xN, yN]]).
+ * @return {{min: number[], max: number[]}} the axis aligned bounding box of the given polygon given by its minimum and maximum position (i.e. their coordinates as a number array [x1,y1]).
+ */
 const polygonBounds = (points) => {
     let minX = Infinity;
     let minY = Infinity;
@@ -87,6 +140,15 @@ const polygonBounds = (points) => {
     }
     return {min: [minX, minY], max: [maxX, maxY]};
 }
+
+/**
+ * The axis aligned bounding box of a polygon given as a set of points (i.e. [[x1,y1], [x2,y2], ... , [xN, yN]]) rounded
+ * to integer coordinates.
+ * Calls {@link polygonBounds} internally.
+ * @param points an array of points on a polygon (i.e. [[x1,y1], [x2,y2], ... , [xN, yN]]).
+ * @param toInt a function for mapping floating point values to integers. Must have the signature (number) => number. Defaults to {@link Math#round}.
+ * @return {{min: number[], max: number[]}} the axis aligned bounding box of the given polygon with integer coordinates only.
+ */
 const integerBounds = (points, toInt = Math.round) => {
     const bounds = polygonBounds(points);
     bounds.min = bounds.min.map(toInt);
@@ -95,15 +157,28 @@ const integerBounds = (points, toInt = Math.round) => {
 }
 
 /**
- *
- * @param x position
- * @param y position
- * @param voronoi
- * @returns the index of the voronoi region of the given position
+ * Finds the index of the Voronoi region a given point falls into in a given Voronoi diagram.
+ * @param x the x coordinate of the given point
+ * @param y the y coordinate of the given point
+ * @param voronoi a Voronoi diagram
+ * @returns number the index of the Voronoi region the given point falls into
  */
 const getVoronoiCell = ([x, y], voronoi) => {
     return voronoi.delaunay.find(x, y);
 }
+
+/**
+ * Calculates the axis aligned bounding box of a {@link Stipple} using the corresponding Voronoi diagram that was
+ * returned alongside the {@link Stipple} by {@link stipple} or {@link stippleParallel}.
+ *
+ * See also:
+ *  - {@link getVoronoiCell}
+ *  - {@link polygonBounds}
+ *
+ * @param stipple the given {@link Stipple}
+ * @param voronoi the Voronoi diagram
+ * @return {{min: number[], max: number[]}} the axis aligned bounding box of the given {@link Stipple}
+ */
 const stippleBounds = (stipple, voronoi) => {
     let index = getVoronoiCell(stipple.position(), voronoi);
     let cell = voronoi.cellPolygon(index);
@@ -127,9 +202,8 @@ const showImage = (img, divName) => {
 
 /**
  * Calculates two new cell centroids from a Voronoi cell that should be split.
- *
- * @param cell
- * @returns {{position1: any[], position2: any[]}}
+ * @param cell the convex hull of a Voronoi cell as an array of points (i.e. [[x1,y1], [x2,y2], ... , [xN, yN]]).
+ * @returns {{position1: any[], position2: any[]}} the two new centers of the split Voronoi cell
  */
 const splitCell = (cell) => {
     // Note: this is a very naive implementation that chooses two new centroids that are halfway from the cell's centroid
@@ -175,6 +249,8 @@ const splitCell = (cell) => {
  * A stipple as returned by {@link stipple}.
  * Has a position (x, y) coordinate with respect to the dimensions of the underlying {@link DensityFunction2D},
  * and a density ∈ [0,1].
+ * A stipple also has a relative position that is independent of the underlying {@link DensityFunction2D} and can be
+ * used to scale a visualization to a new resolution more easily.
  */
 class Stipple {
     constructor(x, y) {
@@ -185,6 +261,14 @@ class Stipple {
         this.absoluteDensity = 0;
     }
 
+    /**
+     * Creates an array of randomly placed stipples in a 2D region with lower bounds (0,0) and upper bounds (xScale, yScale).
+     * @param numStipples the number of {@link Stipple} instances to create
+     * @param xScale the upper bound for x coordinates of created {@link Stipple} instances
+     * @param yScale the upper bound for y coordinates of created {@link Stipple} instances
+     * @param sampler a callable factory for creating sampling functions. Must have the signature (number, number, ...) => function<number()>. Defaults to {@link d3.randomUniform}.
+     * @return {Stipple[]} an array of randomly placed {@link Stipple} instances.
+     */
     static createRandomStipples(numStipples, xScale = 1, yScale = 1, sampler = d3.randomUniform) {
         const xSampler = sampler(0, xScale);
         const ySampler = sampler(0, yScale);
@@ -195,11 +279,20 @@ class Stipple {
         return stipples;
     }
 
+    /**
+     * Sets the position for this stipple based on new x and y coordinates.
+     * @param x the new x coordinate of this stipple
+     * @param y the new y coordinate of this stipple
+     */
     setPosition(x, y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * The position of this stipple with respect to the dimensions of the {@link DensityFunction2D} it was created from.
+     * @return {number[]} the position of this stipple as an array containing its x and y coordinates (i.e. [x,y])
+     */
     position() {
         return [this.x, this.y];
     }
@@ -317,10 +410,21 @@ class DensityFunction2D {
         return new DensityFunction2D(machBanded, imageData.width);
     }
 
+    /**
+     * Returns the density at a point given as x & y coordinates on this 2D density function.
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return {number} the density at the given point
+     */
     density(x, y) {
         return this.data[y][x];
     }
 
+    /**
+     * Returns the accumulated density within a given polygon on this 2D density function.
+     * @param polygon a polygon given as array of points (i.e.: [[x1,y1], [x2,y2], ... , [xN, yN]])
+     * @return {Promise<number>} the accumulated density within the given polygon on this 2D density function.
+     */
     async areaDensity(polygon) {
         // this doesn't have any async calls, but we could e.g. add a backing tf.tensor2D to perform this operation
         // which would be asynchronous (& hopefully faster)
@@ -337,6 +441,13 @@ class DensityFunction2D {
         return density;
     }
 
+    /**
+     * Assigns density values to each element in a given array of {@link Stipple} instances based on the accumulated
+     * density in their corresponding Voronoi regions.
+     * @param stipples an array of {@link Stipple} instances.
+     * @param voronoi the Voronoi regions for the given stipples - must be in the same order.
+     * @return Stipple[]
+     */
     assignDensity(stipples, voronoi) {
         stipples.forEach(s => s.density = 0);
         let lastFound = 0;
@@ -372,7 +483,7 @@ class DensityFunction2D {
 class RestrictedStipplingDensityFunction2D extends DensityFunction2D {
     constructor() {
         super([], 1);
-        throw new Error('Not implemented');
+        throw new Error('Not implemented :(');
     }
 }
 
@@ -381,16 +492,17 @@ class RestrictedStipplingDensityFunction2D extends DensityFunction2D {
  * Creates stipples for a given target density function ({@link DensityFunction2D}) using the algorithm presented by
  * Görtler et al. (Stippling of 2D Scalar Fields).
  *
- * For contouring techniques use a {@link RestrictedStipplingDensityFunction2D} instead of a plain {@link DensityFunction2D}.
+ * For contouring techniques either use a {@link DensityFunction2D} created via {@link DensityFunction2D#machBandingFromImageData2D}
+ * or a {@link RestrictedStipplingDensityFunction2D} instead of a plain {@link DensityFunction2D}.
  *
  * Note that the function returns a {@link Promise}, so you either have to await it in an async context or use its
  * return values in a {@link Promise} chain.
  *
  * @param targetDensityFunction a {@link DensityFunction2D}
- * @param stippleRadius
+ * @param stippleRadius the radius of a {@link Stipple} with respect to the resolution of the {@link DensityFunction2D}
  * @param initialErrorThreshold the initial error threshold used for splitting and merging stipples.
  * @param thresholdConvergenceRate the error threshold is increased by this amount in every iteration
- * @return {Promise<{voronoi: *, stipples: any[]}>}
+ * @return {Promise<{voronoi: any, stipples: Stipple[]}>} an object containing an array of genereated {@link Stipple} instances as well as a corresponding Voronoi diagram.
  */
 const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorThreshold = 0.0, thresholdConvergenceRate = 0.01) => {
     /* Görtler et al:
@@ -521,7 +633,8 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
  * Creates stipples for a given target density function ({@link DensityFunction2D}) using the algorithm presented by
  * Görtler et al. (Stippling of 2D Scalar Fields).
  *
- * For contouring techniques use a {@link RestrictedStipplingDensityFunction2D} instead of a plain {@link DensityFunction2D}.
+ * For contouring techniques either use a {@link DensityFunction2D} created via {@link DensityFunction2D#machBandingFromImageData2D}
+ * or a {@link RestrictedStipplingDensityFunction2D} instead of a plain {@link DensityFunction2D}.
  *
  * Note that the function returns a {@link Promise}, so you either have to await it in an async context or use its
  * return values in a {@link Promise} chain.
@@ -531,10 +644,11 @@ const stipple = async (targetDensityFunction, stippleRadius = 5.0, initialErrorT
  * Probably because some density values don't contribute to the density of their Voronoi cells due to rounding errors.
  *
  * @param targetDensityFunction a {@link DensityFunction2D}
- * @param stippleRadius
+ * @param stippleRadius the radius of a {@link Stipple} with respect to the resolution of the {@link DensityFunction2D}
  * @param initialErrorThreshold the initial error threshold used for splitting and merging stipples.
  * @param thresholdConvergenceRate the error threshold is increased by this amount in every iteration
- * @return {Promise<{voronoi: *, stipples: any[]}>}
+ * @return {Promise<{voronoi: any, stipples: any[]}>} an object containing an array of genereated {@link Stipple} instances as well as a corresponding Voronoi diagram.
+
  */
 const stippleParallel = async (targetDensityFunction, stippleRadius = 5.0, initialErrorThreshold = 0.0, thresholdConvergenceRate = 0.01) => {
     // keep track of computation time for indiviual steps
