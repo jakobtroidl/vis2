@@ -26,15 +26,32 @@ function showDataSetForm() {
         document.getElementById(id).style.display = (id === selectedForm ? 'block' : 'none');
     })
 
-    // todo: maybe fill other form fields based on selection (e.g. from/to for gradient)
+    const currentWidth = document.getElementById('stippleWidth').value;
+
     switch (document.forms['dataSetForm']['dataset'].value) {
         case 'gradient':
             changeHeightInputVisibility(true);
-            document.getElementById('gradientX2').value = document.getElementById('stippleWidth').value;
+            let x2 = currentWidth;
+            if (parseInt(currentWidth) === 480) {
+                const newWidth = 300;
+                document.getElementById('stippleWidth').value = newWidth;
+                document.getElementById('stippleHeight').value = 150;
+                x2 = newWidth;
+            }
+            document.getElementById('gradientX2').value = x2;
             break;
         case 'custom':
             changeHeightInputVisibility(true);
             break;
+        case 'italy':
+        case 'eggholder':
+        case 'cglogo':
+        case 'meister':
+        case 'image':
+            if (parseInt(currentWidth) === 480) {
+                document.getElementById('stippleWidth').value = 200;
+            }
+            // fallthrough is intentional
         default:
             changeHeightInputVisibility(false);
             break;
@@ -136,7 +153,7 @@ async function visualizeCurrentStipples() {
             .attr('width', outputWidth)
             .attr('height', outputHeight);
 
-        if (invertColors && matchBackground) {
+        if ((invertColors && matchBackground) || (!invertColors && !matchBackground)) {
             svg.append('rect')
                 .attr('width', '100%')
                 .attr('height', '100%')
